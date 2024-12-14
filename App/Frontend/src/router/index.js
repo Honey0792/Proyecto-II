@@ -12,6 +12,11 @@ const router = createRouter({
       path: "/Main",
       name: "Main",
       component: () => import("../views/MainView.Vue")
+    },
+    {
+      path: "/Nuketown",
+      name: "Nuketown",
+      component: () => import("../views/NuketownView.vue")
     }
   ],
 });

@@ -1,3 +1,15 @@
+-- CREAR BASE DE DATOS NEWGOAL
+
+CREATE DATABASE NEWGOAL WITH
+    OWNER = postgres                    -- PROPIETARIO DE LA BADE DE DATOS
+    ENCODING = 'UTF8'                   -- CODIFICACION DE LOS CARACTERES
+    LC_COLLATE = 'Spanish_Spain.1252'   -- LOCALIZACION DE COLLACION
+    LC_CTYPE = 'Spanish_Spain.1252'     -- LOCALIZACION DE TIPO DE CARACTERES
+    LOCALE_PROVIDER = 'libc'            -- PROVEDOR DE LOCALIZACION
+    TABLESPACE = pg_default             -- TABLESPACE PREDETERMINADO
+    CONNECTION LIMIT = -1               -- ESTABLECE LIMITE DE CONECCIONES
+    IS_TEMPLATE = False;                -- PERMITIR CREACION DE PLANTILLAS
+
 /*          CREACION DE TABLAS        */
 
 CREATE TABLE TBL_ESTUDIANTE (
@@ -47,16 +59,64 @@ CREATE TABLE TBL_RELACION (
     ID_RELACION SERIAL PRIMARY KEY,
     NOMBRE_RELACION VARCHAR(100) NOT NULL
 );
+
+INSERT INTO TBL_RELACION (NOMBRE_RELACION) VALUES
+    ('Padre'),
+    ('Madre'),
+    ('Abuelo'),
+    ('Abuela'),
+    ('Hermano'),
+    ('Hermana'),
+    ('Tio'),
+    ('Tia'),
+    ('Primo'),
+    ('Prima'),
+    ('Cuidador Principal'),
+    ('Guardian Legal'),
+    ('Padrastro'),
+    ('Madrasta'),
+    ('Otro');
+
 CREATE TABLE TBL_DISCAPACIDAD (
     ID_DISCD SERIAL PRIMARY KEY,
     TIPO_DISCD VARCHAR(100) NOT NULL,
     NOMBRE_DISCD VARCHAR(100) NOT NULL
 );
 
+INSERT INTO TBL_DISCAPACIDAD (TIPO_DISCD, NOMBRE_DISCD) VALUES
+    ('Discapacidad Física', 'Parálisis'),
+    ('Discapacidad Física', 'Amputación'),
+    ('Discapacidad Física', 'Espina bífida'),
+    ('Discapacidad Física', 'Distonías'),
+    ('Discapacidad Física', 'Esclerosis múltiple'),
+    ('Discapacidad Sensorial', 'Ceguera total'),
+    ('Discapacidad Sensorial', 'Baja visión'),
+    ('Discapacidad Sensorial', 'Hipoacusia'),
+    ('Discapacidad Sensorial', 'Sordera'),
+    ('Discapacidad Sensorial', 'Sordoceguera'),
+    ('Discapacidad Intelectual', 'Síndrome de Down'),
+    ('Discapacidad Intelectual', 'Trastorno del desarrollo intelectual (TDI)'),
+    ('Discapacidad Intelectual', 'Fenilcetonuria'),
+    ('Discapacidad Psicosocial o Mental', 'Esquizofrenia'),
+    ('Discapacidad Psicosocial o Mental', 'Trastorno bipolar'),
+    ('Discapacidad Psicosocial o Mental', 'Depresión severa'),
+    ('Discapacidad Psicosocial o Mental', 'Trastornos de ansiedad'),
+    ('Discapacidad del Desarrollo', 'Autismo (TEA)'),
+    ('Discapacidad del Desarrollo', 'Parálisis cerebral'),
+    ('Discapacidad del Desarrollo', 'Síndrome de Rett'),
+    ('Discapacidad Neurológica', 'Epilepsia'),
+    ('Discapacidad Neurológica', 'Parkinson'),
+    ('Discapacidad Neurológica', 'Lesión medular');
+
+
 CREATE TABLE TBL_GENERO (
     ID_GENERO SERIAL PRIMARY KEY,
     NOMBRE_GENERO VARCHAR(100) NOT NULL
 );
+
+INSERT INTO TBL_GENERO (NOMBRE_GENERO) VALUES
+    ('Hombre'),
+    ('Mujer');
 
 CREATE TABLE TBL_NIVEL_EDUCACION (
     ID_NV_EDU SERIAL PRIMARY KEY,
@@ -64,16 +124,248 @@ CREATE TABLE TBL_NIVEL_EDUCACION (
     NOMBRE_NV_EDU VARCHAR(100) NOT NULL
 );
 
+INSERT INTO TBL_NIVEL_EDUCACION (TIPO_NV_EDU, NOMBRE_NV_EDU)
+VALUES
+    ('Educación Inicial', 'Maternal'),
+    ('Educación Inicial', 'Preescolar'),
+    ('Educación Primaria', 'Primer Grado'),
+    ('Educación Primaria', 'Segundo Grado'),
+    ('Educación Primaria', 'Tercer Grado'),
+    ('Educación Primaria', 'Cuarto Grado'),
+    ('Educación Primaria', 'Quinto Grado'),
+    ('Educación Primaria', 'Sexto Grado'),
+    ('Educación Media', 'Primer Año'),
+    ('Educación Media', 'Segundo Año'),
+    ('Educación Media', 'Tercer Año'),
+    ('Educación Media', 'Cuarto Año'),
+    ('Educación Media', 'Quinto Año'),
+    ('Educación Media', 'Sexto Año'),
+    ('Educación Media', 'Bachiller'),
+    ('Educación Media', 'Tecnico Medio'),
+    ('Educación Universitaria', 'Técnico Superior Universitario'),
+    ('Educación Universitaria', 'Licenciatura'),
+    ('Educación Universitaria', 'Ingeniería'),
+    ('Educación Universitaria', 'Especialización'),
+    ('Educación Universitaria', 'Maestría'),
+    ('Educación Universitaria', 'Doctorado');
+
+
 CREATE TABLE TBL_NACIONALIDAD (
     ID_NCD SERIAL PRIMARY KEY,
     NOMBRE_NCD VARCHAR(100) NOT NULL,
     CODIGO_NCD VARCHAR(50) NOT NULL
 );
 
+INSERT INTO TBL_NACIONALIDAD (NOMBRE_NCD, CODIGO_NCD)
+VALUES
+    ('Afganistán', 'AFG'),
+    ('Albania', 'ALB'),
+    ('Argelia', 'DZA'),
+    ('Andorra', 'AND'),
+    ('Angola', 'AGO'),
+    ('Antigua y Barbuda', 'ATG'),
+    ('Argentina', 'ARG'),
+    ('Armenia', 'ARM'),
+    ('Australia', 'AUS'),
+    ('Austria', 'AUT'),
+    ('Azerbaiyán', 'AZE'),
+    ('Bahamas', 'BHS'),
+    ('Baréin', 'BHR'),
+    ('Bangladés', 'BGD'),
+    ('Barbados', 'BRB'),
+    ('Bielorrusia', 'BLR'),
+    ('Bélgica', 'BEL'),
+    ('Belice', 'BLZ'),
+    ('Benín', 'BEN'),
+    ('Bután', 'BTN'),
+    ('Bolivia', 'BOL'),
+    ('Bosnia y Herzegovina', 'BIH'),
+    ('Botsuana', 'BWA'),
+    ('Brasil', 'BRA'),
+    ('Brunéi', 'BRN'),
+    ('Bulgaria', 'BGR'),
+    ('Burkina Faso', 'BFA'),
+    ('Burundi', 'BDI'),
+    ('Cabo Verde', 'CPV'),
+    ('Camboya', 'KHM'),
+    ('Camerún', 'CMR'),
+    ('Canadá', 'CAN'),
+    ('Chad', 'TCD'),
+    ('Chile', 'CHL'),
+    ('China', 'CHN'),
+    ('Colombia', 'COL'),
+    ('Comoras', 'COM'),
+    ('Congo', 'COG'),
+    ('Costa Rica', 'CRI'),
+    ('Croacia', 'HRV'),
+    ('Cuba', 'CUB'),
+    ('Chipre', 'CYP'),
+    ('República Checa', 'CZE'),
+    ('Dinamarca', 'DNK'),
+    ('Yibuti', 'DJI'),
+    ('Dominica', 'DMA'),
+    ('República Dominicana', 'DOM'),
+    ('Ecuador', 'ECU'),
+    ('Egipto', 'EGY'),
+    ('El Salvador', 'SLV'),
+    ('Guinea Ecuatorial', 'GNQ'),
+    ('Eritrea', 'ERI'),
+    ('Estonia', 'EST'),
+    ('Eswatini', 'SWZ'),
+    ('Etiopía', 'ETH'),
+    ('Fiyi', 'FJI'),
+    ('Finlandia', 'FIN'),
+    ('Francia', 'FRA'),
+    ('Gabón', 'GAB'),
+    ('Gambia', 'GMB'),
+    ('Georgia', 'GEO'),
+    ('Alemania', 'DEU'),
+    ('Ghana', 'GHA'),
+    ('Grecia', 'GRC'),
+    ('Granada', 'GRD'),
+    ('Guatemala', 'GTM'),
+    ('Guinea', 'GIN'),
+    ('Guinea-Bisáu', 'GNB'),
+    ('Guyana', 'GUY'),
+    ('Haití', 'HTI'),
+    ('Honduras', 'HND'),
+    ('Hungría', 'HUN'),
+    ('Islandia', 'ISL'),
+    ('India', 'IND'),
+    ('Indonesia', 'IDN'),
+    ('Irán', 'IRN'),
+    ('Irak', 'IRQ'),
+    ('Irlanda', 'IRL'),
+    ('Israel', 'ISR'),
+    ('Italia', 'ITA'),
+    ('Jamaica', 'JAM'),
+    ('Japón', 'JPN'),
+    ('Jordania', 'JOR'),
+    ('Kazajistán', 'KAZ'),
+    ('Kenia', 'KEN'),
+    ('Kiribati', 'KIR'),
+    ('Corea del Norte', 'PRK'),
+    ('Corea del Sur', 'KOR'),
+    ('Kosovo', 'UNK'),
+    ('Kuwait', 'KWT'),
+    ('Kirguistán', 'KGZ'),
+    ('Laos', 'LAO'),
+    ('Letonia', 'LVA'),
+    ('Líbano', 'LBN'),
+    ('Lesoto', 'LSO'),
+    ('Liberia', 'LBR'),
+    ('Libia', 'LBY'),
+    ('Liechtenstein', 'LIE'),
+    ('Lituania', 'LTU'),
+    ('Luxemburgo', 'LUX'),
+    ('Madagascar', 'MDG'),
+    ('Malaui', 'MWI'),
+    ('Malasia', 'MYS'),
+    ('Maldivas', 'MDV'),
+    ('Malí', 'MLI'),
+    ('Malta', 'MLT'),
+    ('Islas Marshall', 'MHL'),
+    ('Mauritania', 'MRT'),
+    ('Mauricio', 'MUS'),
+    ('México', 'MEX'),
+    ('Micronesia', 'FSM'),
+    ('Moldavia', 'MDA'),
+    ('Mónaco', 'MCO'),
+    ('Mongolia', 'MNG'),
+    ('Montenegro', 'MNE'),
+    ('Marruecos', 'MAR'),
+    ('Mozambique', 'MOZ'),
+    ('Birmania', 'MMR'),
+    ('Namibia', 'NAM'),
+    ('Nauru', 'NRU'),
+    ('Nepal', 'NPL'),
+    ('Países Bajos', 'NLD'),
+    ('Nueva Zelanda', 'NZL'),
+    ('Nicaragua', 'NIC'),
+    ('Níger', 'NER'),
+    ('Nigeria', 'NGA'),
+    ('Noruega', 'NOR'),
+    ('Omán', 'OMN'),
+    ('Pakistán', 'PAK'),
+    ('Palaos', 'PLW'),
+    ('Palestina', 'PSE'),
+    ('Panamá', 'PAN'),
+    ('Papúa Nueva Guinea', 'PNG'),
+    ('Paraguay', 'PRY'),
+    ('Perú', 'PER'),
+    ('Filipinas', 'PHL'),
+    ('Polonia', 'POL'),
+    ('Portugal', 'PRT'),
+    ('Catar', 'QAT'),
+    ('Rumania', 'ROU'),
+    ('Rusia', 'RUS'),
+    ('Ruanda', 'RWA'),
+    ('San Cristóbal y Nieves', 'KNA'),
+    ('Santa Lucía', 'LCA'),
+    ('San Vicente y las Granadinas', 'VCT'),
+    ('Samoa', 'WSM'),
+    ('San Marino', 'SMR'),
+    ('Santo Tomé y Príncipe', 'STP'),
+    ('Arabia Saudita', 'SAU'),
+    ('Senegal', 'SEN'),
+    ('Serbia', 'SRB'),
+    ('Seychelles', 'SYC'),
+    ('Sierra Leona', 'SLE'),
+    ('Singapur', 'SGP'),
+    ('Eslovaquia', 'SVK'),
+    ('Eslovenia', 'SVN'),
+    ('Islas Salomón', 'SLB'),
+    ('Somalia', 'SOM'),
+    ('Sudáfrica', 'ZAF'),
+    ('Sudán del Sur', 'SSD'),
+    ('España', 'ESP'),
+    ('Sri Lanka', 'LKA'),
+    ('Sudán', 'SDN'),
+    ('Surinam', 'SUR'),
+    ('Suecia', 'SWE'),
+    ('Suiza', 'CHE'),
+    ('Siria', 'SYR'),
+    ('Tayikistán', 'TJK'),
+    ('Tanzania', 'TZA'),
+    ('Tailandia', 'THA'),
+    ('Timor-Leste', 'TLS'),
+    ('Togo', 'TGO'),
+    ('Tonga', 'TON'),
+    ('Trinidad y Tobago', 'TTO'),
+    ('Túnez', 'TUN'),
+    ('Turquía', 'TUR'),
+    ('Turkmenistán', 'TKM'),
+    ('Tuvalu', 'TUV'),
+    ('Uganda', 'UGA'),
+    ('Ucrania', 'UKR'),
+    ('Emiratos Árabes Unidos', 'ARE'),
+    ('Reino Unido', 'GBR'),
+    ('Estados Unidos', 'USA'),
+    ('Uruguay', 'URY'),
+    ('Uzbekistán', 'UZB'),
+    ('Vanuatu', 'VUT'),
+    ('Vaticano', 'VAT'),
+    ('Venezuela', 'VEN'),
+    ('Vietnam', 'VNM'),
+    ('Yemen', 'YEM'),
+    ('Zambia', 'ZMB'),
+    ('Zimbabue', 'ZWE');
+
+
 CREATE TABLE TBL_NIVEL_INGLES (
     ID_NIVEL_INGLES SERIAL PRIMARY KEY,
     NOMBRE_NIVEL_INGLES VARCHAR(100) NOT NULL
 );
+
+INSERT INTO TBL_NIVEL_INGLES (NOMBRE_NIVEL_INGLES)
+VALUES
+    ('A1'),
+    ('A2'),
+    ('B1'),
+    ('B2'),
+    ('C1'),
+    ('C2');
+
 
 CREATE TABLE TBL_ALERGIA_ESTUDIANTE (
     ID_ALERGIA_ETD SERIAL PRIMARY KEY,      -- Clave primaria autoincremental
@@ -91,6 +383,10 @@ CREATE TABLE TBL_ESTADO (
     ID_ESTADO SERIAL PRIMARY KEY,
     NOMBRE_ESTADO VARCHAR(100) NOT NULL
 );
+
+INSERT INTO TBL_ESTADO (NOMBRE_ESTADO) VALUES
+    ('Activo'),
+    ('Inactivo');
 
 CREATE TABLE TBL_PERIODO (
     ID_PERIODO SERIAL PRIMARY KEY,          -- Clave primaria autoincremental
@@ -113,10 +409,38 @@ CREATE TABLE TBL_INSCRIPCION (
 
 CREATE TABLE TBL_NIVEL (
     ID_NIVEL SERIAL PRIMARY KEY,        -- Clave primaria autoincremental
+    CATEGORIA_NIVEL VARCHAR(50) NOT NULL,
     NOMBRE_NIVEL VARCHAR(100) NOT NULL,
     DESCRIPCION_NIVEL VARCHAR(200),
     DURACION_NIVEL VARCHAR(50) NOT NULL
 );
+
+INSERT INTO TBL_NIVEL (CATEGORIA_NIVEL, NOMBRE_NIVEL, DURACION_NIVEL) VALUES 
+    ('Adults','A-1','No Definido'),
+    ('Adults','A-2','No Definido'),
+    ('Adults','A-3','No Definido'),
+    ('Adults','A-4','No Definido'),
+    ('Adults','A-5','No Definido'),
+    ('Adults','A-6','No Definido'),
+    ('Little Starters','LS-1','No Definido'),
+    ('Little Starters','LS-2','No Definido'),
+    ('Little Starters','LS-3','No Definido'),
+    ('Little Starters','LS-4','No Definido'),
+    ('Little Starters','LS-5','No Definido'),
+    ('Little Starters','LS-6','No Definido'),
+    ('Pre-Teens & Teens','PT-T 1','No Definido'),
+    ('Pre-Teens & Teens','PT-T 2','No Definido'),
+    ('Pre-Teens & Teens','PT-T 3','No Definido'),
+    ('Pre-Teens & Teens','PT-T 4','No Definido'),
+    ('Pre-Teens & Teens','PT-T 5','No Definido'),
+    ('Pre-Teens & Teens','PT-T 6','No Definido'),
+    ('Kids','K-1','No Definido'),
+    ('Kids','K-2','No Definido'),
+    ('Kids','K-3','No Definido'),
+    ('Kids','K-4','No Definido'),
+    ('Kids','K-5','No Definido'),
+    ('Kids','K-6','No Definido');
+
 
 CREATE TABLE TBL_NOTA (
     ID_NOTA SERIAL PRIMARY KEY,     -- Clave primaria autoincremental
@@ -141,6 +465,13 @@ CREATE TABLE TBL_METODO_PAGO (
     NOMBRE_METODO_PAGO VARCHAR(100) NOT NULL
 );
 
+INSERT INTO TBL_METODO_PAGO (NOMBRE_METODO_PAGO) VALUES
+    ('Efectivo'),
+    ('Pago Movil'),
+    ('Transferencia'),
+    ('Zelle'),
+    ('Divisas');
+
 CREATE TABLE TBL_GASTO (
     ID_GASTO SERIAL PRIMARY KEY,            -- Clave primaria autoincremental
     ID_PERSONA INTEGER NOT NULL,                    --FK PERSONA
@@ -156,6 +487,11 @@ CREATE TABLE TBL_TIPO_GASTO (
     ID_TIPO_GASTO SERIAL PRIMARY KEY,           -- Clave primaria autoincremental
     NOMBRE_TIPO_GASTO VARCHAR(100) NOT NULL
 );
+
+INSERT INTO TBL_TIPO_GASTO (NOMBRE_TIPO_GASTO) VALUES
+    ('Limpeza'),
+    ('Papeleria'),
+    ('Infraestructura');
 
 CREATE TABLE TBL_REGISTRO_MES (
     ID_REGISTRO_MES SERIAL PRIMARY KEY,             -- Clave primaria autoincremental
@@ -173,6 +509,9 @@ CREATE TABLE TBL_USUARIO (
     PASSWORD_USUARIO VARCHAR(50) NOT NULL,
     ROL_USUARIO NUMERIC(2) NOT NULL
 );
+
+INSERT INTO TBL_USUARIO (NOMBRE_USUARIO, PASSWORD_USUARIO, ROL_USUARIO) VALUES
+    ('admin', 'adminnewgoal', 1);
 
 
 --          RELACIONES DE TABLA ESTUDIANTES(7)         --

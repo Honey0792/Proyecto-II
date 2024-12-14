@@ -1,13 +1,9 @@
 <template>
-    <NavBar />
-  <div id="app" class="app-container">
-    <div id="router" class="content-container">
-      <router-view v-slot="{ Component }">
-        <transition name="fade">
-          <component :is="Component" />
-        </transition>
-      </router-view>
-    </div>
+  <div id="router">
+    <NavBar/>
+    <router-view v-slot="{ Component }">
+      <component :is="Component" />
+    </router-view>
     <Footer />
   </div>
 </template>
@@ -20,7 +16,7 @@ import NavBar from "./components/NavBar.vue";
 export default {
   components: {
     Footer,
-    NavBar
+    NavBar,
   },
 };
 </script>
