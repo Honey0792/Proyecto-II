@@ -85,7 +85,7 @@
         <v-container>
           <v-row class="mx-auto">
             <v-col class="d-flex">
-              <v-checkbox class="mx-3" v-model="activate" title="No tiene cedula"></v-checkbox>
+              <v-checkbox class="mx-3" v-model="activate" title=""></v-checkbox>
               <v-text-field 
               :disabled="activate"
               type="" variant="outlined" hint="Marque la casilla si el estudiante no posee cedula" label="Cedula">
@@ -129,15 +129,6 @@
   </v-form>
 </template>
 <script>
-import { ref } from 'vue';
-
-  function clear () {
-    v$.value.$reset()
-    for (const [key, value] of Object.entries(initialState)) {
-      state[key] = value
-    }
-  }
-
 export default {
 
 
@@ -156,7 +147,7 @@ export default {
       numTlf: "",
       email: "",
     },
-    activate: null
+    activate: false
   }),
  
 };

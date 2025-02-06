@@ -2,64 +2,66 @@
   <Header />
 
   <v-container>
-    <v-form>
-    <v-row align="center" justify="center">
-      <v-col cols="12" sm="10">
-        <v-card class="elevation-6 mt-10">
-          <v-row>
-            <v-col cols="12" md="6">
-              <v-card-text class="mt-12">
-                <h4 class="text-center">Login in to Your Account</h4>
-                <v-row align="center" justify="center">
-                  <v-col cols="12" sm="8">
-                    <v-text-field
-                      :rules="usernameRules"
-                      label="User"
-                      outlined
-                      dense
-                      color="blue"
-                      autocomplete="false"
-                      class="mt-16"
-                    />
-                    <v-text-field
-                      :rules="contrasenaRules"
-                      label="Password"
-                      outlined
-                      dense
-                      color="blue"
-                      autocomplete="false"
-                      type="password"
-                    />
-                    <v-row>
-                      <v-col cols="12" sm="7"> </v-col>
-                    </v-row>
-                    <v-btn
-                      type="submit"
-                      color="cyan"
-                      dark
-                      block
-                      tile
-                      @click="loading = true"
-                      >Log in</v-btn
-                    >
-                  </v-col>
-                </v-row>
-              </v-card-text>
-            </v-col>
-            <v-col cols="12" md="6" class="kbg rounded-bl-xl">
-              <div style="text-align: center; padding: 275px 0"></div>
-            </v-col>
-          </v-row>
-        </v-card>
-      </v-col>
-    </v-row>
-  </v-form>
+    <v-form @submit.prevent="login">
+      <v-row align="center" justify="center">
+        <v-col cols="12" sm="10">
+          <v-card class="elevation-6 mt-10">
+            <v-row>
+              <v-col cols="12" md="6">
+                <v-card-text class="mt-12">
+                  <h4 class="text-center">Login in to Your Account</h4>
+                  <v-row align="center" justify="center">
+                    <v-col cols="12" sm="8">
+                      <v-text-field
+                        v-model="usuario.username"
+                        :rules="usernameRules"
+                        label="User"
+                        outlined
+                        dense
+                        color="blue"
+                        autocomplete="false"
+                        class="mt-16"
+                      />
+                      <v-text-field
+                        v-model="usuario.contrasena"
+                        :rules="contrasenaRules"
+                        label="Password"
+                        outlined
+                        dense
+                        color="blue"
+                        autocomplete="false"
+                        type="password"
+                      />
+                      <v-row>
+                        <v-col cols="12" sm="7"> </v-col>
+                      </v-row>
+                      <v-btn
+                        type="submit"
+                        color="cyan"
+                        dark
+                        block
+                        tile
+                        @click="login"
+                        >Log in</v-btn
+                      >
+                    </v-col>
+                  </v-row>
+                </v-card-text>
+              </v-col>
+              <v-col cols="12" md="6" class="kbg rounded-bl-xl">
+                <div style="text-align: center; padding: 275px 0"></div>
+              </v-col>
+            </v-row>
+          </v-card>
+        </v-col>
+      </v-row>
+    </v-form>
   </v-container>
 </template>
 
 <script>
 import Header from "@/components/Header.vue";
-
+import axios from "axios";
 export default {
   components: {
     Header,
@@ -103,6 +105,23 @@ export default {
         "La contraseña no puede tener menos de 4 caracteres",
     ],
   }),
+  methods: {
+    async login() {
+      try {
+        const response = await axios.post("http://localhost:3000/auth/", {
+          usuario: this.usuario.username,
+          password: this.usuario.contrasena,
+        });
+
+        const token = response.data.token; // Asegúrate de que tu API retorne el token en esta propiedad
+        sessionStorage.setItem("token", token);
+        console.log("Inicio de sesión exitoso. Token guardado:", token);
+      } catch (err) {
+        this.error = "Error al iniciar sesión. Verifica tus credenciales.";
+        console.error(err);
+      }
+    },
+  },
 };
 </script>
 
