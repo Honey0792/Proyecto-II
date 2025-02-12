@@ -1,21 +1,21 @@
 <template>
-  <v-container class="d-flex">
-    <v-card
-      v-for="n in 3"
-      :key="n"
-      class="mx-auto"
-      prepend-icon="$vuetify"
-      width="400"
-      height="300"
-    >
-    
-      <template v-slot:title>
-        <span class="font-weight-black">Welcome to Vuetify</span>
-      </template>
-      <template v-slot class="d-flex justify-center align-center">
-        <v-progress-circular model-value="20" size="200"></v-progress-circular>
-      </template>
-    </v-card>
+    <v-container class="ga-4">
+    <v-row class="pa-6">
+      <v-col>
+        <v-card variant="tonal" class="mx-auto" width="600" height="231"> </v-card>
+      </v-col>
+      <v-col>
+        <v-card variant="tonal" class="mx-auto" width="300" height="231"> </v-card>
+      </v-col>
+    </v-row>
+    <v-row class="pa-6">
+      <v-col>
+        <v-card variant="tonal" class="mx-auto" width="300" height="231"> </v-card>
+      </v-col>
+      <v-col>
+        <v-card variant="tonal" class="mx-auto" width="600" height="231"> </v-card>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
