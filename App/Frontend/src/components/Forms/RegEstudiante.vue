@@ -5,54 +5,24 @@
         Registro de Estudiante
       </v-card-title>
       <v-card-text class="d-flex flex-column aling-center justify-center pa-0">
-        <h3 class="pa-3">Datos de la Inscripcion</h3>
-        <v-divider></v-divider>
-        <v-container class="">
-          <v-row>
-            <v-col>
-              <v-text-field
-                variant="outlined"
-                type="date"
-                label="Fecha de Inscripcion"
-              ></v-text-field>
-            </v-col>
-            <v-col>
-              <v-text-field
-                variant="outlined"
-                type="date"
-                label="Fecha de Inicio"
-              ></v-text-field>
-            </v-col>
-            <v-col>
-              <v-text-field
-                variant="outlined"
-                type="date"
-                label="Fecha de Culminacion"
-              ></v-text-field>
-            </v-col>
-            <v-col>
-              <v-select variant="outlined" label="Grupo"></v-select>
-            </v-col>
-            <v-col>
-              <v-select label="Nivel" variant="outlined"></v-select>
-            </v-col>
-          </v-row>
-        </v-container>
-        <v-divider></v-divider>
-
         <h3 class="pa-3">Datos Del Estudiante</h3>
 
         <v-divider></v-divider>
         <v-container class="">
           <v-row>
             <v-col>
-              <v-text-field v-model="estudiante.nombre" variant="outlined" label="Nombres"></v-text-field>
+              <v-text-field
+                v-model="estudiante.nombre"
+                variant="outlined"
+                label="Nombres"
+              ></v-text-field>
             </v-col>
             <v-col>
               <v-text-field variant="outlined" label="Apellidos"></v-text-field>
             </v-col>
             <v-col>
               <v-text-field
+                v-model="estudiante.fechaNacimiento"
                 variant="outlined"
                 type="date"
                 label="Fecha de Nacimiento"
@@ -71,10 +41,16 @@
         <v-container>
           <v-row>
             <v-col>
-              <v-select variant="outlined" label="Grado Escolar"></v-select>
+              <v-select
+                variant="outlined"
+                label="Nivel de Educación"
+              ></v-select>
             </v-col>
             <v-col>
               <v-select label="Nivel de Ingles" variant="outlined"></v-select>
+            </v-col>
+            <v-col>
+              <v-select variant="outlined" label="Estado"> </v-select>
             </v-col>
             <v-col>
               <v-select label="Alergias" variant="outlined"></v-select>
@@ -83,20 +59,44 @@
         </v-container>
         <v-divider class="mx-8"></v-divider>
         <v-container>
+          <v-row>
+            <v-col>
+              <v-select
+                variant="outlined"
+                label="Representante"
+              ></v-select>
+            </v-col>
+            <v-col>
+              <v-select label="Discapacidad" variant="outlined"></v-select>
+            </v-col>
+            <v-col>
+              <v-select variant="outlined" label="Genero"> </v-select>
+            </v-col>
+            <v-col>
+              <v-select label="Persona que registro" variant="outlined"></v-select>
+            </v-col>
+          </v-row>
+        </v-container>
+        <v-divider class="mx-8"></v-divider>
+        <v-container>
           <v-row class="mx-auto">
             <v-col class="d-flex">
-              <v-checkbox class="mx-3" v-model="activate" title=""></v-checkbox>
-              <v-text-field 
-              :disabled="activate"
-              type="" variant="outlined" hint="Marque la casilla si el estudiante no posee cedula" label="Cedula">
+              <v-checkbox class="mx-3" v-model="activate"></v-checkbox>
+              <v-text-field
+                :disabled="!activate"
+                type=""
+                variant="outlined"
+                hint="Desmarque la casilla si el estudiante no posee cedula"
+                label="Cedula"
+              >
               </v-text-field>
             </v-col>
             <v-col>
-              <v-text-field variant="outlined" label="Ocupacion">
+              <v-text-field variant="outlined" label="Contacto de emergencia">
               </v-text-field>
             </v-col>
             <v-col>
-              <v-text-field variant="outlined" label="Direccion">
+              <v-text-field variant="outlined" label="Encargado/s de retirar el Estudiante">
               </v-text-field>
             </v-col>
           </v-row>
@@ -111,6 +111,10 @@
               ></v-text-field>
             </v-col>
             <v-col>
+              <v-text-field variant="outlined" label="Direccion">
+              </v-text-field>
+            </v-col>
+            <v-col>
               <v-text-field
                 type="email"
                 variant="outlined"
@@ -121,17 +125,19 @@
           </v-row>
         </v-container>
         <v-container class="d-flex aling-center">
-        <v-btn class="text-white bg-orange-lighten-2 mx-auto" type="submit">Registrar</v-btn>
-        <v-btn @click="clear" class="text-white bg-orange-lighten-2 mx-auto">Limpiar</v-btn>
-      </v-container>
+          <v-btn class="text-white bg-orange-lighten-2 mx-auto" type="submit"
+            >Registrar</v-btn
+          >
+          <v-btn @click="clear" class="text-white bg-orange-lighten-2 mx-auto"
+            >Limpiar</v-btn
+          >
+        </v-container>
       </v-card-text>
     </v-card>
   </v-form>
 </template>
 <script>
 export default {
-
-
   data: () => ({
     estudiante: {
       nombres: "",
@@ -147,8 +153,8 @@ export default {
       numTlf: "",
       email: "",
     },
-    activate: false
+    activate: true,
   }),
- 
+  methods: [],
 };
 </script>

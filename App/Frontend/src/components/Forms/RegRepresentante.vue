@@ -18,17 +18,10 @@
               <v-text-field variant="outlined" label="Apellidos"></v-text-field>
             </v-col>
             <v-col>
-              <v-text-field
+              <v-select
                 variant="outlined"
-                label="Parentesco"
-              ></v-text-field>
-            </v-col>
-            <v-col>
-              <v-text-field
-                variant="outlined"
-                type="number"
-                label="Edad"
-              ></v-text-field>
+                label="Genero"
+              ></v-select>
             </v-col>
             <v-divider class="mx-8"></v-divider>
           </v-row>
@@ -36,7 +29,7 @@
         <v-container>
           <v-row>
             <v-col>
-              <v-text-field variant="outlined" label="Direccion">
+              <v-text-field variant="outlined" label="Cedula">
               </v-text-field>
             </v-col>
             <v-col>
@@ -59,11 +52,7 @@
         <v-container>
           <v-row class="mx-auto">
             <v-col class="d-flex">
-              <v-text-field type="number" variant="outlined" label="Cedula">
-              </v-text-field>
-            </v-col>
-            <v-col>
-              <v-text-field variant="outlined" label="Ocupacion">
+              <v-text-field type="" variant="outlined" label="Dirección">
               </v-text-field>
             </v-col>
           </v-row>
@@ -71,13 +60,7 @@
         <v-divider class="mx-8"></v-divider>
         <v-container class="">
           <v-row>
-            <v-col>
-              <v-text-field
-                label="Encargado/s de retirar el Estudiante"
-                variant="outlined"
-              >
-              </v-text-field>
-            </v-col>
+
           </v-row>
         </v-container>
       </v-card-text>
