@@ -6,7 +6,7 @@
         @click.stop="drawer = !drawer"
       ></v-app-bar-nav-icon>
 
-      <v-toolbar-title>My files</v-toolbar-title>
+      <v-toolbar-title>New Goal</v-toolbar-title>
 
       <v-spacer></v-spacer>
 
@@ -24,7 +24,11 @@
       :location="$vuetify.display.mobile ? 'bottom' : undefined"
       temporary
     >
-      <v-list :items="items"> </v-list>
+    <v-menu>
+      <template v-slot:activator="{ props }">
+      <v-list :props :items="items"> </v-list>
+    </template>
+    </v-menu>
     </v-navigation-drawer>
     <v-main style="height: 20px"> </v-main>
   </v-layout>

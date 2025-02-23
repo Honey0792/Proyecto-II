@@ -13,7 +13,7 @@
                   <v-row align="center" justify="center">
                     <v-col cols="12" sm="8">
                       <v-text-field
-                        v-model="usuario.username"
+                        v-model="user.usuario"
                         :rules="usernameRules"
                         label="User"
                         outlined
@@ -23,7 +23,7 @@
                         class="mt-16"
                       />
                       <v-text-field
-                        v-model="usuario.contrasena"
+                        v-model="user.password"
                         :rules="contrasenaRules"
                         label="Password"
                         outlined
@@ -61,7 +61,7 @@
 
 <script>
 import Header from "@/components/Header.vue";
-import axios from "axios";
+import newGoalService from "@/services/newGoalService";
 export default {
   components: {
     Header,
@@ -71,9 +71,9 @@ export default {
     visible: false,
     loading: false,
     alert: { show: false, message: "" },
-    usuario: {
-      username: "",
-      contrasena: "",
+    user: {
+      usuario: "",
+      password: "",
     },
     usernameRules: [
       (value) => !!value || "Éste campo es requerido",
@@ -108,11 +108,7 @@ export default {
   methods: {
     async login() {
       try {
-        const response = await axios.post("http://localhost:3000/auth/", {
-          usuario: this.usuario.username,
-          password: this.usuario.contrasena,
-        });
-
+        const response = await newGoalService.userLog(this.user)
         const token = response.data.token; // Asegúrate de que tu API retorne el token en esta propiedad
         sessionStorage.setItem("token", token);
         console.log("Inicio de sesión exitoso. Token guardado:", token);

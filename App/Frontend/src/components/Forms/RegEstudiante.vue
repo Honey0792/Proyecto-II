@@ -44,16 +44,29 @@
               <v-select
                 variant="outlined"
                 label="Nivel de Educación"
+                :items="nivelEducativo"
+                item-title="nombre_nv_edu"
+                item-value="id_nv_edu"
               ></v-select>
             </v-col>
             <v-col>
-              <v-select label="Nivel de Ingles" variant="outlined"></v-select>
+              <v-select
+               label="Nivel de Ingles" 
+               variant="outlined"
+               :items="levelEnglish"
+               item-title="nombre_nivel_ingles"
+               item-value="id_nivel_ingles"
+               ></v-select>
             </v-col>
             <v-col>
-              <v-select variant="outlined" label="Estado"> </v-select>
-            </v-col>
-            <v-col>
-              <v-select label="Alergias" variant="outlined"></v-select>
+              <v-select
+                variant="outlined"
+                label="Estado"
+                :items="estados"
+                item-title="nombre_estado"
+                item-value="id_estado"
+              >
+              </v-select>
             </v-col>
           </v-row>
         </v-container>
@@ -61,19 +74,31 @@
         <v-container>
           <v-row>
             <v-col>
+              <v-text-field variant="outlined" label="Representante"></v-text-field>
+            </v-col>
+            <v-col>
               <v-select
+               label="Discapacidad" 
+               variant="outlined"
+               :items="discapacidades"
+               item-title="nombre_discd"
+               item-value="id_discd"
+               ></v-select>
+            </v-col>
+            <v-col>
+              <v-select
+               variant="outlined"
+                label="genero"
+                :items="generos"
+                item-title="nombre_genero"
+                item-value="id_genero"
+               > </v-select>
+            </v-col>
+            <v-col>
+              <v-text-field
+                label="Persona que registro"
                 variant="outlined"
-                label="Representante"
-              ></v-select>
-            </v-col>
-            <v-col>
-              <v-select label="Discapacidad" variant="outlined"></v-select>
-            </v-col>
-            <v-col>
-              <v-select variant="outlined" label="Genero"> </v-select>
-            </v-col>
-            <v-col>
-              <v-select label="Persona que registro" variant="outlined"></v-select>
+              ></v-text-field>
             </v-col>
           </v-row>
         </v-container>
@@ -96,7 +121,10 @@
               </v-text-field>
             </v-col>
             <v-col>
-              <v-text-field variant="outlined" label="Encargado/s de retirar el Estudiante">
+              <v-text-field
+                variant="outlined"
+                label="Encargado/s de retirar el Estudiante"
+              >
               </v-text-field>
             </v-col>
           </v-row>
@@ -128,17 +156,21 @@
           <v-btn class="text-white bg-orange-lighten-2 mx-auto" type="submit"
             >Registrar</v-btn
           >
-          <v-btn @click="clear" class="text-white bg-orange-lighten-2 mx-auto"
-            >Limpiar</v-btn
-          >
+          <v-btn class="text-white bg-orange-lighten-2 mx-auto">Limpiar</v-btn>
         </v-container>
       </v-card-text>
     </v-card>
   </v-form>
 </template>
 <script>
+import newGoalService from "@/services/newGoalService";
 export default {
   data: () => ({
+    levelEnglish : [],
+    nivelEducativo : [],
+    discapacidades: [],
+    estados: [],
+    generos: [],
     estudiante: {
       nombres: "",
       apellidos: "",
@@ -154,7 +186,67 @@ export default {
       email: "",
     },
     activate: true,
+    prueba: null,
   }),
-  methods: [],
+  methods: {
+
+    async leerEstados() {
+     try {
+       const res = await newGoalService.getEstado();
+       this.estados = res.data.datos;
+     } catch (error) {
+      console.log('error')
+     }
+    },
+
+    async leerDiscapacidades(){
+      try {
+        const res = await newGoalService.getDiscapacidad()
+        this.discapacidades = res.data.datos
+     //   console.log(res.data)
+      }catch(error){
+        console.log(error)
+      }
+
+    },
+
+    async leerGeneros(){
+      try {
+        const res = await newGoalService.getGenero()
+        this.generos = res.data.datos
+      } catch (error) {
+        console.log(error)
+      }
+
+    },
+    async leerNivelEducativo(){
+      try {
+        const res = await newGoalService.getNivelEducacion()
+        console.log(res.data)
+        this.nivelEducativo = res.data.datos
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    async leerNivelIngles(){
+      try {
+        const res = await newGoalService.getNivelIngles()
+        console.log(res.data)
+        this.levelEnglish = res.data.datos
+      } catch (error) {
+        console.log(error)
+      }
+    }
+  },
+
+  mounted() {
+  this.leerEstados()
+  this.leerDiscapacidades()
+  this.leerGeneros()
+  this.leerNivelEducativo()
+  this.leerNivelIngles()
+    },
+
+
 };
 </script>

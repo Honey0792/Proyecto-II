@@ -1,5 +1,4 @@
 <template>
-
   <v-form>
     <v-card class="ma-7">
       <v-card-title class="bg-cyan-lighten-5">
@@ -21,6 +20,9 @@
               <v-select
                 variant="outlined"
                 label="Genero"
+                :items="generos"
+                item-title="nombre_genero"
+                item-value="id_genero"
               ></v-select>
             </v-col>
             <v-divider class="mx-8"></v-divider>
@@ -29,8 +31,7 @@
         <v-container>
           <v-row>
             <v-col>
-              <v-text-field variant="outlined" label="Cedula">
-              </v-text-field>
+              <v-text-field variant="outlined" label="Cedula"> </v-text-field>
             </v-col>
             <v-col>
               <v-text-field
@@ -52,16 +53,14 @@
         <v-container>
           <v-row class="mx-auto">
             <v-col class="d-flex">
-              <v-text-field type="" variant="outlined" label="Dirección">
-              </v-text-field>
+              <v-textarea rows="3" no-resize type="" variant="outlined" label="Dirección">
+              </v-textarea>
             </v-col>
           </v-row>
         </v-container>
         <v-divider class="mx-8"></v-divider>
         <v-container class="">
-          <v-row>
-
-          </v-row>
+          <v-row> </v-row>
         </v-container>
       </v-card-text>
     </v-card>
@@ -69,5 +68,25 @@
 </template>
 
 <script>
-    
+import newGoalService from "@/services/newGoalService";
+
+export default {
+  data: () => ({
+    generos: [],
+  }),
+
+  methods: {
+    async leerGeneros() {
+      try {
+        const res = await newGoalService.getGenero();
+        this.generos = res.data.datos;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+  },
+  mounted(){
+    this.leerGeneros()
+  }
+};
 </script>
