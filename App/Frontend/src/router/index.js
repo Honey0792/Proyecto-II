@@ -17,6 +17,11 @@ const router = createRouter({
       path: "/Nuketown",
       name: "Nuketown",
       component: () => import("../views/NuketownView.vue")
+    },
+    {
+      path: "/Estudiantes",
+      name: "Listado_Estudiantes",
+      component: () => import("../views/ListadoEstudiantesView.vue")
     }
   ],
 });

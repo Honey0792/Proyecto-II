@@ -111,7 +111,8 @@ export default {
         const response = await newGoalService.userLog(this.user)
         const token = response.data.token; // Asegúrate de que tu API retorne el token en esta propiedad
         sessionStorage.setItem("token", token);
-        console.log("Inicio de sesión exitoso. Token guardado:", token);
+        this.$router.push('/Nuketown')
+        
       } catch (err) {
         this.error = "Error al iniciar sesión. Verifica tus credenciales.";
         console.error(err);

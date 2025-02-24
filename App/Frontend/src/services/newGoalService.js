@@ -6,7 +6,15 @@ export default {
   userLog(value) {
     return newGoalApi().post('/auth', value)
   },
+
+  postEstudiante(value){
+    return newGoalApi().post('/estudiantes', value)
+  },
   //GET
+  getNacionalidad(){
+    return newGoalApi().get('/select/nacionalidad')
+  },
+
   getEstado(){
     return newGoalApi().get('/select/estado')
   },
@@ -25,6 +33,12 @@ export default {
   getNivelIngles(){
     return newGoalApi().get('/select/nivel-ingles')
   },
+
+  getEstudiante(){
+    return newGoalApi().get('/estudiantes')
+  }
+
+
   //DELETE
   //PUT
 };

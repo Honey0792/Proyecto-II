@@ -1,5 +1,5 @@
 <template>
-  <v-form>
+  <v-form @submit.prevent="registrarEstudiante">
     <v-card class="ma-7">
       <v-card-title class="bg-cyan-lighten-5">
         Registro de Estudiante
@@ -18,11 +18,16 @@
               ></v-text-field>
             </v-col>
             <v-col>
-              <v-text-field variant="outlined" label="Apellidos"></v-text-field>
+              <v-text-field
+                variant="outlined"
+                v-model="estudiante.apellido"
+                label="Apellidos"
+              >
+              </v-text-field>
             </v-col>
             <v-col>
               <v-text-field
-                v-model="estudiante.fechaNacimiento"
+                v-model="estudiante.fecha_canimiento"
                 variant="outlined"
                 type="date"
                 label="Fecha de Nacimiento"
@@ -35,8 +40,8 @@
                 label="Edad"
               ></v-text-field>
             </v-col>
-            <v-divider class="mx-8"></v-divider>
           </v-row>
+          <v-divider class="mx-8"></v-divider>
         </v-container>
         <v-container>
           <v-row>
@@ -47,16 +52,18 @@
                 :items="nivelEducativo"
                 item-title="nombre_nv_edu"
                 item-value="id_nv_edu"
+                v-model="estudiante.nivel_edu"
               ></v-select>
             </v-col>
             <v-col>
               <v-select
-               label="Nivel de Ingles" 
-               variant="outlined"
-               :items="levelEnglish"
-               item-title="nombre_nivel_ingles"
-               item-value="id_nivel_ingles"
-               ></v-select>
+                label="Nivel de Ingles"
+                variant="outlined"
+                :items="levelEnglish"
+                item-title="nombre_nivel_ingles"
+                item-value="id_nivel_ingles"
+                v-model="estudiante.nivel_ingles"
+              ></v-select>
             </v-col>
             <v-col>
               <v-select
@@ -65,7 +72,21 @@
                 :items="estados"
                 item-title="nombre_estado"
                 item-value="id_estado"
+                v-model="estudiante.estado"
               >
+              </v-select>
+            </v-col>
+            <v-col>
+              <v-select 
+              variant="outlined"
+              label="Nacionalidad"
+              :items="nacionalidades"
+              item-title="nombre_ncd"
+              item-value="id_ncd"
+              v-model="estudiante.nacionalidad"
+
+              >
+
               </v-select>
             </v-col>
           </v-row>
@@ -74,30 +95,31 @@
         <v-container>
           <v-row>
             <v-col>
-              <v-text-field variant="outlined" label="Representante"></v-text-field>
+              <v-select
+                label="Discapacidad"
+                variant="outlined"
+                :items="discapacidades"
+                item-title="nombre_discd"
+                item-value="id_discd"
+                v-model="estudiante.discapacidad"
+              ></v-select>
             </v-col>
             <v-col>
               <v-select
-               label="Discapacidad" 
-               variant="outlined"
-               :items="discapacidades"
-               item-title="nombre_discd"
-               item-value="id_discd"
-               ></v-select>
-            </v-col>
-            <v-col>
-              <v-select
-               variant="outlined"
+                variant="outlined"
                 label="genero"
                 :items="generos"
                 item-title="nombre_genero"
                 item-value="id_genero"
-               > </v-select>
+                v-model="estudiante.genero"
+              >
+              </v-select>
             </v-col>
             <v-col>
               <v-text-field
                 label="Persona que registro"
                 variant="outlined"
+                v-model="estudiante.persona"
               ></v-text-field>
             </v-col>
           </v-row>
@@ -113,17 +135,23 @@
                 variant="outlined"
                 hint="Desmarque la casilla si el estudiante no posee cedula"
                 label="Cedula"
+                v-model="estudiante.cedula"
               >
               </v-text-field>
             </v-col>
             <v-col>
-              <v-text-field variant="outlined" label="Contacto de emergencia">
+              <v-text-field
+                v-model="estudiante.contacto_emergencia"
+                variant="outlined"
+                label="Contacto de emergencia"
+              >
               </v-text-field>
             </v-col>
             <v-col>
               <v-text-field
                 variant="outlined"
                 label="Encargado/s de retirar el Estudiante"
+                v-model="estudiante.quien_retira"
               >
               </v-text-field>
             </v-col>
@@ -136,14 +164,20 @@
               <v-text-field
                 variant="outlined"
                 label="Numero de Telefono"
+                v-model="estudiante.telefono"
               ></v-text-field>
             </v-col>
             <v-col>
-              <v-text-field variant="outlined" label="Direccion">
+              <v-text-field
+                v-model="estudiante.direccion"
+                variant="outlined"
+                label="Direccion"
+              >
               </v-text-field>
             </v-col>
             <v-col>
               <v-text-field
+                v-model="estudiante.correo"
                 type="email"
                 variant="outlined"
                 label="Correo Electronico"
@@ -166,87 +200,109 @@
 import newGoalService from "@/services/newGoalService";
 export default {
   data: () => ({
-    levelEnglish : [],
-    nivelEducativo : [],
+    nacionalidades: [],
+    levelEnglish: [],
+    nivelEducativo: [],
     discapacidades: [],
     estados: [],
     generos: [],
     estudiante: {
-      nombres: "",
-      apellidos: "",
-      cedula: "",
-      fechaNacimiento: "",
-      edad: "",
-      nivelIngles: "",
-      gradoEscolar: "",
-      alergias: "",
-      ocupacion: "",
-      direccion: "",
-      numTlf: "",
-      email: "",
+      estado: null, //Requerido
+      discapacidad: null, //Opcional
+      genero: null, //Requerido
+      nivel_edu: null, //Requerido
+      nacionalidad: 188, //Requerido
+      nivel_ingles: null, //Opcional pronto requerido
+      persona: null, //Requerido
+      nombre: "", //Requerido
+      apellido: "", //Requerido
+      fecha_canimiento: null, //Requerido
+      cedula: "", //Requerido pronto Opcional
+      direccion: "", //Requerido
+      telefono: "", //Requerido
+      correo: "", //Requerido
+      contacto_emergencia: "", //Requerido
+      quien_retira: "", //Opcional
+      // edad: null,
     },
     activate: true,
     prueba: null,
   }),
   methods: {
+    // PETICIONES GET
+    async leerNacionalidades() {
+      try {
+        const res = await newGoalService.getNacionalidad();
+        this.nacionalidades = res.data.datos;
+        console.log(this.nacionalidades)
+      } catch (error) {
+        console.log("error");
+      }
+    },
 
     async leerEstados() {
-     try {
-       const res = await newGoalService.getEstado();
-       this.estados = res.data.datos;
-     } catch (error) {
-      console.log('error')
-     }
-    },
-
-    async leerDiscapacidades(){
       try {
-        const res = await newGoalService.getDiscapacidad()
-        this.discapacidades = res.data.datos
-     //   console.log(res.data)
-      }catch(error){
-        console.log(error)
-      }
-
-    },
-
-    async leerGeneros(){
-      try {
-        const res = await newGoalService.getGenero()
-        this.generos = res.data.datos
+        const res = await newGoalService.getEstado();
+        this.estados = res.data.datos;
       } catch (error) {
-        console.log(error)
+        console.log("error");
       }
+    },
 
-    },
-    async leerNivelEducativo(){
+    async leerDiscapacidades() {
       try {
-        const res = await newGoalService.getNivelEducacion()
-        console.log(res.data)
-        this.nivelEducativo = res.data.datos
+        const res = await newGoalService.getDiscapacidad();
+        this.discapacidades = res.data.datos;
+        //   console.log(res.data)
       } catch (error) {
-        console.log(error)
+        console.log(error);
       }
     },
-    async leerNivelIngles(){
+
+    async leerGeneros() {
       try {
-        const res = await newGoalService.getNivelIngles()
-        console.log(res.data)
-        this.levelEnglish = res.data.datos
+        const res = await newGoalService.getGenero();
+        this.generos = res.data.datos;
       } catch (error) {
-        console.log(error)
+        console.log(error);
       }
-    }
+    },
+    async leerNivelEducativo() {
+      try {
+        const res = await newGoalService.getNivelEducacion();
+        console.log(res.data);
+        this.nivelEducativo = res.data.datos;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async leerNivelIngles() {
+      try {
+        const res = await newGoalService.getNivelIngles();
+        console.log(res.data);
+        this.levelEnglish = res.data.datos;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    // PETICIONES POST
+    async registrarEstudiante() {
+      console.log(this.estudiante)
+      try {
+        const res = await newGoalService.postEstudiante(this.estudiante);
+      } catch (error) {
+        console.log(error);
+      }
+    },
   },
 
   mounted() {
-  this.leerEstados()
-  this.leerDiscapacidades()
-  this.leerGeneros()
-  this.leerNivelEducativo()
-  this.leerNivelIngles()
-    },
-
-
+    this.leerEstados();
+    this.leerDiscapacidades();
+    this.leerGeneros();
+    this.leerNivelEducativo();
+    this.leerNivelIngles();
+    this.leerNacionalidades()
+  },
 };
 </script>
