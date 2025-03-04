@@ -26,7 +26,20 @@
     >
     <v-menu>
       <template v-slot:activator="{ props }">
-      <v-list :props :items="items"> </v-list>
+      <v-list :props> 
+        <v-list-item
+        to="/Main">
+          Home
+        </v-list-item>
+        <v-list-item
+        to="/Nuketown">
+          Nuketown
+        </v-list-item>
+        <v-list-item
+        to="/Estudiantes">
+          Estudiantes
+        </v-list-item>
+      </v-list>
     </template>
     </v-menu>
     </v-navigation-drawer>

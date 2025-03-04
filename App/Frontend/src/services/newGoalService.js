@@ -10,6 +10,10 @@ export default {
   postEstudiante(value){
     return newGoalApi().post('/estudiantes', value)
   },
+
+  postRepresentante(value){
+    return newGoalApi().post('/representantes', value)
+  },
   //GET
   getNacionalidad(){
     return newGoalApi().get('/select/nacionalidad')
@@ -36,6 +40,14 @@ export default {
 
   getEstudiante(){
     return newGoalApi().get('/estudiantes')
+  },
+
+  getEstudianteById(id){
+    return newGoalApi().get(`/estudiantes/${id}`)
+  },
+
+  getRepresentante(){
+    return newGoalApi().get('/representantes')
   }
 
 

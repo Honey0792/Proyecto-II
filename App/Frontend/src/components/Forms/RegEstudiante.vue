@@ -1,6 +1,6 @@
 <template>
-  <v-form @submit.prevent="registrarEstudiante">
-    <v-card class="ma-7">
+  <v-card class="ma-7">
+      <v-form @submit.prevent="registrarEstudiante">
       <v-card-title class="bg-cyan-lighten-5">
         Registro de Estudiante
       </v-card-title>
@@ -193,8 +193,8 @@
           <v-btn class="text-white bg-orange-lighten-2 mx-auto">Limpiar</v-btn>
         </v-container>
       </v-card-text>
+    </v-form>
     </v-card>
-  </v-form>
 </template>
 <script>
 import newGoalService from "@/services/newGoalService";
@@ -217,12 +217,12 @@ export default {
       nombre: "", //Requerido
       apellido: "", //Requerido
       fecha_canimiento: null, //Requerido
-      cedula: "", //Requerido pronto Opcional
+      cedula: null, //Requerido pronto Opcional
       direccion: "", //Requerido
       telefono: "", //Requerido
       correo: "", //Requerido
       contacto_emergencia: "", //Requerido
-      quien_retira: "", //Opcional
+      quien_retira: null, //Opcional
       // edad: null,
     },
     activate: true,

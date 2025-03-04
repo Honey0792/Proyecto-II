@@ -22,6 +22,16 @@ const router = createRouter({
       path: "/Estudiantes",
       name: "Listado_Estudiantes",
       component: () => import("../views/ListadoEstudiantesView.vue")
+    },
+    {
+      path: "/Representantes",
+      name: "Listado_Representantes",
+      component: () => import("../views/ListadoRepresentantesView.vue")
+    },
+    {
+      path: "/registrar/cliente",
+      name: "Registro_Clientes",
+      component: () => import("../views/RegistrarClienteView.vue")
     }
   ],
 });

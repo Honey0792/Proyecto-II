@@ -15,10 +15,10 @@ export default {
 
   methods: {
 
-    async obtenerEstudiante() {
+    async obtenerEstudiantes() {
       try {
-        console.log('hola')
         const res = await newGoalService.getEstudiante();
+        console.log(res)
         this.estudiante = res.data.datos;
         console.log(this.estudiante)
       } catch (error) {
@@ -26,9 +26,8 @@ export default {
       }
     },
   },
-
   mounted(){
-    this.obtenerEstudiante()
+    this.obtenerEstudiantes()
   }
 };
 
