@@ -9,22 +9,22 @@ const router = createRouter({
       component: () => import("../views/LoginView.vue"),
     },
     {
-      path: "/Main",
+      path: "/main",
       name: "Main",
       component: () => import("../views/MainView.Vue")
     },
     {
-      path: "/Nuketown",
+      path: "/nuketown",
       name: "Nuketown",
       component: () => import("../views/NuketownView.vue")
     },
     {
-      path: "/Estudiantes",
+      path: "/estudiantes",
       name: "Listado_Estudiantes",
       component: () => import("../views/ListadoEstudiantesView.vue")
     },
     {
-      path: "/Representantes",
+      path: "/representantes",
       name: "Listado_Representantes",
       component: () => import("../views/ListadoRepresentantesView.vue")
     },

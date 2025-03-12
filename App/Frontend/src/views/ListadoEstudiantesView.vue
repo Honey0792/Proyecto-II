@@ -1,13 +1,13 @@
 <template>
-  <listaEstudiantes />
+  <TablaEstudiantes />
 </template>
 
 <script>
-import listaEstudiantes from "@/components/Lists/listaEstudiantes.vue";
+import TablaEstudiantes from "@/components/Tables/tablaEstudiantes.vue";
 
 export default {
   components: {
-    listaEstudiantes,
+    TablaEstudiantes,
   },
 };
 </script>

@@ -1,6 +1,6 @@
 <template>
   <div id="router">
-    <NavBar/>
+    <NavBar v-if="!isLoginPage"/>
     <router-view v-slot="{ Component }">
       <component :is="Component" />
     </router-view>
@@ -18,6 +18,13 @@ export default {
     Footer,
     NavBar,
   },
+  computed: {
+    // Computed property para verificar si la ruta actual es 'login'
+    isLoginPage() {
+      return this.$route.name === 'Login';
+    },
+  },
+
 };
 </script>
 

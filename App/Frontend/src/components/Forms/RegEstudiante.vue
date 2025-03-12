@@ -117,9 +117,9 @@
             </v-col>
             <v-col>
               <v-text-field
-                label="Persona que registro"
+                label="representante"
                 variant="outlined"
-                v-model="estudiante.persona"
+                v-model="estudiante.representante"
               ></v-text-field>
             </v-col>
           </v-row>
@@ -207,13 +207,13 @@ export default {
     estados: [],
     generos: [],
     estudiante: {
+      representante: null, //Requerido
       estado: null, //Requerido
       discapacidad: null, //Opcional
       genero: null, //Requerido
       nivel_edu: null, //Requerido
       nacionalidad: 188, //Requerido
       nivel_ingles: null, //Opcional pronto requerido
-      persona: null, //Requerido
       nombre: "", //Requerido
       apellido: "", //Requerido
       fecha_canimiento: null, //Requerido

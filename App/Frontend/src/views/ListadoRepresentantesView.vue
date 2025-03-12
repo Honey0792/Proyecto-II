@@ -1,12 +1,12 @@
 <template>
-  <listRepresentantes />
+  <TablaRepresentantes />
 </template>
 
 <script>
-import listRepresentantes from "@/components/Lists/listRepresentantes.vue";
+import TablaRepresentantes from "@/components/Tables/tablaRepresentantes.vue";
 export default {
   components: {
-    listRepresentantes,
+    TablaRepresentantes,
   },
 };
 </script>

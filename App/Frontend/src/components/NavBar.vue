@@ -41,6 +41,10 @@
         </v-list-item>
       </v-list>
     </template>
+    <v-list>
+      <v-list-item @click="accion1">Opción 1</v-list-item>
+      <v-list-item @click="accion2">Opción 2</v-list-item>
+    </v-list>
     </v-menu>
     </v-navigation-drawer>
     <v-main style="height: 20px"> </v-main>
@@ -51,24 +55,6 @@ export default {
   data: () => ({
     drawer: false,
     group: null,
-    items: [
-      {
-        title: "Foo",
-        value: "foo",
-      },
-      {
-        title: "Bar",
-        value: "bar",
-      },
-      {
-        title: "Fizz",
-        value: "fizz",
-      },
-      {
-        title: "Buzz",
-        value: "buzz",
-      },
-    ],
   }),
 
   watch: {

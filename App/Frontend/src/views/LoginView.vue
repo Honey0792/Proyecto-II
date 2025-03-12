@@ -1,8 +1,22 @@
 <template>
   <Header />
-
-  <v-container>
-    <v-form @submit.prevent="login">
+  <v-dialog
+      v-model="alert.show"
+      width="auto"
+      class="justify-center align-center"
+    >
+      <v-alert
+        v-model="alert.show"
+        :color="alert.color"
+        variant="elevated"
+        prominent
+        closable
+        width="400px"
+        >{{ alert.message }}</v-alert
+      >
+    </v-dialog>
+  <v-container >
+    <v-form @submit.prevent="login" class="d-flex">
       <v-row align="center" justify="center">
         <v-col cols="12" sm="10">
           <v-card class="elevation-6 mt-10">
@@ -48,8 +62,8 @@
                   </v-row>
                 </v-card-text>
               </v-col>
-              <v-col cols="12" md="6" class="kbg rounded-bl-xl">
-                <div style="text-align: center; padding: 275px 0"></div>
+              <v-col cols="12" md="6" class="kbg">
+                <div style="text-align: center; padding: 290px 0"></div>
               </v-col>
             </v-row>
           </v-card>
@@ -108,12 +122,23 @@ export default {
   methods: {
     async login() {
       try {
-        const response = await newGoalService.userLog(this.user)
-        const token = response.data.token; // Asegúrate de que tu API retorne el token en esta propiedad
+        const res = await newGoalService.userLog(this.user)
+        const token = res.data.token; // Asegúrate de que tu API retorne el token en esta propiedad
         sessionStorage.setItem("token", token);
-        this.$router.push('/Nuketown')
+        console.log(res)
+        // this.alert = {
+        //   show: true,
+        //   color: 'success',
+        //   message: "Sesion Iniciada Exitosamente",
+        // }
+        this.$router.push('/main')
         
       } catch (err) {
+        this.alert = {
+          show: true,
+          color: 'warning',
+          message: "Error al iniciar sesión. Verifica tus credenciales." ,
+        }
         this.error = "Error al iniciar sesión. Verifica tus credenciales.";
         console.error(err);
       }
@@ -124,7 +149,7 @@ export default {
 
 <style scoped>
 .kbg {
-  background-image: url(../assets/portada.jpg);
+  background-image: url(../assets/Login_img.webp);
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
