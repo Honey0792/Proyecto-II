@@ -58,9 +58,14 @@ export default {
   //ESTUDIANTES
   putEstudiante(value){
     return newGoalApi().put('/estudiantes', value)
-  }
+  },
   
   
   //DELETE
+
+  //ESTUDIANTES
+  deleteEstudiante(value){
+    return newGoalApi().delete('/estudiantes', value)
+  }
 
 };

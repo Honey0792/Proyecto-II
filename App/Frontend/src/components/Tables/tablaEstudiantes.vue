@@ -8,7 +8,12 @@
     >Añadir</v-btn
   >
   <v-card class="d-flex mx-10 ma-7">
-    <v-data-table height="460" :headers="headers" :items="estudiantes">
+    <v-data-table
+      height="460"
+      :headers="headers"
+      :sort-by="[{ key: 'id_etd', order: 'desc' }]"
+      :items="estudiantes"
+    >
       <template v-slot:item.nombre_etd="{ item }">
         {{ item.nombre_etd }}
       </template>
@@ -26,43 +31,88 @@
             size="small"
             @click="edita(item.id_etd)"
           ></v-icon>
-          <v-icon color="medium-emphasis" icon="mdi-eye" size="small"></v-icon>
+          <v-icon
+            color="medium-emphasis"
+            icon="mdi-eye"
+            size="small"
+            @click="ver(item.id_etd)"
+          ></v-icon>
           <v-icon
             color="medium-emphasis"
             icon="mdi-delete"
             size="small"
-            @click="remove(item.id)"
+            @click="eliminar(item.id_etd)"
           ></v-icon>
         </div>
       </template>
     </v-data-table>
   </v-card>
 
-  <v-dialog  v-model="this.dialog">
+  <v-dialog v-model="this.dialog_1">
     <v-icon
-              icon="mdi-close"
-              class="position-absolute right-0"
-              color="white"
-            ></v-icon>
+      icon="mdi-close"
+      class="position-absolute right-0"
+      color="white"
+      @click="this.dialog_1 = false"
+    ></v-icon>
     <CartaEditEstudiante :id="id_etd" />
   </v-dialog>
+  <v-dialog v-model="this.dialog_2">
+    <v-icon
+      icon="mdi-close"
+      class="position-absolute right-0"
+      color="white"
+      @click="this.dialog_2 = false"
+    ></v-icon>
+    <CartaVerEstudiante :id="id_etd" />
+  </v-dialog>
+  <v-dialog
+      v-model="this.dialog_3"
+      width="auto"
+    >
+      <v-card
+        max-width="400"
+        prepend-icon="mdi-delete-alert"
+        text="¿Estas Seguro/a de querer eliminar a este estdiante?"
+        title="Oprimiste eliminar"
+        color="warning"
+      >
+        <template v-slot:actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            class="ms-auto"
+            text="Cancelar"
+            @click="this.dialog_3 = false"
+          ></v-btn>
+          <v-btn
+            class="ms-auto"
+            text="Ok"
+            @click="eliminarEstudiante"
+          ></v-btn>
+        </template>
+      </v-card>
+    </v-dialog>
 </template>
 
 <script>
 import newGoalService from "@/services/newGoalService";
 import { getCurrentInstance } from "vue";
 import CartaEditEstudiante from "../Cards/CartaEditEstudiante.vue";
+import CartaVerEstudiante from "../Cards/CartaVerEstudiante.vue";
 
 export default {
   components: {
     CartaEditEstudiante,
+    CartaVerEstudiante,
   },
   data: () => ({
-    id_etd : null,
-    dialog: false,
+    id_etd: null,
+    dialog_1: false,
+    dialog_2: false,
+    dialog_3: false,
     estudiantes: [], // Lista de estudiantes
     headers: [
-    { title: "ID", key: "id_etd" }, // Columna para el estado
+      { title: "ID", key: "id_etd" }, // Columna para el estado
       { title: "Estado", key: "estado" }, // Columna para el estado
       { title: "Nombre", key: "nombre_etd" }, // Columna para el nombre
       { title: "Apellido", key: "apellido_etd" }, // Columna para el apellido
@@ -82,11 +132,32 @@ export default {
         console.log(error);
       }
     },
-    edita(id){
-      this.id_etd = id
-    console.log('hola')
-    this.dialog=true
-  },
+    edita(id) {
+      this.id_etd = id;
+      console.log("hola");
+      this.dialog_1 = true;
+    },
+
+    ver(id) {
+      this.id_etd = id;
+      console.log("hola");
+      this.dialog_2 = true;
+    },
+    eliminar(id){
+      this.id_etd = id;
+      console.log("hola");
+      this.dialog_3 = true;
+      console.log(id)
+
+    },
+
+    async eliminarEstudiante (){
+      try {
+// const res = await newGoalService.deleteEstudiante(id_estudiante)        
+      } catch (error) {
+        console.log(error)
+      }
+    },
 
     getcolor(estado) {
       if (estado == "Activo") {
@@ -96,7 +167,6 @@ export default {
       }
     },
   },
-
 
   mounted() {
     this.obtenerEstudiantes();
