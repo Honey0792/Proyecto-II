@@ -1,4 +1,19 @@
 <template>
+    <v-dialog
+      v-model="alert.show"
+      width="auto"
+      class="justify-center align-center"
+    >
+      <v-alert
+        v-model="alert.show"
+        :color="alert.color"
+        variant="elevated"
+        prominent
+        closable
+        width="400px"
+        >{{ alert.message }}</v-alert
+      >
+    </v-dialog>
   <v-card class="ma-7">
       <v-form @submit.prevent="registrarEstudiante">
       <v-card-title class="bg-cyan-lighten-5">
@@ -200,6 +215,7 @@
 import newGoalService from "@/services/newGoalService";
 export default {
   data: () => ({
+    alert: { show: false, message: "" },
     nacionalidades: [],
     levelEnglish: [],
     nivelEducativo: [],
@@ -290,8 +306,19 @@ export default {
       console.log(this.estudiante)
       try {
         const res = await newGoalService.postEstudiante(this.estudiante);
+         this.alert = {
+          show: true,
+          color: 'success',
+          message: "Estudiante registrado correctamente",
+        }
       } catch (error) {
         console.log(error);
+        this.alert = {
+          show: true,
+          color: 'warning',
+          message: "Estudiante no Registrado",
+        }
+        
       }
     },
   },

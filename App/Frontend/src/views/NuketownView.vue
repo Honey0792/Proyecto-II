@@ -76,18 +76,6 @@
   <div class="d-flex justify-center">
 <RegPeriodo />
 </div>
-<v-menu>
-    <!-- Activador (elemento que activa el menú) -->
-    <template v-slot:activator="{ props }">
-      <v-btn v-bind="props">Menú</v-btn>
-    </template>
-
-    <!-- Contenido del menú -->
-    <v-list>
-      <v-list-item @click="accion1">Opción 1</v-list-item>
-      <v-list-item @click="accion2">Opción 2</v-list-item>
-    </v-list>
-  </v-menu>
 </template>
 
 <script>

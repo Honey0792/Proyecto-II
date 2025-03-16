@@ -15,6 +15,8 @@ export default {
     return newGoalApi().post('/representantes', value)
   },
   //GET
+
+  // SELECTS
   getNacionalidad(){
     return newGoalApi().get('/select/nacionalidad')
   },
@@ -37,7 +39,7 @@ export default {
   getNivelIngles(){
     return newGoalApi().get('/select/nivel-ingles')
   },
-
+// ESTUDIANTES
   getEstudiante(){
     return newGoalApi().get('/estudiantes')
   },
@@ -45,12 +47,20 @@ export default {
   getEstudianteById(id){
     return newGoalApi().get(`/estudiantes/${id}`)
   },
-
+// REPRESENTANTES 
   getRepresentante(){
     return newGoalApi().get('/representantes')
-  }
+  },
 
 
-  //DELETE
   //PUT
+
+  //ESTUDIANTES
+  putEstudiante(value){
+    return newGoalApi().put('/estudiantes', value)
+  }
+  
+  
+  //DELETE
+
 };

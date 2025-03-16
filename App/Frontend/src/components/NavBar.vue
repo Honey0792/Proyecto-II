@@ -1,5 +1,5 @@
 <template>
-  <v-layout>
+  <v-layout class="ma-3">
     <v-app-bar color="#FF9100">
       <v-app-bar-nav-icon
         variant="text"
@@ -24,28 +24,20 @@
       :location="$vuetify.display.mobile ? 'bottom' : undefined"
       temporary
     >
-    <v-menu>
-      <template v-slot:activator="{ props }">
-      <v-list :props> 
-        <v-list-item
-        to="/Main">
-          Home
-        </v-list-item>
-        <v-list-item
-        to="/Nuketown">
-          Nuketown
-        </v-list-item>
-        <v-list-item
-        to="/Estudiantes">
-          Estudiantes
-        </v-list-item>
-      </v-list>
-    </template>
-    <v-list>
-      <v-list-item @click="accion1">Opción 1</v-list-item>
-      <v-list-item @click="accion2">Opción 2</v-list-item>
-    </v-list>
-    </v-menu>
+      <v-menu>
+        <template v-slot:activator="{ props }">
+          <v-list :props>
+            <v-list-item to="/main"> Home </v-list-item>
+            <v-list-item to="/nuketown"> Nuketown </v-list-item>
+            <v-list-item to="/estudiantes"> Estudiantes </v-list-item>
+            <v-list-item to="/representantes"> Representantes </v-list-item>
+          </v-list>
+        </template>
+        <v-list>
+          <v-list-item @click="accion1">Opción 1</v-list-item>
+          <v-list-item @click="accion2">Opción 2</v-list-item>
+        </v-list>
+      </v-menu>
     </v-navigation-drawer>
     <v-main style="height: 20px"> </v-main>
   </v-layout>

@@ -32,9 +32,9 @@
       </v-col>
       <v-col>
         <v-card variant="" class="mx-auto" width="600" height="231">
-          <div class="scroll-overlay">
+          <!-- <div class="scroll-overlay">
         <TablaEstudiantes />
-      </div>
+      </div> -->
         </v-card>
       </v-col>
     </v-row>

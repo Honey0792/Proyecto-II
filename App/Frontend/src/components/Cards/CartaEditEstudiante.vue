@@ -1,6 +1,6 @@
 <template>
   <v-card class="ma-7">
-      <v-form>
+      <v-form @submit="modificarEstudiante">
       <v-card-title class="bg-cyan-lighten-5">
         Registro de Estudiante
       </v-card-title>
@@ -12,7 +12,7 @@
           <v-row>
             <v-col>
               <v-text-field
-                v-model="estudiante.nombre_etd"
+                v-model="estudiante.nombre"
                 variant="plain"
                 label="Nombres"
               ></v-text-field>
@@ -20,23 +20,23 @@
             <v-col>
               <v-text-field
                 variant="plain"
-                v-model="estudiante.apellido_etd"
+                v-model="estudiante.apellido"
                 label="Apellidos"
               >
               </v-text-field>
             </v-col>
             <v-col>
               <v-text-field
-                v-model="estudiante.fecha_nacimiento_etd"
+                v-model="estudiante.fecha_canimiento.split('T')[0]"
                 variant="plain"
-                type=""
+                type="date"
                 label="Fecha de Nacimiento"
               ></v-text-field>
             </v-col>
             <v-col>
               <v-text-field
                 variant="plain"
-                type="number"
+                type=null
                 label="Edad"
               ></v-text-field>
             </v-col>
@@ -52,14 +52,14 @@
                 :items="nivelEducativo"
                 item-title="nombre_nv_edu"
                 item-value="id_nv_edu"
-                v-model="estudiante.id_nv_edu"
+                v-model="estudiante.nivel_edu"
               ></v-select>
             </v-col>
             <v-col>
               <v-select
                 label="Nivel de Ingles"
                 variant="plain"
-                v-model="estudiante.id_nivel_ingles"
+                v-model="estudiante.nivel_ingles"
                 :items="levelEnglish"
                 item-title="nombre_nivel_ingles"
                 item-value="id_nivel_ingles"
@@ -69,7 +69,7 @@
               <v-select
                 variant="plain"
                 label="Estado"
-                v-model="estudiante.id_estado"
+                v-model="estudiante.estado"
                 :items="estados"
                 item-title="nombre_estado"
                 item-value="id_estado"
@@ -80,7 +80,7 @@
               <v-select 
               variant="plain"
               label="Nacionalidad"
-              v-model="estudiante.id_ncd"
+              v-model="estudiante.nacionalidad"
               :items="nacionalidades"
               item-title="nombre_ncd"
               item-value="id_ncd"
@@ -97,7 +97,7 @@
               <v-select
                 label="Discapacidad"
                 variant="plain"
-                v-model="estudiante.id_discd"
+                v-model="estudiante.discapacidad"
                 :items="discapacidades"
                 item-title="nombre_discd"
                 item-value="id_discd"
@@ -107,7 +107,7 @@
               <v-select
                 variant="plain"
                 label="genero"
-                v-model="estudiante.id_genero"
+                v-model="estudiante.genero"
                 :items="generos"
                 item-title="nombre_genero"
                 item-value="id_genero"
@@ -116,9 +116,9 @@
             </v-col>
             <v-col>
               <v-text-field
-                label="Persona que registro"
+                label="Representante"
                 variant="plain"
-                v-model="estudiante.id_persona"
+                v-model="estudiante.representante"
               ></v-text-field>
             </v-col>
           </v-row>
@@ -132,13 +132,13 @@
                 variant="plain"
                 hint="Desmarque la casilla si el estudiante no posee cedula"
                 label="Cedula"
-                v-model="estudiante.cedula_etd"
+                v-model="estudiante.cedula"
               >
               </v-text-field>
             </v-col>
             <v-col>
               <v-text-field
-                v-model="estudiante.contacto_emergencia_etd"
+                v-model="estudiante.contacto_emergencia"
                 variant="plain"
                 label="Contacto de emergencia"
               >
@@ -148,7 +148,7 @@
               <v-text-field
                 variant="plain"
                 label="Encargado/s de retirar el Estudiante"
-                v-model="estudiante.quien_retira_etd"
+                v-model="estudiante.quien_retira"
               >
               </v-text-field>
             </v-col>
@@ -161,12 +161,12 @@
               <v-text-field
                 variant="plain"
                 label="Numero de Telefono"
-                v-model="estudiante.telefono_etd"
+                v-model="estudiante.telefono"
               ></v-text-field>
             </v-col>
             <v-col>
               <v-text-field
-                v-model="estudiante.direccion_etd"
+                v-model="estudiante.direccion"
                 variant="plain"
                 label="Direccion"
               >
@@ -174,7 +174,7 @@
             </v-col>
             <v-col>
               <v-text-field
-                v-model="estudiante.correo_etd"
+                v-model="estudiante.correo"
                 type="email"
                 variant="plain"
                 label="Correo Electronico"
@@ -184,6 +184,8 @@
           </v-row>
         </v-container>
         <v-container class="d-flex aling-center">
+          <v-btn type="submit"
+          >Guardar</v-btn>
         </v-container>
       </v-card-text>
     </v-form>
@@ -194,7 +196,14 @@
 <script>
 import newGoalService from '@/services/newGoalService';
 export default {
+  props:{
+    id: {
+      type : Number,
+      required : true
+    }
+  },
 data: () => ({
+
   nacionalidades: [],
     levelEnglish: [],
     nivelEducativo: [],
@@ -202,42 +211,66 @@ data: () => ({
     estados: [],
     generos: [],
     estudiante:{
-      id_estado: null, //Requerido
-      id_discd: null, //Opcional
-      id_genero: null, //Requerido
-     id_nv_edu: null, //Requerido
-      id_ncd: null, //Requerido
-      id_nivel_ingles: null, //Opcional pronto requerido
-      id_persona: null, //Requerido
-      nombre_etd:null, //Requerido
-      apellido_etd:null, //Requerido
-      fecha_nacimiento_etd: null, //Requerido
-      cedula_etd: null, //Requerido pronto Opcional
-      direccion_etd:null, //Requerido
-      telefono_etd:null, //Requerido
-      correo_etd:null, //Requerido
-      contacto_emergencia_etd: null, //Requerido
-      quien_retira_etd: null, //Opcional
-      // edad: null,
-    },
+    id_estudiante: null,
+    representante: null,
+    estado: null, //Devuelve el nombre pero no el id, necesitamos el id
+    discapacidad: null, //Devuelve el nombre pero no el id, necesitamos el id
+    genero: null,
+    nivel_edu: null,
+    nacionalidad: null,
+    nivel_ingles: null,
+    nombre: null,
+    apellido: null,
+    fecha_canimiento: "",
+    cedula: null,
+    direccion: null,
+    telefono: null,
+    correo: null,
+    contacto_emergencia: null,
+    quien_retira: null
+}
 }),
 methods: {
 
 
-async obtenerEstudianteById (){
+async obtenerEstudianteById (id){
+  id = this.id
 try {
 
-    const res = await newGoalService.getEstudianteById(1)
-    const datosApi = res.data.datos;
-
+    const res = await newGoalService.getEstudianteById(id)
+  
+    const datosApi = res.data[0];
+    
+    
+    this.estudiante.id_estudiante = datosApi.id_etd
+    // this.estudiante.representante = datosApi.
+    //  this.estudiante.estado = datosApi.contacto_emergencia_etd
+    //  this.estudiante.discapacidad = datosApi.correo_etd
+    //  this.estudiante.genero = datosApi.direccion_etd
+//  this.estudiante.nivel_edu = datosApi.nombre_discapacidad
+//  this.estudiante.nacionalidad = datosApi.estado
+//  this.estudiante.nivel_ingles = datosApi.fecha_nacimiento_etd
+this.estudiante.nombre = datosApi.nombre_etd
+this.estudiante.apellido = datosApi.apellido_etd
+ this.estudiante.fecha_canimiento = datosApi.fecha_nacimiento_etd
+ this.estudiante.cedula = datosApi.cedula_etd
+this.estudiante.direccion = datosApi.direccion_etd
+this.estudiante.telefono = datosApi.telefono_etd
+this.estudiante.correo = datosApi.correo_etd
+this.estudiante.contacto_emergencia = datosApi.contacto_emergencia_etd
+this.estudiante.quien_retira = datosApi.quien_retira_etd
+console.log('--------------------')
+console.log(this.estudiante)
+console.log('--------------------')
+// Este ciclo es una mierda por eso lo comento
 // Itera sobre las propiedades de `estudiante`
-for (const key in this.estudiante) {
-  if (datosApi.hasOwnProperty(key)) {
-    this.estudiante[key] = datosApi[key];
-  }
-}
+// for (const key in this.estudiante) {
+//   if (datosApi.hasOwnProperty(key)) {
+//     this.estudiante[key] = datosApi[key];
+//   }
+// }
 
-console.log("Estudiante actualizado:", this.estudiante);
+// console.log("Estudiante actualizado:", this.estudiante);
 } catch (error) {
     console.log(error)
 }
@@ -296,6 +329,15 @@ async leerNacionalidades() {
         console.log(error);
       }
     },
+
+    async modificarEstudiante(){
+      try {
+       const res = await newGoalService.putEstudiante(this.estudiante)
+       console.log(res)
+      } catch (error) {
+        console.log(error)        
+      }
+    }
 },
 
     mounted(){

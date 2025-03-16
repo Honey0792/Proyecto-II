@@ -1,6 +1,6 @@
 <template>
         <v-card width="1200" >
-          <h3 class="pa-3">Datos de la Inscripcion</h3>
+          <h3 class="pa-3">Nuevo Periodo</h3>
           <v-form @submit.prevent="">
             <v-divider></v-divider>
             <v-container class="">
