@@ -21,12 +21,15 @@
 import Footer from "@/components/Footer.vue";
 import { RouterLink, RouterView } from "vue-router";
 import NavBar from "./components/NavBar.vue";
+import newGoalApi from "./services/newGoalApi";
+import newGoalService from "./services/newGoalService";
 
 export default {
   components: {
     Footer,
     NavBar,
   },
+
   computed: {
     // Computed property para verificar si la ruta actual es 'login'
     isLoginPage() {

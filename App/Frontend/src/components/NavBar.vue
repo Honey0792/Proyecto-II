@@ -11,12 +11,9 @@
       <v-spacer></v-spacer>
 
       <template v-if="$vuetify.display.mdAndUp">
-        <v-btn icon="mdi-magnify" variant="text"></v-btn>
+        <v-btn icon="mdi-logout" variant="text" to="/"></v-btn>
 
-        <v-btn icon="mdi-filter" variant="text"></v-btn>
       </template>
-
-      <v-btn icon="mdi-dots-vertical" variant="text"></v-btn>
     </v-app-bar>
 
     <v-navigation-drawer
@@ -31,6 +28,7 @@
             <v-list-item to="/nuketown"> Nuketown </v-list-item>
             <v-list-item to="/estudiantes"> Estudiantes </v-list-item>
             <v-list-item to="/representantes"> Representantes </v-list-item>
+            <v-list-item to="/periodos"> Periodos </v-list-item>
           </v-list>
         </template>
         <v-list>

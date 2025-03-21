@@ -151,9 +151,11 @@ export default {
 
     },
 
-    async eliminarEstudiante (){
+    async eliminarEstudiante (id){ 
+      id = {id_estudiante: this.id_etd}
       try {
-// const res = await newGoalService.deleteEstudiante(id_estudiante)        
+        console.log(id)
+const res = await newGoalService.deleteEstudiante(id)        
       } catch (error) {
         console.log(error)
       }
@@ -173,3 +175,4 @@ export default {
   },
 };
 </script>
+/

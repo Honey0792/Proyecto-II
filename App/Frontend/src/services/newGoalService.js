@@ -52,8 +52,17 @@ export default {
     return newGoalApi().get('/representantes')
   },
 
+  getRepresentanteById(id){
+    return newGoalApi().get(`/representantes/${id}`)
+  },
+
 
   //PUT
+
+  //REPRESENTANTES
+  putRepresentante(value){
+    return newGoalApi().put('/representantes', value)
+  },
 
   //ESTUDIANTES
   putEstudiante(value){

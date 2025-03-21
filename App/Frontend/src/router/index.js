@@ -32,7 +32,12 @@ const router = createRouter({
       path: "/registrar/cliente",
       name: "Registro_Clientes",
       component: () => import("../views/RegistrarClienteView.vue")
-    }
+    },
+    {
+      path: "/periodos",
+      name: "Periodos",
+      component: () => import("../views/PeriodosView.vue")
+    },
   ],
 });
 
