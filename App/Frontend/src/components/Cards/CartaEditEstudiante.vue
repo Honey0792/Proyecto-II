@@ -260,7 +260,7 @@ this.estudiante.correo = datosApi.correo_etd
 this.estudiante.contacto_emergencia = datosApi.contacto_emergencia_etd
 this.estudiante.quien_retira = datosApi.quien_retira_etd
 console.log('--------------------')
-console.log(this.estudiante)
+console.log(datosApi)
 console.log('--------------------')
 // Este ciclo es una mierda por eso lo comento
 // Itera sobre las propiedades de `estudiante`

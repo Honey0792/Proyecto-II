@@ -1,13 +1,14 @@
 <template>
   <v-card width="1200">
     <h3 class="pa-3">Nuevo Periodo</h3>
-    <v-form @submit="crearPeriodo">
+    <v-form>
       <v-divider></v-divider>
       <v-container class="">
         <v-row>
           <v-col>
             <v-text-field
-              variant="outlined"
+            readonly  
+            variant="outlined"
               label="Nombre"
               v-model="periodo.nombre"
             ></v-text-field>
@@ -16,18 +17,20 @@
         <v-row>
           <v-col>
             <v-text-field
-              variant="outlined"
+            readonly  
+            variant="outlined"
               type="date"
               label="Fecha de Inicio"
-              v-model="periodo.fecha_inicio"
+              v-model="periodo.fecha_inicio.split('T')[0]"
             ></v-text-field>
           </v-col>
           <v-col>
             <v-text-field
-              variant="outlined"
+            readonly  
+            variant="outlined"
               type="date"
               label="Fecha de Culminacion"
-              v-model="periodo.fecha_fin"
+              v-model="periodo.fecha_fin.split('T')[0]"
             ></v-text-field>
           </v-col>
         </v-row>
@@ -35,6 +38,7 @@
           <v-col>
             <v-text-field
               label="Año Academico"
+              readonly
               variant="outlined"
               type="number"
               min="2000"
@@ -44,6 +48,7 @@
           <v-col>
             <v-select
               label="Estado"
+              readonly
               variant="outlined"
               :items="estados"
               item-title="nombre_estado"
@@ -52,57 +57,58 @@
             ></v-select>
           </v-col>
         </v-row>
-        <v-btn class="text-white bg-orange-lighten-2 mx-auto" type="submit"
-          >Crear</v-btn
-        >
       </v-container>
     </v-form>
-    <v-divider></v-divider>
-    <h3 class="pa-3">Periodos Academicos</h3>
-    <v-divider></v-divider>
-    <tablaPeriodos />
   </v-card>
 </template>
 
 <script>
 import newGoalService from "@/services/newGoalService";
-import tablaPeriodos from "../Tables/tablaPeriodos.vue";
+
 export default {
-  components: {
-    tablaPeriodos,
+  props: {
+    id: {
+      type: Number,
+      required: true,
+    },
   },
   data: () => ({
     estados: [],
     periodo: {
+      id_periodo: null,
       id_estado: null,
       nombre: null,
-      fecha_inicio: null,
-      fecha_fin: null,
+      fecha_inicio: "",
+      fecha_fin: "",
       anio_academico: null,
     },
   }),
   methods: {
     async leerEstados() {
       try {
-        console.log("hola");
         const res = await newGoalService.getEstado();
         this.estados = res.data.datos;
       } catch (error) {
-        console.log(error);
+        console.log("error");
       }
     },
-
-    async crearPeriodo() {
+    async obtenerPeriodoById(id) {
+      id = this.id;
       try {
-        const res = await newGoalService.postPeriodo(this.periodo);
-        console.log(res)
-      } catch (error) {
-        console.log(error);
-      }
+        const res = await newGoalService.getPeriodoById(id);
+        const datosApi = res.data[0];
+        this.periodo.id_periodo = datosApi.id_periodo;
+        this.periodo.id_estado = datosApi.id_estado;
+        this.periodo.nombre = datosApi.nombre_periodo;
+        this.periodo.fecha_inicio = datosApi.fecha_ini_periodo;
+        this.periodo.fecha_fin = datosApi.fecha_fin_periodo;
+        this.periodo.anio_academico = datosApi.year_academico;
+        console.log(this.periodo);
+      } catch (error) {}
     },
   },
-  computed: {},
   mounted() {
+    this.obtenerPeriodoById();
     this.leerEstados();
   },
 };

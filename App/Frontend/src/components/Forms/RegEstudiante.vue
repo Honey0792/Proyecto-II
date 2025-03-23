@@ -48,13 +48,6 @@
                 label="Fecha de Nacimiento"
               ></v-text-field>
             </v-col>
-            <v-col>
-              <v-text-field
-                variant="outlined"
-                type="number"
-                label="Edad"
-              ></v-text-field>
-            </v-col>
           </v-row>
           <v-divider class="mx-8"></v-divider>
         </v-container>

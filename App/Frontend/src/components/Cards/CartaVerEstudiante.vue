@@ -13,14 +13,14 @@
             <v-col>
               <v-text-field
                 v-model="estudiante.nombre"
-                variant="underlined"
+                variant="outlined"
                 readonly
                 label="Nombres"
               ></v-text-field>
             </v-col>
             <v-col>
               <v-text-field
-                variant="underlined"
+                variant="outlined"
                 v-model="estudiante.apellido"
                 readonly
                 label="Apellidos"
@@ -30,7 +30,7 @@
             <v-col>
               <v-text-field
                 v-model="estudiante.fecha_canimiento.split('T')[0]"
-                variant="underlined"
+                variant="outlined"
                 type="date"
                 readonly
                 label="Fecha de Nacimiento"
@@ -38,11 +38,11 @@
             </v-col>
             <v-col>
               <v-text-field
-                variant="underlined"
+                variant="outlined"
                 type=""
                 readonly
                 label="Edad"
-                  v-model:model-value="edad"
+                v-model:model-value="edad"
               ></v-text-field>
             </v-col>
           </v-row>
@@ -52,7 +52,7 @@
           <v-row>
             <v-col>
               <v-text-field
-                variant="underlined"
+                variant="outlined"
                 readonly
                 label="Nivel de Educación"
                 v-model="estudiante.nivel_edu"
@@ -61,14 +61,14 @@
             <v-col>
               <v-text-field
                 readonly
-              label="Nivel de Ingles"
-                variant="underlined"
+                label="Nivel de Ingles"
+                variant="outlined"
                 v-model="estudiante.nivel_ingles"
               ></v-text-field>
             </v-col>
             <v-col>
               <v-text-field
-                variant="underlined"
+                variant="outlined"
                 readonly
                 label="Estado"
                 v-model="estudiante.estado"
@@ -77,7 +77,7 @@
             </v-col>
             <v-col>
               <v-text-field
-                variant="underlined"
+                variant="outlined"
                 readonly
                 label="Nacionalidad"
                 v-model="estudiante.nacionalidad"
@@ -92,14 +92,14 @@
             <v-col>
               <v-text-field
                 readonly
-              label="Discapacidad"
-                variant="underlined"
+                label="Discapacidad"
+                variant="outlined"
                 v-model="estudiante.discapacidad"
               ></v-text-field>
             </v-col>
             <v-col>
               <v-text-field
-                variant="underlined"
+                variant="outlined"
                 readonly
                 label="genero"
                 v-model="estudiante.genero"
@@ -109,8 +109,8 @@
             <v-col>
               <v-text-field
                 readonly
-              label="Representante"
-                variant="underlined"
+                label="Representante"
+                variant="outlined"
                 v-model="estudiante.representante"
               ></v-text-field>
             </v-col>
@@ -122,7 +122,7 @@
             <v-col class="d-flex">
               <v-text-field
                 type=""
-                variant="underlined"
+                variant="outlined"
                 hint="Desmarque la casilla si el estudiante no posee cedula"
                 readonly
                 label="Cedula"
@@ -133,7 +133,7 @@
             <v-col>
               <v-text-field
                 v-model="estudiante.contacto_emergencia"
-                variant="underlined"
+                variant="outlined"
                 readonly
                 label="Contacto de emergencia"
               >
@@ -141,7 +141,7 @@
             </v-col>
             <v-col>
               <v-text-field
-                variant="underlined"
+                variant="outlined"
                 readonly
                 label="Encargado/s de retirar el Estudiante"
                 v-model="estudiante.quien_retira"
@@ -155,7 +155,7 @@
           <v-row>
             <v-col>
               <v-text-field
-                variant="underlined"
+                variant="outlined"
                 readonly
                 label="Numero de Telefono"
                 v-model="estudiante.telefono"
@@ -164,7 +164,7 @@
             <v-col>
               <v-text-field
                 v-model="estudiante.direccion"
-                variant="underlined"
+                variant="outlined"
                 readonly
                 label="Direccion"
               >
@@ -174,7 +174,7 @@
               <v-text-field
                 v-model="estudiante.correo"
                 type="email"
-                variant="underlined"
+                variant="outlined"
                 readonly
                 label="Correo Electronico"
               >
@@ -223,7 +223,7 @@ export default {
       quien_retira: null,
     },
   }),
-  
+
   methods: {
     async obtenerEstudianteById(id) {
       id = this.id;
@@ -233,13 +233,13 @@ export default {
         const datosApi = res.data[0];
 
         this.estudiante.id_estudiante = datosApi.id_etd;
-        this.estudiante.representante = datosApi.nombre_representante
-         this.estudiante.estado = datosApi.estado
-         this.estudiante.discapacidad = datosApi.nombre_discapacidad
-         this.estudiante.genero = datosApi.genero
-         this.estudiante.nivel_edu = datosApi.nivel_educacion
-         this.estudiante.nacionalidad = datosApi.nacionalidad
-         this.estudiante.nivel_ingles = datosApi.nivel_ingles
+        this.estudiante.representante = datosApi.nombre_representante;
+        this.estudiante.estado = datosApi.estado;
+        this.estudiante.discapacidad = datosApi.nombre_discapacidad;
+        this.estudiante.genero = datosApi.genero;
+        this.estudiante.nivel_edu = datosApi.nivel_educacion;
+        this.estudiante.nacionalidad = datosApi.nacionalidad;
+        this.estudiante.nivel_ingles = datosApi.nivel_ingles;
         this.estudiante.nombre = datosApi.nombre_etd;
         this.estudiante.apellido = datosApi.apellido_etd;
         this.estudiante.fecha_canimiento = datosApi.fecha_nacimiento_etd;
@@ -269,23 +269,23 @@ export default {
   computed: {
     edad() {
       if (!this.estudiante.fecha_canimiento) return "";
-      
+
       const fechaNacimiento = new Date(this.estudiante.fecha_canimiento);
       const hoy = new Date();
-      
+
       // Validar fecha
       if (isNaN(fechaNacimiento.getTime())) return "Fecha inválida";
-      
+
       let edad = hoy.getFullYear() - fechaNacimiento.getFullYear();
       const mes = hoy.getMonth() - fechaNacimiento.getMonth();
-      
+
       if (mes < 0 || (mes === 0 && hoy.getDate() < fechaNacimiento.getDate())) {
         edad--;
       }
-      
+
       return edad;
-    }
-},
+    },
+  },
 
   mounted() {
     this.obtenerEstudianteById();

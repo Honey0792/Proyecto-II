@@ -151,11 +151,12 @@ export default {
 
     },
 
-    async eliminarEstudiante (id){ 
-      id = {id_estudiante: this.id_etd}
+    async eliminarEstudiante (){ 
+      const id = {id_estudiante: this.id_etd}
       try {
-        console.log(id)
-const res = await newGoalService.deleteEstudiante(id)        
+        const res = await newGoalService.deleteEstudiante(id)
+        this.dialog_3 = false;
+        this.obtenerEstudiantes();
       } catch (error) {
         console.log(error)
       }

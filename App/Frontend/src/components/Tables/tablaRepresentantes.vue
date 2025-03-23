@@ -50,7 +50,7 @@
       color="white"
       @click="this.dialog_1 = false"
     ></v-icon>
-    <CartaModificarRepresentante :id="id_rt" />
+    <CartaEditRepresentante :id="id_rt" />
   </v-dialog>
   <v-dialog v-model="this.dialog_2">
     <v-icon
@@ -82,7 +82,7 @@
           <v-btn
             class="ms-auto"
             text="Ok"
-            @click="eliminarEstudiante"
+            @click=""
           ></v-btn>
         </template>
       </v-card>
@@ -92,12 +92,12 @@
 <script>
 import newGoalService from '@/services/newGoalService';
 import CartaVerRepresentante from '../Cards/CartaVerRepresentante.vue';
-import CartaModificarRepresentante from '../Cards/CartaModificarRepresentante.vue';
+import CartaEditRepresentante from '../Cards/CartaEditRepresentante.vue';
 
 export default {
   components:{
     CartaVerRepresentante,
-    CartaModificarRepresentante,
+    CartaEditRepresentante,
   },
   data: () => ({
     id_rt: null,

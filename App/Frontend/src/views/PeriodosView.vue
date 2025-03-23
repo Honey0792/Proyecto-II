@@ -1,19 +1,16 @@
 <template>
-<v-expansion-panels>
-  <v-expansion-panel
-    title="Registrar Perido"
-  >
-  <v-expansion-panel-content>
-  <RegPeriodo/>
-</v-expansion-panel-content>
-  </v-expansion-panel>
-</v-expansion-panels>
+  <div class="d-flex justify-center my-7">
+  <RegPeriodo />
+</div>
 </template>
 
 <script>
-import RegPeriodo from '@/components/Forms/RegPeriodo.vue';
+import RegPeriodo from "@/components/Forms/RegPeriodo.vue";
+import TablaPeriodos from "@/components/Tables/tablaPeriodos.vue";
 export default {
-    components:{
-        RegPeriodo,},
-}
+  components: {
+    RegPeriodo,
+    TablaPeriodos
+  },
+};
 </script>

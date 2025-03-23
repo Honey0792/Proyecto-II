@@ -1,11 +1,11 @@
 <template>
    <div class="app-container">
     <NavBar v-if="!isLoginPage" />
-    <main class="main-content">
+    <!-- <main class="main-content"> -->
       <router-view v-slot="{ Component }">
         <component :is="Component" />
       </router-view>
-    </main>
+    <!-- </main> -->
     <Footer />
   </div>
   <!-- <NavBar v-if="!isLoginPage" />
@@ -29,17 +29,32 @@ export default {
     Footer,
     NavBar,
   },
-
+ methods:{
+  // async obtenerRepresentanteById() {
+  //     try {
+  //       const res = await newGoalService.getRepresentanteById(6);
+  //       console.log(res)
+  //     } catch (error) {
+  //       console.log(error);
+  //       if(error.status == 400){
+  //       this.$router.push('/')
+  //     }
+  //     }
+  //   },
+ },
   computed: {
     // Computed property para verificar si la ruta actual es 'login'
     isLoginPage() {
       return this.$route.name === "Login";
     },
   },
+  mounted(){
+    // this.obtenerRepresentanteById()
+  }
 };
 </script>
 
-<style scoped>
+<!-- <style scoped>
 .app-container {
   min-height: 100vh;
   display: flex;
@@ -53,4 +68,4 @@ html, body {
   height: 100%;
   margin: 0;
 }
-</style>
+</style> -->

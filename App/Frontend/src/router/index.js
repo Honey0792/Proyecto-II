@@ -11,34 +11,59 @@ const router = createRouter({
     {
       path: "/main",
       name: "Main",
-      component: () => import("../views/MainView.Vue")
+      component: () => import("../views/MainView.Vue"),
+      meta: { requiresAuth: true },
     },
     {
       path: "/nuketown",
       name: "Nuketown",
-      component: () => import("../views/NuketownView.vue")
+      component: () => import("../views/NuketownView.vue"),
+      meta: { requiresAuth: true },
     },
     {
       path: "/estudiantes",
       name: "Listado_Estudiantes",
-      component: () => import("../views/ListadoEstudiantesView.vue")
+      component: () => import("../views/ListadoEstudiantesView.vue"),
+      meta: { requiresAuth: true },
     },
     {
       path: "/representantes",
       name: "Listado_Representantes",
-      component: () => import("../views/ListadoRepresentantesView.vue")
+      component: () => import("../views/ListadoRepresentantesView.vue"),
+      meta: { requiresAuth: true },
     },
     {
       path: "/registrar/cliente",
       name: "Registro_Clientes",
-      component: () => import("../views/RegistrarClienteView.vue")
+      component: () => import("../views/RegistrarClienteView.vue"),
+      meta: { requiresAuth: true },
     },
     {
       path: "/periodos",
       name: "Periodos",
-      component: () => import("../views/PeriodosView.vue")
+      component: () => import("../views/PeriodosView.vue"),
+      meta: { requiresAuth: true },
+    },
+    {
+      path: "/transsacciones",
+      name: "Transsacciones",
+      component: () => import("../views/TranssaccionesView.vue"),
+      meta: { requiresAuth: true },
     },
   ],
 });
-
+router.beforeEach((to, from, next) => {
+  const isAuthenticated = sessionStorage.getItem('token'); // Ejemplo de token
+  
+  if (to.meta.requiresAuth && !isAuthenticated) {
+    next('/');
+  } 
+  // // Si el usuario está autenticado pero intenta acceder al login
+  // else if (isAuthenticated && to.path === '/main') {
+  //   next('/'); // Redirige al inicio
+  // } 
+  else {
+    next(); // Permite la navegación
+  }
+});
 export default router;

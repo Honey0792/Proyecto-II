@@ -11,8 +11,7 @@
       <v-spacer></v-spacer>
 
       <template v-if="$vuetify.display.mdAndUp">
-        <v-btn icon="mdi-logout" variant="text" to="/"></v-btn>
-
+        <v-btn icon="mdi-logout" variant="text" @click="cerrarSesion()"></v-btn>
       </template>
     </v-app-bar>
 
@@ -21,21 +20,32 @@
       :location="$vuetify.display.mobile ? 'bottom' : undefined"
       temporary
     >
-      <v-menu>
-        <template v-slot:activator="{ props }">
-          <v-list :props>
-            <v-list-item to="/main"> Home </v-list-item>
-            <v-list-item to="/nuketown"> Nuketown </v-list-item>
-            <v-list-item to="/estudiantes"> Estudiantes </v-list-item>
-            <v-list-item to="/representantes"> Representantes </v-list-item>
-            <v-list-item to="/periodos"> Periodos </v-list-item>
-          </v-list>
-        </template>
-        <v-list>
-          <v-list-item @click="accion1">Opción 1</v-list-item>
-          <v-list-item @click="accion2">Opción 2</v-list-item>
-        </v-list>
-      </v-menu>
+      <!-- <v-menu>
+        <template v-slot:activator="{ props }"> -->
+      <v-list>
+        <v-list-item to="/main" prepend-icon="mdi-home"> Home </v-list-item>
+        <v-list-item to="/estudiantes" prepend-icon="mdi-account-school">
+          Estudiantes
+        </v-list-item>
+        <v-list-item
+          to="/representantes"
+          prepend-icon="mdi-human-male-female-child"
+        >
+          Representantes
+        </v-list-item>
+        <v-list-item to="/periodos" prepend-icon="mdi-calendar">
+          Periodos
+        </v-list-item>
+        <v-list-item to="/transsacciones" prepend-icon="mdi-cash-register">
+          Transsacciones
+        </v-list-item>
+        <v-list-item to="/nuketown" prepend-icon="mdi-nuke">
+          Nuketown
+        </v-list-item>
+      </v-list>
+      <!-- </template> -->
+
+      <!-- </v-menu> -->
     </v-navigation-drawer>
     <v-main style="height: 20px"> </v-main>
   </v-layout>
@@ -46,7 +56,14 @@ export default {
     drawer: false,
     group: null,
   }),
-
+  methods: {
+    cerrarSesion() {
+      sessionStorage.clear();
+      this.$router.push("/").then(() => {
+        this.$router.go(0);
+      });
+    },
+  },
   watch: {
     group() {
       this.drawer = false;
