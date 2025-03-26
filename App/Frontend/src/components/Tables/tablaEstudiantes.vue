@@ -13,6 +13,9 @@
       :headers="headers"
       :sort-by="[{ key: 'id_etd', order: 'desc' }]"
       :items="estudiantes"
+      :items-per-page-options="itemsPerPage"
+      v-model:items-per-page="paginacion.items"
+      v-model:page="paginacion.pagina"
     >
       <template v-slot:item.nombre_etd="{ item }">
         {{ item.nombre_etd }}
@@ -66,32 +69,25 @@
     ></v-icon>
     <CartaVerEstudiante :id="id_etd" />
   </v-dialog>
-  <v-dialog
-      v-model="this.dialog_3"
-      width="auto"
+  <v-dialog v-model="this.dialog_3" width="auto">
+    <v-card
+      max-width="400"
+      prepend-icon="mdi-delete-alert"
+      text="¿Estas Seguro/a de querer eliminar a este estdiante?"
+      title="Oprimiste eliminar"
+      color="warning"
     >
-      <v-card
-        max-width="400"
-        prepend-icon="mdi-delete-alert"
-        text="¿Estas Seguro/a de querer eliminar a este estdiante?"
-        title="Oprimiste eliminar"
-        color="warning"
-      >
-        <template v-slot:actions>
-          <v-spacer></v-spacer>
-          <v-btn
-            class="ms-auto"
-            text="Cancelar"
-            @click="this.dialog_3 = false"
-          ></v-btn>
-          <v-btn
-            class="ms-auto"
-            text="Ok"
-            @click="eliminarEstudiante"
-          ></v-btn>
-        </template>
-      </v-card>
-    </v-dialog>
+      <template v-slot:actions>
+        <v-spacer></v-spacer>
+        <v-btn
+          class="ms-auto"
+          text="Cancelar"
+          @click="this.dialog_3 = false"
+        ></v-btn>
+        <v-btn class="ms-auto" text="Ok" @click="eliminarEstudiante"></v-btn>
+      </template>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script>
@@ -106,6 +102,16 @@ export default {
     CartaVerEstudiante,
   },
   data: () => ({
+    paginacion:{
+      items : 10,
+      pagina: 1,
+    },
+    itemsPerPage: [
+      { value: 10, title: "10" },
+      { value: 25, title: "25" },
+      { value: 50, title: "50" },
+      { value: 100, title: "100" },
+    ],
     id_etd: null,
     dialog_1: false,
     dialog_2: false,
@@ -143,22 +149,22 @@ export default {
       console.log("hola");
       this.dialog_2 = true;
     },
-    eliminar(id){
+    eliminar(id) {
+      console.log(this.paginacion)
       this.id_etd = id;
       console.log("hola");
       this.dialog_3 = true;
-      console.log(id)
-
+      console.log(id);
     },
 
-    async eliminarEstudiante (){ 
-      const id = {id_estudiante: this.id_etd}
+    async eliminarEstudiante() {
+      const id = { id_estudiante: this.id_etd };
       try {
-        const res = await newGoalService.deleteEstudiante(id)
+        const res = await newGoalService.deleteEstudiante(id);
         this.dialog_3 = false;
         this.obtenerEstudiantes();
       } catch (error) {
-        console.log(error)
+        console.log(error);
       }
     },
 

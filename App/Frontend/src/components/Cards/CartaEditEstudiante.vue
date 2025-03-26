@@ -1,4 +1,19 @@
 <template>
+      <v-dialog
+    v-model="alert.show"
+    width="auto"
+    class="justify-center align-center"
+  >
+    <v-alert
+      v-model="alert.show"
+      :color="alert.color"
+      variant="elevated"
+      prominent
+      closable
+      width="400px"
+      >{{ alert.message }}</v-alert
+    >
+  </v-dialog>
   <v-card class="ma-7">
       <v-form @submit="modificarEstudiante">
       <v-card-title class="bg-cyan-lighten-5">
@@ -13,13 +28,13 @@
             <v-col>
               <v-text-field
                 v-model="estudiante.nombre"
-                variant="plain"
+                variant="outlined"
                 label="Nombres"
               ></v-text-field>
             </v-col>
             <v-col>
               <v-text-field
-                variant="plain"
+                variant="outlined"
                 v-model="estudiante.apellido"
                 label="Apellidos"
               >
@@ -28,26 +43,19 @@
             <v-col>
               <v-text-field
                 v-model="estudiante.fecha_canimiento.split('T')[0]"
-                variant="plain"
+                variant="outlined"
                 type="date"
                 label="Fecha de Nacimiento"
               ></v-text-field>
             </v-col>
-            <v-col>
-              <v-text-field
-                variant="plain"
-                type=null
-                label="Edad"
-              ></v-text-field>
-            </v-col>
           </v-row>
-          <v-divider class="mx-8"></v-divider>
         </v-container>
+        <v-divider class="mx-8"></v-divider>
         <v-container>
           <v-row>
             <v-col>
               <v-select
-                variant="plain"
+                variant="outlined"
                 label="Nivel de Educación"
                 :items="nivelEducativo"
                 item-title="nombre_nv_edu"
@@ -58,7 +66,7 @@
             <v-col>
               <v-select
                 label="Nivel de Ingles"
-                variant="plain"
+                variant="outlined"
                 v-model="estudiante.nivel_ingles"
                 :items="levelEnglish"
                 item-title="nombre_nivel_ingles"
@@ -67,7 +75,7 @@
             </v-col>
             <v-col>
               <v-select
-                variant="plain"
+                variant="outlined"
                 label="Estado"
                 v-model="estudiante.estado"
                 :items="estados"
@@ -78,7 +86,7 @@
             </v-col>
             <v-col>
               <v-select 
-              variant="plain"
+              variant="outlined"
               label="Nacionalidad"
               v-model="estudiante.nacionalidad"
               :items="nacionalidades"
@@ -96,7 +104,7 @@
             <v-col>
               <v-select
                 label="Discapacidad"
-                variant="plain"
+                variant="outlined"
                 v-model="estudiante.discapacidad"
                 :items="discapacidades"
                 item-title="nombre_discd"
@@ -105,7 +113,7 @@
             </v-col>
             <v-col>
               <v-select
-                variant="plain"
+                variant="outlined"
                 label="genero"
                 v-model="estudiante.genero"
                 :items="generos"
@@ -117,7 +125,7 @@
             <v-col>
               <v-text-field
                 label="Representante"
-                variant="plain"
+                variant="outlined"
                 v-model="estudiante.representante"
               ></v-text-field>
             </v-col>
@@ -129,7 +137,7 @@
             <v-col class="d-flex">
               <v-text-field
                 type=""
-                variant="plain"
+                variant="outlined"
                 hint="Desmarque la casilla si el estudiante no posee cedula"
                 label="Cedula"
                 v-model="estudiante.cedula"
@@ -139,14 +147,14 @@
             <v-col>
               <v-text-field
                 v-model="estudiante.contacto_emergencia"
-                variant="plain"
+                variant="outlined"
                 label="Contacto de emergencia"
               >
               </v-text-field>
             </v-col>
             <v-col>
               <v-text-field
-                variant="plain"
+                variant="outlined"
                 label="Encargado/s de retirar el Estudiante"
                 v-model="estudiante.quien_retira"
               >
@@ -159,7 +167,7 @@
           <v-row>
             <v-col>
               <v-text-field
-                variant="plain"
+                variant="outlined"
                 label="Numero de Telefono"
                 v-model="estudiante.telefono"
               ></v-text-field>
@@ -167,7 +175,7 @@
             <v-col>
               <v-text-field
                 v-model="estudiante.direccion"
-                variant="plain"
+                variant="outlined"
                 label="Direccion"
               >
               </v-text-field>
@@ -176,7 +184,7 @@
               <v-text-field
                 v-model="estudiante.correo"
                 type="email"
-                variant="plain"
+                variant="outlined"
                 label="Correo Electronico"
               >
               </v-text-field>
@@ -203,7 +211,7 @@ export default {
     }
   },
 data: () => ({
-
+  alert: { show: false, message: "" },
   nacionalidades: [],
     levelEnglish: [],
     nivelEducativo: [],
@@ -333,9 +341,18 @@ async leerNacionalidades() {
     async modificarEstudiante(){
       try {
        const res = await newGoalService.putEstudiante(this.estudiante)
-       console.log(res)
+       this.alert = {
+          show: true,
+          color: "success",
+          message: "Estudiante modificado corectamente",
+        };
       } catch (error) {
-        console.log(error)        
+        console.log(error);
+        this.alert = {
+          show: true,
+          color: "warning",
+          message: "Error al intentar modificar estudiante",
+        };
       }
     }
 },

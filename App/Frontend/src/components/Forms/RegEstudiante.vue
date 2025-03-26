@@ -198,7 +198,7 @@
           <v-btn class="text-white bg-orange-lighten-2 mx-auto" type="submit"
             >Registrar</v-btn
           >
-          <v-btn class="text-white bg-orange-lighten-2 mx-auto">Limpiar</v-btn>
+          <v-btn @click="limpiarFormulario" class="text-white bg-orange-lighten-2 mx-auto">Limpiar</v-btn>
         </v-container>
       </v-card-text>
     </v-form>
@@ -238,6 +238,35 @@ export default {
     prueba: null,
   }),
   methods: {
+ 
+    limpiarFormulario() {
+    // Restablece el objeto estudiante
+    this.estudiante = {
+      representante: null,
+      estado: null,
+      discapacidad: null,
+      genero: null,
+      nivel_edu: null,
+      nacionalidad: 188,
+      nivel_ingles: null,
+      nombre: "",
+      apellido: "",
+      fecha_canimiento: null,
+      cedula: null,
+      direccion: "",
+      telefono: "",
+      correo: "",
+      contacto_emergencia: "",
+      quien_retira: null,
+    };
+    
+    // Restablece el checkbox de cédula
+    this.activate = true;
+    
+    // Opcional: Cierra la alerta si está visible
+    this.alert.show = false;
+  },
+
     // PETICIONES GET
     async leerNacionalidades() {
       try {

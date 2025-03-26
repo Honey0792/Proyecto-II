@@ -82,7 +82,7 @@
           <v-btn
             class="ms-auto"
             text="Ok"
-            @click=""
+            @click="eliminarRepresentante"
           ></v-btn>
         </template>
       </v-card>
@@ -121,6 +121,16 @@ export default {
         const res = await newGoalService.getRepresentante();
         this.representantes = res.data;
         console.log(this.representantes);
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async eliminarRepresentante() {
+      const id = { id_representante: this.id_rt };
+      try {
+        const res = await newGoalService.deleteRepresentante(id);
+        this.dialog_3 = false;
+        this.obtenerRepresentantes();
       } catch (error) {
         console.log(error);
       }

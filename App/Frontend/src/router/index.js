@@ -53,7 +53,7 @@ const router = createRouter({
   ],
 });
 router.beforeEach((to, from, next) => {
-  const isAuthenticated = sessionStorage.getItem('token'); // Ejemplo de token
+  const isAuthenticated = sessionStorage.getItem('token');
   
   if (to.meta.requiresAuth && !isAuthenticated) {
     next('/');

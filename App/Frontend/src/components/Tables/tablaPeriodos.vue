@@ -66,7 +66,7 @@
           text="Cancelar"
           @click="this.dialog_3 = false"
         ></v-btn>
-        <v-btn class="ms-auto" text="Ok" @click=""></v-btn>
+        <v-btn class="ms-auto" text="Ok" @click="eliminarPeriodo"></v-btn>
       </template>
     </v-card>
   </v-dialog>
@@ -100,11 +100,21 @@ export default {
   }),
 
   methods: {
-    async obtenerEstados() {
+    async obtenerPeriodos() {
       try {
         const res = await newGoalService.getPeriodos();
         this.periodos = res.data;
         console.log(res);
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async eliminarPeriodo() {
+      const id = { id_periodo: this.id_periodo };
+      try {
+        const res = await newGoalService.deletePeriodo(id);
+        this.dialog_3 = false;
+        this.obtenerPeriodos();
       } catch (error) {
         console.log(error);
       }
@@ -128,7 +138,7 @@ export default {
     },
   },
   mounted() {
-    this.obtenerEstados();
+    this.obtenerPeriodos();
   },
 };
 </script>

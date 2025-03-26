@@ -1,4 +1,19 @@
 <template>
+    <v-dialog
+    v-model="alert.show"
+    width="auto"
+    class="justify-center align-center"
+  >
+    <v-alert
+      v-model="alert.show"
+      :color="alert.color"
+      variant="elevated"
+      prominent
+      closable
+      width="400px"
+      >{{ alert.message }}</v-alert
+    >
+  </v-dialog>
   <v-card width="1200">
     <h3 class="pa-3">Nuevo Periodo</h3>
     <v-form @submit="crearPeriodo">
@@ -72,6 +87,7 @@ export default {
     tablaPeriodos,
   },
   data: () => ({
+    alert: { show: false, message: "" },
     estados: [],
     periodo: {
       id_estado: null,
@@ -96,8 +112,18 @@ export default {
       try {
         const res = await newGoalService.postPeriodo(this.periodo);
         console.log(res)
+        this.alert = {
+          show: true,
+          color: "success",
+          message: "Periodo creado corectamente",
+        };
       } catch (error) {
         console.log(error);
+        this.alert = {
+          show: true,
+          color: "warning",
+          message: "Error al intentar registrar periodo",
+        };
       }
     },
   },

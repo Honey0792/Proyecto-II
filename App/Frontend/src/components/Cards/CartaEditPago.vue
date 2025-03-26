@@ -1,22 +1,22 @@
 <template>
- <v-dialog
+  <v-dialog
+    v-model="alert.show"
+    width="auto"
+    class="justify-center align-center"
+  >
+    <v-alert
       v-model="alert.show"
-      width="auto"
-      class="justify-center align-center"
+      :color="alert.color"
+      variant="elevated"
+      prominent
+      closable
+      width="400px"
+      >{{ alert.message }}</v-alert
     >
-      <v-alert
-        v-model="alert.show"
-        :color="alert.color"
-        variant="elevated"
-        prominent
-        closable
-        width="400px"
-        >{{ alert.message }}</v-alert
-      >
-    </v-dialog>
-<v-card class="ma-7">
-    <v-form @submit.prevent="registrarPago">
-    <h3 class="pa-3">Datos del Pago</h3>
+  </v-dialog>
+  <v-card class="ma-7">
+    <v-form @submit.prevent="">
+      <h3 class="pa-3">Datos del Pago</h3>
       <v-divider></v-divider>
       <v-container>
         <v-row>
@@ -39,14 +39,14 @@
               variant="outlined"
               type="date"
               label="Fecha del Pago"
-              v-model="pago.fecha_pago"
+              v-model="pago.fecha_pago.split('T')[0]"
             ></v-text-field>
           </v-col>
           <v-col>
             <v-select
-            :items="metodos_pago"
-            item-value="id_metodo_pago"
-            item-title="nombre_metodo_pago"
+              :items="metodos_pago"
+              item-value="id_metodo_pago"
+              item-title="nombre_metodo_pago"
               label="Metodo de Pago"
               variant="outlined"
               v-model="pago.metodo_pago"
@@ -74,8 +74,8 @@
           </v-col>
         </v-row>
         <div class="d-flex justify-center">
-        <v-btn type="submit">Registrar</v-btn>
-      </div>
+          <v-btn type="submit">Guardar</v-btn>
+        </div>
       </v-container>
       <!-- <v-container>
             <v-row>
@@ -93,23 +93,27 @@
           </v-col>
             </v-row>
         </v-container> -->
-      </v-form>
-        <v-divider></v-divider>
-      <tablaPagos />
-    </v-card>
+    </v-form>
+  </v-card>
 </template>
 
 <script>
 import newGoalService from "@/services/newGoalService";
-import tablaPagos from "../Tables/tablaPagos.vue";
 
 export default {
-  components: { tablaPagos },
+  components: {},
+  props: {
+    id: {
+      type: Number,
+      required: true,
+    },
+  },
   data: () => ({
     alert: { show: false, message: "" },
     metodos_pago: [],
     estudiantes: [], // Lista de estudiantes
     pago: {
+      id_pago: null,
       id_estudiante: null,
       metodo_pago: null,
       fecha_pago: "",
@@ -124,29 +128,28 @@ export default {
     async leerMetodosdePago() {
       try {
         const res = await newGoalService.getMetodoDePago();
-        this.metodos_pago = res.data.datos
+        this.metodos_pago = res.data.datos;
         console.log(this.metodos_pago);
       } catch (error) {
         console.log(error);
       }
     },
-    async registrarPago() {
+    async obtenerPagoById() {
+      const id = this.id;
       try {
-        console.log(this.pago)
-        const res = await newGoalService.postPagos(this.pago);
-        this.alert = {
-          show: true,
-          color: 'success',
-          message: "pago registrado corectamente",
-        }
+        const res = await newGoalService.getPagoById(id);
+        const datosApi = res.data[0];
+
+        this.pago.id_pago = datosApi.id_pago
+        this.pago.id_estudiante = datosApi.id_etd;
+        this.pago.metodo_pago = datosApi.id_metodo_pago;
+        this.pago.fecha_pago = datosApi.fecha_pago;
+        this.pago.monto_total = datosApi.monto_total_pago;
+        this.pago.monto_cancelado = datosApi.monto_cancelado_pago;
+
+        console.log(this.pago);
       } catch (error) {
         console.log(error);
-        this.alert = {
-          show: true,
-          color: 'warning',
-          message: "Pago no registrado",
-        }
-        
       }
     },
     async obtenerEstudiantes() {
@@ -162,7 +165,8 @@ export default {
   computed: {},
   mounted() {
     this.obtenerEstudiantes();
-    this.leerMetodosdePago()
+    this.obtenerPagoById();
+    this.leerMetodosdePago();
   },
 };
 </script>

@@ -1,4 +1,19 @@
 <template>
+    <v-dialog
+    v-model="alert.show"
+    width="auto"
+    class="justify-center align-center"
+  >
+    <v-alert
+      v-model="alert.show"
+      :color="alert.color"
+      variant="elevated"
+      prominent
+      closable
+      width="400px"
+      >{{ alert.message }}</v-alert
+    >
+  </v-dialog>
   <v-card width="1200">
     <h3 class="pa-3">Nuevo Periodo</h3>
     <v-form @submit="modificarPeriodo">
@@ -71,6 +86,7 @@ export default {
     },
   },
   data: () => ({
+    alert: { show: false, message: "" },
     estados: [],
     periodo: {
       id_periodo: null,
@@ -109,9 +125,19 @@ export default {
             const res = await newGoalService.putPeriodo(this.periodo)
 
             console.log(res)
-        } catch (error) {
-            console.log(error)
-        }
+            this.alert = {
+          show: true,
+          color: "success",
+          message: "Periodo modificado corectamente",
+        };
+      } catch (error) {
+        console.log(error);
+        this.alert = {
+          show: true,
+          color: "warning",
+          message: "Error al intentar modificar periodo",
+        };
+      }
     },
 
   },

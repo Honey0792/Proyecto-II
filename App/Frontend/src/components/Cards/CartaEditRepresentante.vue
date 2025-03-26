@@ -1,4 +1,19 @@
 <template>
+    <v-dialog
+    v-model="alert.show"
+    width="auto"
+    class="justify-center align-center"
+  >
+    <v-alert
+      v-model="alert.show"
+      :color="alert.color"
+      variant="elevated"
+      prominent
+      closable
+      width="400px"
+      >{{ alert.message }}</v-alert
+    >
+  </v-dialog>
     <v-card class="ma-7">
       <v-form @submit="modificarRepresentante">
         <v-card-title class="bg-cyan-lighten-5">
@@ -102,6 +117,7 @@
       },
     },
     data: () => ({
+      alert: { show: false, message: "" },
         generos: [],
       representante: {
         id_representante: null,
@@ -120,10 +136,19 @@
         async modificarRepresentante(){
             try {
                 const res = await newGoalService.putRepresentante(this.representante)
-                console.log(res)
-            } catch (error) {
-                console.log(error)
-            }
+                this.alert = {
+          show: true,
+          color: "success",
+          message: "Representante modificado corectamente",
+        };
+      } catch (error) {
+        console.log(error);
+        this.alert = {
+          show: true,
+          color: "warning",
+          message: "Error al intentar modificar representante",
+        };
+      }
         },
       async obtenerRepresentanteById(id) {
         id = this.id;
