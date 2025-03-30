@@ -94,6 +94,15 @@ export default {
   getPagoById(id) {
     return newGoalApi().get(`/pagos/${id}`);
   },
+
+  //GASTOS
+  getGastos() {
+    return newGoalApi().get(`/gastos?pagina=1&limit=1000`);
+  },
+
+  getGastoById(id) {
+    return newGoalApi().get(`/gastos/${id}`);
+  },
   //PUT
 
   //REPRESENTANTES
@@ -116,26 +125,34 @@ export default {
     return newGoalApi().put("/pagos", value);
   },
 
+  //GASTOS
+  putGasto(value) {
+    return newGoalApi().put("/gastos", value);
+  },
   //DELETE
 
   //ESTUDIANTES
   deleteEstudiante(value) {
-    return newGoalApi().delete("/estudiantes",{ data: value });
+    return newGoalApi().delete("/estudiantes", { data: value });
   },
 
   //REPRESENTANTES
   deleteRepresentante(value) {
-    return newGoalApi().delete("/representantes",{ data: value });
+    return newGoalApi().delete("/representantes", { data: value });
   },
 
   //PERIODOS
   deletePeriodo(value) {
-    return newGoalApi().delete("/periodos",{ data: value });
+    return newGoalApi().delete("/periodos", { data: value });
   },
-
 
   //PAGOS
   deletePago(value) {
-    return newGoalApi().delete("/pagos",{ data: value });
+    return newGoalApi().delete("/pagos", { data: value });
+  },
+
+  //GASTOS
+  deleteGasto(value) {
+    return newGoalApi().delete("/gastos", { data: value });
   },
 };
