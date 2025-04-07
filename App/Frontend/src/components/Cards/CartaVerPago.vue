@@ -71,20 +71,20 @@
         <v-row>
           <v-col>
             <v-text-field
-              variant="outlined"
-              readonly
-              type="number"
-              label="Monto Cancelado"
-              v-model="pago.monto_cancelado_pago"
-            ></v-text-field>
-          </v-col>
-          <v-col>
-            <v-text-field
               type="number"
               variant="outlined"
               readonly
               label="Monto Total"
               v-model="pago.monto_total_pago"
+            ></v-text-field>
+          </v-col>
+          <v-col>
+            <v-text-field
+              variant="outlined"
+              readonly
+              type="number"
+              label="Monto Cancelado"
+              v-model="pago.monto_cancelado_pago"
             ></v-text-field>
           </v-col>
         </v-row>

@@ -15,7 +15,7 @@
     >
   </v-dialog>
   <v-card class="ma-7">
-    <v-form @submit.prevent="">
+    <v-form @submit.prevent="actualizarPago">
       <h3 class="pa-3">Datos del Pago</h3>
       <v-divider></v-divider>
       <v-container>
@@ -58,18 +58,18 @@
         <v-row>
           <v-col>
             <v-text-field
-              variant="outlined"
-              type="number"
-              label="Monto Cancelado"
-              v-model="pago.monto_cancelado"
-            ></v-text-field>
-          </v-col>
-          <v-col>
-            <v-text-field
               type="number"
               variant="outlined"
               label="Monto Total"
               v-model="pago.monto_total"
+            ></v-text-field>
+          </v-col>
+          <v-col>
+            <v-text-field
+              variant="outlined"
+              type="number"
+              label="Monto Cancelado"
+              v-model="pago.monto_cancelado"
             ></v-text-field>
           </v-col>
         </v-row>
@@ -122,6 +122,23 @@ export default {
     },
   }),
   methods: {
+    async actualizarPago() {
+      try {
+        const res = await newGoalService.putPago(this.pago)
+        this.alert = {
+          show: true,
+          color: "success",
+          message: "Pago modificado corectamente",
+        };
+      } catch (error) {
+        console.log(error);
+        this.alert = {
+          show: true,
+          color: "warning",
+          message: "Pago no modificado",
+        };
+      }
+    },
     fullName(item) {
       return `${item.nombre_etd} ${item.apellido_etd}`;
     },
@@ -140,7 +157,7 @@ export default {
         const res = await newGoalService.getPagoById(id);
         const datosApi = res.data[0];
 
-        this.pago.id_pago = datosApi.id_pago
+        this.pago.id_pago = datosApi.id_pago;
         this.pago.id_estudiante = datosApi.id_etd;
         this.pago.metodo_pago = datosApi.id_metodo_pago;
         this.pago.fecha_pago = datosApi.fecha_pago;

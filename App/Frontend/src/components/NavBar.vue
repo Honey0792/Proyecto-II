@@ -37,7 +37,10 @@
           Periodos
         </v-list-item>
         <v-list-item to="/transsacciones" prepend-icon="mdi-cash-register">
-          Transsacciones
+          Transacciones
+        </v-list-item>
+        <v-list-item to="/inscripciones" prepend-icon="mdi-text-box-edit">
+          Inscripciones
         </v-list-item>
         <v-list-item to="/nuketown" prepend-icon="mdi-nuke">
           Nuketown

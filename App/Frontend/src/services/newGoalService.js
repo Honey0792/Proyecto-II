@@ -28,6 +28,12 @@ export default {
   postGastos(value) {
     return newGoalApi().post("/gastos", value);
   },
+
+  //PERSONAS
+  postPersonas(value) {
+    return newGoalApi().post("/personas", value);
+  },
+
   //GET
 
   // SELECTS
@@ -59,6 +65,10 @@ export default {
 
   getTipoDeGasto() {
     return newGoalApi().get("/select/tipo-gasto");
+  },
+
+  getNivelInscripcion() {
+    return newGoalApi().get("/select/nivel-inscripcion");
   },
   // ESTUDIANTES
   getEstudiante() {
@@ -103,6 +113,15 @@ export default {
   getGastoById(id) {
     return newGoalApi().get(`/gastos/${id}`);
   },
+
+  //PERSONAS
+  getPersonas() {
+    return newGoalApi().get(`/personas?pagina=1&limit=1000`);
+  },
+
+  getPersonaById(id) {
+    return newGoalApi().get(`/personas/${id}`);
+  },
   //PUT
 
   //REPRESENTANTES
@@ -129,6 +148,13 @@ export default {
   putGasto(value) {
     return newGoalApi().put("/gastos", value);
   },
+
+  //PERSONAS
+  putPersona(value) {
+    return newGoalApi().put("/personas", value);
+  },
+
+
   //DELETE
 
   //ESTUDIANTES
@@ -154,5 +180,10 @@ export default {
   //GASTOS
   deleteGasto(value) {
     return newGoalApi().delete("/gastos", { data: value });
+  },
+
+  //PERSONAS
+  deletePersona(value) {
+    return newGoalApi().delete("/personas", { data: value });
   },
 };

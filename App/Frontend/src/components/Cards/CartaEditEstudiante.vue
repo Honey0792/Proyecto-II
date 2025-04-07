@@ -252,12 +252,12 @@ try {
     
     this.estudiante.id_estudiante = datosApi.id_etd
     // this.estudiante.representante = datosApi.
-    //  this.estudiante.estado = datosApi.contacto_emergencia_etd
-    //  this.estudiante.discapacidad = datosApi.correo_etd
-    //  this.estudiante.genero = datosApi.direccion_etd
-//  this.estudiante.nivel_edu = datosApi.nombre_discapacidad
-//  this.estudiante.nacionalidad = datosApi.estado
-//  this.estudiante.nivel_ingles = datosApi.fecha_nacimiento_etd
+     this.estudiante.estado = datosApi.id_estado
+     this.estudiante.discapacidad = datosApi.id_discd
+     this.estudiante.genero = datosApi.id_genero
+ this.estudiante.nivel_edu = datosApi.id_nv_edu
+ this.estudiante.nacionalidad = datosApi.id_ncd
+ this.estudiante.nivel_ingles = datosApi.id_nivel_ingles
 this.estudiante.nombre = datosApi.nombre_etd
 this.estudiante.apellido = datosApi.apellido_etd
  this.estudiante.fecha_canimiento = datosApi.fecha_nacimiento_etd

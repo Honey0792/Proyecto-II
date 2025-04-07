@@ -58,18 +58,18 @@
         <v-row>
           <v-col>
             <v-text-field
-              variant="outlined"
-              type="number"
-              label="Monto Cancelado"
-              v-model="pago.monto_cancelado"
-            ></v-text-field>
-          </v-col>
-          <v-col>
-            <v-text-field
               type="number"
               variant="outlined"
               label="Monto Total"
               v-model="pago.monto_total"
+            ></v-text-field>
+          </v-col>
+          <v-col>
+            <v-text-field
+              variant="outlined"
+              type="number"
+              label="Monto Cancelado"
+              v-model="pago.monto_cancelado"
             ></v-text-field>
           </v-col>
         </v-row>
