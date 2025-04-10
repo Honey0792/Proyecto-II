@@ -1,6 +1,6 @@
 <template>
-  <v-form>
-    <v-card class="ma-7">
+  <v-card class="ma-7">
+      <v-form>
       <h3 class="pa-3">Datos de la Inscripcion</h3>
       <v-divider></v-divider>
       <v-container class="">
@@ -32,8 +32,8 @@
         </v-row>
       </v-container>
       <v-divider></v-divider>
+    </v-form>
     </v-card>
-  </v-form>
 </template>
 
 <script>

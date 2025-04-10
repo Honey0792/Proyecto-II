@@ -12,7 +12,7 @@ const router = createRouter({
       path: "/main",
       name: "Main",
       component: () => import("../views/MainView.Vue"),
-      meta: { requiresAuth: true },
+      meta: { requiresAuth: true, allowedRoles: ['1', '2'] },
     },
     {
       path: "/nuketown",
@@ -56,20 +56,30 @@ const router = createRouter({
       component: () => import("../views/InscripcionesView.vue"),
       meta: { requiresAuth: true },
     },
+    {
+      path: "/usuarios",
+      name: "Usuarios",
+      component: () => import("../views/UsuariosView.vue"),
+      meta: { requiresAuth: true, allowedRoles: ['1'] },
+    },
   ],
 });
 router.beforeEach((to, from, next) => {
-  const isAuthenticated = sessionStorage.getItem('token');
-  
+  const isAuthenticated = sessionStorage.getItem("token");
+  const userRole = sessionStorage.getItem("role");
+  console.log(sessionStorage.getItem("role"));
+
   if (to.meta.requiresAuth && !isAuthenticated) {
-    next('/');
-  } 
+    next("/");
+  } else {
+    next(); // Permite la navegación
+  }
+ if(to.meta.allowedRoles && !userRole){
+ return next("/main")
+ }
   // // Si el usuario está autenticado pero intenta acceder al login
   // else if (isAuthenticated && to.path === '/main') {
   //   next('/'); // Redirige al inicio
-  // } 
-  else {
-    next(); // Permite la navegación
-  }
+  // }
 });
 export default router;

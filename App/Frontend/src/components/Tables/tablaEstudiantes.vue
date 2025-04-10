@@ -73,10 +73,10 @@
     <v-card
       max-width="400"
       prepend-icon="mdi-delete-alert"
-      text="¿Estas Seguro/a de querer eliminar a este estdiante?"
       title="Oprimiste eliminar"
       color="warning"
     >
+      <v-card-text> ¿Estas seguro de querer elimanar a {{ this.nombreEliminar }} {{ this.apellidoEliminar }}? </v-card-text>
       <template v-slot:actions>
         <v-spacer></v-spacer>
         <v-btn
@@ -102,8 +102,10 @@ export default {
     CartaVerEstudiante,
   },
   data: () => ({
-    paginacion:{
-      items : 10,
+    nombreEliminar: "",
+    apellidoEliminar: "",
+    paginacion: {
+      items: 10,
       pagina: 1,
     },
     itemsPerPage: [
@@ -150,11 +152,16 @@ export default {
       this.dialog_2 = true;
     },
     eliminar(id) {
-      console.log(this.paginacion)
+      const estudiante = this.estudiantes.find((e) => e.id_etd === id); // Busca el estudiante por ID
       this.id_etd = id;
-      console.log("hola");
+      this.nombreEliminar = estudiante.nombre_etd; // Guarda el nombre
+      this.apellidoEliminar = estudiante.apellido_etd; // Guarda el apellido
       this.dialog_3 = true;
-      console.log(id);
+      // console.log(this.paginacion)
+      // this.id_etd = id;
+      // console.log("hola");
+      // this.dialog_3 = true;
+      // console.log(id);
     },
 
     async eliminarEstudiante() {

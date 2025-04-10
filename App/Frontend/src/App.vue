@@ -1,13 +1,15 @@
 <template>
-   <div class="app-container">
-    <NavBar v-if="!isLoginPage" />
+  <NavBar v-if="!isLoginPage" />
+ <v-app>
     <!-- <main class="main-content"> -->
+      <v-main>
       <router-view v-slot="{ Component }">
         <component :is="Component" />
       </router-view>
+    </v-main>
     <!-- </main> -->
-    <Footer />
-  </div>
+  </v-app>
+  <Footer />
   <!-- <NavBar v-if="!isLoginPage" />
 
   <router-view v-slot="{ Component }">
@@ -53,7 +55,19 @@ export default {
   }
 };
 </script>
+<style>
+/* Asegura que el contenedor ocupe toda la altura */
+.v-application {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+} */
 
+/* Empuja el footer hacia abajo */
+ .v-main {
+  flex: 1 0 auto;
+}
+</style>
 <!-- <style scoped>
 .app-container {
   min-height: 100vh;

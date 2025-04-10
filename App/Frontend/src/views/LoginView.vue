@@ -123,8 +123,11 @@ export default {
     async login() {
       try {
         const res = await newGoalService.userLog(this.user)
-        const token = res.data.token; // Asegúrate de que tu API retorne el token en esta propiedad
+        const token = res.data.token;
+        const role = res.data.role
+        console.log(res) // Asegúrate de que tu API retorne el token en esta propiedad
         sessionStorage.setItem("token", token);
+        sessionStorage.setItem("role", role)
         console.log(res)
         // this.alert = {
         //   show: true,

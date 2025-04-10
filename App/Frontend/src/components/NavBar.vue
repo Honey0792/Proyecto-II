@@ -42,6 +42,9 @@
         <v-list-item to="/inscripciones" prepend-icon="mdi-text-box-edit">
           Inscripciones
         </v-list-item>
+        <v-list-item to="/usuarios" prepend-icon="mdi-account-group">
+          Usuarios
+        </v-list-item>
         <v-list-item to="/nuketown" prepend-icon="mdi-nuke">
           Nuketown
         </v-list-item>

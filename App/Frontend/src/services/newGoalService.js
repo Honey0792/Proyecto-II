@@ -34,6 +34,11 @@ export default {
     return newGoalApi().post("/personas", value);
   },
 
+  //SESIONES
+  postSesion(value) {
+    return newGoalApi().post("/sesiones", value);
+  },
+
   //GET
 
   // SELECTS
@@ -121,6 +126,12 @@ export default {
 
   getPersonaById(id) {
     return newGoalApi().get(`/personas/${id}`);
+  },
+
+  //SESIONES
+
+  getSesiones() {
+    return newGoalApi().get(`/sesiones?pagina=1&limit=1000`);
   },
   //PUT
 
