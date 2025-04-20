@@ -23,8 +23,8 @@
           </template>
           <template v-slot:actions>
             <v-spacer></v-spacer>
-            <v-btn variant="outlined" size="small" color="#00ACC1">Modificar</v-btn>
-            <v-btn variant="outlined" size="small" color="#E65100">Elminar</v-btn>
+            <v-btn variant="outlined" size="small" color="#00ACC1" @click="modificarUsuario(cards.id_usuario)">Modificar</v-btn>
+            <v-btn variant="outlined" size="small" color="#E65100" @click="eliminar(cards.id_usuario)">Elminar</v-btn>
 
           </template>
           <!-- <template v-slot:append>
@@ -35,13 +35,49 @@
       </v-col>
     </v-row>
   </v-container>
+  <v-dialog v-model="dialog_1">
+    <v-icon
+      icon="mdi-close"
+      class="position-absolute right-0"
+      color="white"
+      @click="this.dialog_1 = false"
+    ></v-icon>
+    <CartaEditUsuario :id="id"/>
+  </v-dialog>
+
+  <v-dialog v-model="this.dialog_2" width="auto">
+    <v-card
+      max-width="400"
+      prepend-icon="mdi-delete-alert"
+      text="¿Estas Seguro/a de querer eliminar a este Usuario?"
+      title="Oprimiste eliminar"
+      color="warning"
+    >
+      <template v-slot:actions>
+        <v-spacer></v-spacer>
+        <v-btn
+          class="ms-auto"
+          text="Cancelar"
+          @click="this.dialog_2 = false"
+        ></v-btn>
+        <v-btn class="ms-auto" text="Ok" @click="eliminarSesion"></v-btn>
+      </template>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script>
 import newGoalService from "@/services/newGoalService";
+import CartaEditUsuario from "./CartaEditUsuario.vue";
 
 export default {
+  components:{
+    CartaEditUsuario
+  },
   data: () => ({
+    dialog_1: false,
+    dialog_2: false,
+    id: null,
     usuarios: [],
   }),
 
@@ -55,6 +91,31 @@ export default {
         console.log(error);
       }
     },
+
+    modificarUsuario(id_usuario){
+      this.id = id_usuario
+      this.dialog_1 = true
+      console.log(this.id)
+    },
+
+    eliminar(id) {
+      this.id=id
+      console.log("hola");
+      console.log(this.id);
+      this.dialog_2 = true;
+    },
+
+    async eliminarSesion(){
+      try {
+        const id = {id_usuario: this.id}
+        const res = await newGoalService.deleteSesion(id)
+        this.dialog_2 = false
+        console.log(res)
+        this.obtenerUsuarios()
+      } catch (error) {
+        console.log(error)
+      }
+    }
   },
   mounted() {
     this.obtenerUsuarios();

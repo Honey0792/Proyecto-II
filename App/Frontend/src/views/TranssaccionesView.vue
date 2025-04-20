@@ -2,7 +2,7 @@
  <v-tabs
         v-model="tab"
       >
-        <v-tab value="one">Pagos</v-tab>
+        <v-tab value="one" v-show="mostrarPagos">Pagos</v-tab>
         <v-tab value="two">Gastos</v-tab>
       </v-tabs>
   
@@ -28,5 +28,23 @@ export default{
  data: () => ({
       tab: null,
     }),
+    computed: {
+    mostrarPagos() {
+      return sessionStorage.getItem("role") === '1';
+    }
+  },
+  watch: {
+    mostrarPagos(nuevoValor) {
+      if (!nuevoValor) {
+        this.tab = 'two';
+      }
+    }
+  },
+  mounted() {
+    // Inicializar tab según rol al cargar el componente
+    if (!this.mostrarPagos) {
+      this.tab = 'two';
+    }
+  }
 }
 </script>

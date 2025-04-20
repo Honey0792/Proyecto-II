@@ -38,7 +38,14 @@ export default {
   postSesion(value) {
     return newGoalApi().post("/sesiones", value);
   },
-
+  //INSCRIPCION
+  postInscripcion(value) {
+    return newGoalApi().post("/inscripciones", value);
+  },
+  //NOTAS
+  postNota(value) {
+    return newGoalApi().post("/notas", value);
+  },
   //GET
 
   // SELECTS
@@ -133,6 +140,30 @@ export default {
   getSesiones() {
     return newGoalApi().get(`/sesiones?pagina=1&limit=1000`);
   },
+
+  getSesionesById(id) {
+    return newGoalApi().get(`/sesiones/${id}`);
+  },
+
+  //INSCRIPCIONES
+
+  getInscripciones() {
+    return newGoalApi().get(`/inscripciones?pagina=1&limit=1000`);
+  },
+
+  getInscripcionById(id) {
+    return newGoalApi().get(`/inscripciones/${id}`);
+  },
+
+  //NOTAS
+  getNotas() {
+    return newGoalApi().get(`/notas?pagina=1&limit=1000`);
+  },
+
+  getNotasById(id) {
+    return newGoalApi().get(`/notas/${id}`);
+  },
+
   //PUT
 
   //REPRESENTANTES
@@ -165,7 +196,19 @@ export default {
     return newGoalApi().put("/personas", value);
   },
 
+  //SESION
+  putSesion(value) {
+    return newGoalApi().put("/sesiones", value);
+  },
 
+  //INSCRIPCION
+  putSInscripcion(value) {
+    return newGoalApi().put("/inscripciones", value);
+  },
+
+  putNota(value) {
+    return newGoalApi().put("/notas", value);
+  },
   //DELETE
 
   //ESTUDIANTES
@@ -196,5 +239,20 @@ export default {
   //PERSONAS
   deletePersona(value) {
     return newGoalApi().delete("/personas", { data: value });
+  },
+
+  //SESION
+  deleteSesion(value) {
+    return newGoalApi().delete("/sesiones", { data: value });
+  },
+
+  //INSCRIPCION
+  deleteInscripcion(value) {
+    return newGoalApi().delete("/inscripciones", { data: value });
+  },
+
+   //NOTAS
+   deleteNota(value) {
+    return newGoalApi().delete("/notas", { data: value });
   },
 };

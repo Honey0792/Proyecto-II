@@ -69,6 +69,7 @@ export default {
       { title: "Orden", align: "center", key: "id_persona" },
       { title: "Nombres", align: "center", key: "nombre_persona" },
       { title: "Apellidos", align: "center", key: "apellido_persona" },
+      { title: "Cargo", align: "center", key: "cargo_persona" },
       { title: "Cedula", align: "center", key: "cedula_persona" },
       { title: "Acciones", align: "center", key: "actions" },
     ],

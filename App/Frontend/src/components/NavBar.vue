@@ -42,8 +42,14 @@
         <v-list-item to="/inscripciones" prepend-icon="mdi-text-box-edit">
           Inscripciones
         </v-list-item>
-        <v-list-item to="/usuarios" prepend-icon="mdi-account-group">
+        <v-list-item v-show="esVisible" to="/notas" prepend-icon="mdi-chair-school">
+          Notas
+        </v-list-item>
+        <v-list-item v-show="esVisible" to="/usuarios" prepend-icon="mdi-account-group">
           Usuarios
+        </v-list-item>
+        <v-list-item v-show="esVisible" to="/empleados" prepend-icon="mdi-briefcase">
+          Empleados
         </v-list-item>
         <v-list-item to="/nuketown" prepend-icon="mdi-nuke">
           Nuketown
@@ -69,6 +75,11 @@ export default {
         this.$router.go(0);
       });
     },
+  },
+  computed:{
+    esVisible() {
+      return sessionStorage.getItem("role") === '1';
+    }
   },
   watch: {
     group() {

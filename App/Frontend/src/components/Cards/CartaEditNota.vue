@@ -1,9 +1,9 @@
 <template>
   <v-card class="ma-7">
-    <v-form>
-      <h3 class="pa-3">Datos de la Inscripcion</h3>
+    <v-form @submit="modificarNota">
+      <h3 class="pa-3">Modificar Nota</h3>
       <v-divider></v-divider>
-      <v-container class="">
+      <v-container>
         <v-row>
           <v-col>
             <v-autocomplete
@@ -11,62 +11,66 @@
               item-value="id_etd"
               :item-title="fullName"
               variant="outlined"
-              readonly
               label="Estudiante"
-              v-model="inscripcion.id_etd"
+              v-model="nota.id_estudiante"
             ></v-autocomplete>
           </v-col>
         </v-row>
+      </v-container>
+      <v-container class="">
         <v-row>
           <v-col>
             <v-text-field
               variant="outlined"
-              readonly
               type="date"
-              label="Fecha de Inscripcion"
-              v-model="inscripcion.fecha_inscripcion.split('T')[0]"
+              label="Fecha de Nota"
+              v-model="nota.fecha_creacion.split('T')[0]"
             ></v-text-field>
-          </v-col>
-          <v-col>
-            <v-select
-              variant="outlined"
-              readonly
-              label="Grupo"
-              :items="nivelInscripcion"
-              item-title="categoria_nivel"
-            ></v-select>
           </v-col>
           <v-col>
             <v-select
               label="Nivel"
               variant="outlined"
-              readonly
               :items="nivelInscripcion"
               item-title="nombre_nivel"
               item-value="id_nivel"
-              v-model="inscripcion.id_nivel"
-            ></v-select>
-          </v-col>
-          <v-col>
-            <v-select
-              label="Periodo"
-              variant="outlined"
-              readonly
-              :items="periodos"
-              item-title="nombre_periodo"
-              item-value="id_periodo"
-              v-model="inscripcion.id_periodo"
+              v-model="nota.id_nivel"
             ></v-select>
           </v-col>
         </v-row>
       </v-container>
+      <v-container>
+        <v-row>
+          <v-col>
+            <v-select
+              type="number"
+              variant="outlined"
+              label="Periodo"
+              :items="periodos"
+              item-title="nombre_periodo"
+              item-value="id_periodo"
+              v-model="nota.id_periodo"
+            ></v-select>
+          </v-col>
+          <v-col>
+            <v-text-field
+              variant="outlined"
+              label="Nota"
+              v-model="nota.valor_nota"
+            ></v-text-field>
+          </v-col>
+        </v-row>
+        <div class="d-flex pa-4 justify-center">
+          <v-btn type="submit">Guardar</v-btn>
+        </div>
+      </v-container>
     </v-form>
+    <v-divider></v-divider>
   </v-card>
 </template>
 
 <script>
 import newGoalService from "@/services/newGoalService";
-
 export default {
   props: {
     id: {
@@ -75,20 +79,46 @@ export default {
     },
   },
   data: () => ({
-    periodos: [],
     nivelInscripcion: [],
+    periodos: [],
     estudiantes: [],
-    inscripcion: {
-      id_inscripcion: null,
-      id_etd: null,
+    nota: {
+      id_nota: null,
+      id_estudiante: null,
       id_nivel: null,
       id_periodo: null,
-      fecha_inscripcion: "",
+      valor_nota: null,
+      fecha_creacion: "",
     },
   }),
   methods: {
     fullName(item) {
       return `${item.nombre_etd} ${item.apellido_etd}`;
+    },
+    async obtenerNotaById() {
+      const id = this.id;
+      try {
+        const res = await newGoalService.getNotasById(id);
+        const datosApi = res.data[0];
+        this.nota.id_nota = datosApi.id_nota
+        this.nota.fecha_creacion = datosApi.fecha_creacion_nota;
+        this.nota.id_estudiante = datosApi.id_etd;
+        this.nota.id_nivel = datosApi.id_nivel;
+        this.nota.id_periodo = datosApi.id_periodo;
+        this.nota.valor_nota = datosApi.valor_nota;
+        console.log(res);
+      } catch (error) {
+        console.log(error);
+      }
+    },
+
+    async modificarNota(){
+        try {
+            const res = await newGoalService.putNota(this.nota)
+            console.log(res)
+        } catch (error) {
+            console.log(error)
+        }
     },
 
     async obtenerEstudiantes() {
@@ -96,21 +126,6 @@ export default {
         const res = await newGoalService.getEstudiante();
         this.estudiantes = res.data;
         console.log(this.estudiantes);
-      } catch (error) {
-        console.log(error);
-      }
-    },
-    async obtenerInscripcionByID() {
-      const id = this.id;
-      try {
-        const res = await newGoalService.getInscripcionById(id);
-        const datosApi = res.data[0];
-        this.inscripcion.id_inscripcion = datosApi.id_inscripcion;
-        this.inscripcion.id_etd = datosApi.id_etd;
-        this.inscripcion.id_nivel = datosApi.id_nivel;
-        this.inscripcion.fecha_inscripcion = datosApi.fecha_inscripcion;
-        this.inscripcion.id_periodo = datosApi.id_periodo;
-        console.log(res);
       } catch (error) {
         console.log(error);
       }
@@ -133,20 +148,12 @@ export default {
         console.log(error);
       }
     },
-    async modificarInscripcion() {
-      try {
-        const res = await newGoalService.putSInscripcion(this.inscripcion);
-        console.log(res);
-      } catch (error) {
-        console.log(error);
-      }
-    },
   },
   mounted() {
+    this.obtenerNotaById();
     this.obtenerEstudiantes();
-    this.leerNivelInscripcion();
-    this.obtenerInscripcionByID();
     this.obtenerPeriodos();
+    this.leerNivelInscripcion();
   },
 };
 </script>
