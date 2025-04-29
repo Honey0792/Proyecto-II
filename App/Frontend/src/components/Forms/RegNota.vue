@@ -1,6 +1,21 @@
 <template>
+  <v-dialog
+      v-model="alert.show"
+      width="auto"
+      class="justify-center align-center"
+    >
+      <v-alert
+        v-model="alert.show"
+        :color="alert.color"
+        variant="elevated"
+        prominent
+        closable
+        width="400px"
+        >{{ alert.message }}</v-alert
+      >
+    </v-dialog>
   <v-card class="ma-7">
-    <v-form @submit="registrarNota">
+    <v-form @submit.prevent="registrarNota">
       <h3 class="pa-3">Añadir Nota</h3>
       <v-divider></v-divider>
       <v-container>
@@ -66,7 +81,7 @@
       </v-container>
     </v-form>
     <v-divider></v-divider>
-    <tabla-notas />
+    <tabla-notas ref="hijo"/>
   </v-card>
 </template>
 
@@ -79,6 +94,7 @@ export default {
     TablaNotas
   },
   data: () => ({
+    alert: { show: false, message: "" },
     nivelInscripcion: [],
     periodos: [],
     estudiantes: [],
@@ -106,8 +122,19 @@ export default {
       try {
         const res = await newGoalService.postNota(this.nota);
         console.log(res);
+        this.alert = {
+          show: true,
+          color: "success",
+          message: "Nota registrada corectamente",
+        };
+        this.$refs.hijo.obtenerNotas()
       } catch (error) {
         console.log(error);
+        this.alert = {
+          show: true,
+          color: "warning",
+          message: "Nota no registrada",
+        };
       }
     },
 

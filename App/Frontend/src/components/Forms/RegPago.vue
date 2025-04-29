@@ -95,7 +95,7 @@
         </v-container> -->
       </v-form>
         <v-divider></v-divider>
-      <tablaPagos />
+      <tablaPagos ref="hijo" />
     </v-card>
 </template>
 
@@ -134,6 +134,7 @@ export default {
       try {
         console.log(this.pago)
         const res = await newGoalService.postPagos(this.pago);
+        this.$refs.hijo.obtenerPagos()
         this.alert = {
           show: true,
           color: 'success',

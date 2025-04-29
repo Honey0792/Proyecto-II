@@ -1,5 +1,16 @@
 <template>
-  <v-data-table :items="personas" :headers height="200">
+  <v-data-table :search="search" :items="personas" :headers height="200">
+    <template v-slot:top>
+      <v-text-field
+                  v-model="search"
+                  placeholder="Buscar"
+                  prepend-inner-icon="mdi-magnify"
+                  clearable
+                  density="compact"
+                  single-line
+                  hint="Te recomendamos buscar por el número de cédula"
+                ></v-text-field>
+    </template>
     <template v-slot:item.id_persona="{ item }"> </template>
     <template v-slot:item.actions="{ item }">
       <div class="d-flex ga-2 justify-center">
@@ -61,6 +72,7 @@ import CartaEditPersona from "../Cards/CartaEditPersona.vue";
 export default {
   components: { CartaEditPersona },
   data: () => ({
+    search: null,
     dialog_1: false,
     dialog_3: false,
     id_persona: null,

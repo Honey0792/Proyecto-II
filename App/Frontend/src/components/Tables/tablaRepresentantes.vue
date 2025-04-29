@@ -1,5 +1,5 @@
 <template>
- <v-btn
+  <v-btn
     append-icon="mdi-plus"
     variant="elevated"
     class="mx-7"
@@ -13,7 +13,20 @@
       :headers="headers"
       :sort-by="[{ key: 'id_rt', order: 'desc' }]"
       :items="representantes"
+      :search="search"
     >
+      <template v-slot:item.id_rt="{ item }"></template>
+      <template v-slot:top>
+        <v-text-field
+          v-model="search"
+          placeholder="Buscar"
+          prepend-inner-icon="mdi-magnify"
+          clearable
+          density="compact"
+          single-line
+          hint="Te recomendamos buscar por el número de cédula"
+        ></v-text-field>
+      </template>
       <template v-slot:item.nombre_rt="{ item }">
         {{ item.nombre_rt }}
       </template>
@@ -61,52 +74,46 @@
     ></v-icon>
     <CartaVerRepresentante :id="id_rt" />
   </v-dialog>
-  <v-dialog
-      v-model="this.dialog_3"
-      width="auto"
+  <v-dialog v-model="this.dialog_3" width="auto">
+    <v-card
+      max-width="400"
+      prepend-icon="mdi-delete-alert"
+      text="¿Estas Seguro/a de querer eliminar a este estdiante?"
+      title="Oprimiste eliminar"
+      color="warning"
     >
-      <v-card
-        max-width="400"
-        prepend-icon="mdi-delete-alert"
-        text="¿Estas Seguro/a de querer eliminar a este estdiante?"
-        title="Oprimiste eliminar"
-        color="warning"
-      >
-        <template v-slot:actions>
-          <v-spacer></v-spacer>
-          <v-btn
-            class="ms-auto"
-            text="Cancelar"
-            @click="this.dialog_3 = false"
-          ></v-btn>
-          <v-btn
-            class="ms-auto"
-            text="Ok"
-            @click="eliminarRepresentante"
-          ></v-btn>
-        </template>
-      </v-card>
-    </v-dialog>
+      <template v-slot:actions>
+        <v-spacer></v-spacer>
+        <v-btn
+          class="ms-auto"
+          text="Cancelar"
+          @click="this.dialog_3 = false"
+        ></v-btn>
+        <v-btn class="ms-auto" text="Ok" @click="eliminarRepresentante"></v-btn>
+      </template>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script>
-import newGoalService from '@/services/newGoalService';
-import CartaVerRepresentante from '../Cards/CartaVerRepresentante.vue';
-import CartaEditRepresentante from '../Cards/CartaEditRepresentante.vue';
+import newGoalService from "@/services/newGoalService";
+import CartaVerRepresentante from "../Cards/CartaVerRepresentante.vue";
+import CartaEditRepresentante from "../Cards/CartaEditRepresentante.vue";
 
 export default {
-  components:{
+  components: {
     CartaVerRepresentante,
     CartaEditRepresentante,
   },
   data: () => ({
+    search: null,
     id_rt: null,
     dialog_1: false,
     dialog_2: false,
     dialog_3: false,
     representantes: [],
     headers: [
-      { title: "ID", key: "id_rt" }, // Columna para el estado
+      { title: "Orden", key: "id_rt" }, // Columna para el estado
       { title: "Nombre", key: "nombre_rt" }, // Columna para el nombre
       { title: "Apellido", key: "apellido_rt" }, // Columna para el apellido
       { title: "Telefono", key: "telefono_rt" }, // Columna para el estado
@@ -146,16 +153,15 @@ export default {
       console.log("hola");
       this.dialog_2 = true;
     },
-    eliminar(id){
+    eliminar(id) {
       this.id_rt = id;
       console.log("hola");
       this.dialog_3 = true;
-      console.log(id)
-
+      console.log(id);
     },
   },
   mounted() {
- this.obtenerRepresentantes()
+    this.obtenerRepresentantes();
   },
 };
 </script>

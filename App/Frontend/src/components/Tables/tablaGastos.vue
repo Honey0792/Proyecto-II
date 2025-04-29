@@ -1,5 +1,16 @@
 <template>
-  <v-data-table :items="gastos" :headers>
+  <v-data-table :search="search" :items="gastos" :headers>
+    <template v-slot:top>
+      <v-text-field
+        v-model="search"
+        placeholder="Buscar"
+        prepend-inner-icon="mdi-magnify"
+        clearable
+        density="compact"
+        single-line
+      ></v-text-field>
+    </template>
+    <template v-slot:item.id_gasto="{ item }"></template>
     <template v-slot:item.fecha_gasto="{ item }">
       {{ item.fecha_gasto.split("T")[0] }}
     </template>
@@ -73,13 +84,14 @@ import CartaVerGasto from "../Cards/CartaVerGasto.vue";
 export default {
   components: { CartaEditGasto, CartaVerGasto },
   data: () => ({
+    search: null,
     dialog_1: false,
     dialog_2: false,
     dialog_3: false,
     id_gasto: null,
     gastos: [],
     headers: [
-      { title: "ID", align: "start", key: "id_gasto" },
+      { title: "Orden", align: "start", key: "id_gasto" },
       { title: "Nombre", align: "start", key: "nombre_gasto" },
       { title: "Tipo", align: "end", key: "nombre_tipo_gasto" },
       { title: "Metodo de pago", align: "end", key: "nombre_metodo_pago" },

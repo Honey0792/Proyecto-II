@@ -43,7 +43,7 @@
       </v-container>
     </v-form>
     <v-divider></v-divider>
-    <TablaPersonas />
+    <TablaPersonas ref="hijo" />
   </v-card>
 </template>
 <script>
@@ -71,6 +71,7 @@ export default {
           color: 'success',
           message: "Persona registrada corectamente",
         }
+        this.$refs.hijo.obtenerPersonas()
       } catch (error) {
         console.log(error);
         this.alert = {

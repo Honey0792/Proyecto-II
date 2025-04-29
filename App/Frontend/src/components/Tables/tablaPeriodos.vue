@@ -1,5 +1,16 @@
 <template>
-  <v-data-table :headers="headers" :items="periodos">
+  <v-data-table :search="search" :headers="headers" :items="periodos">
+    <template v-slot:top>
+      <v-text-field
+        v-model="search"
+        placeholder="Buscar"
+        prepend-inner-icon="mdi-magnify"
+        clearable
+        density="compact"
+        single-line
+      ></v-text-field>
+    </template>
+    <template v-slot:item.id_periodo="{ item }"></template>
     <template v-slot:item.fecha_ini_periodo="{ item }">
       {{ item.fecha_ini_periodo.split("T")[0] }}
     </template>
@@ -83,6 +94,7 @@ export default {
     CartaVerPeriodo,
   },
   data: () => ({
+    search: null,
     dialog_1: false,
     dialog_2: false,
     dialog_3: false,

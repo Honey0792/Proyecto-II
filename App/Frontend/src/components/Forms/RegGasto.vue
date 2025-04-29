@@ -15,7 +15,7 @@
       >
     </v-dialog>
   <v-card class="ma-7">
-    <v-form @submit="registrarGasto">
+    <v-form @submit.prevent="registrarGasto">
       <h3 class="pa-3">Datos del Gasto</h3>
       <v-divider></v-divider>
       <v-container class="">
@@ -91,7 +91,7 @@
       </v-container>
     </v-form>
     <v-divider></v-divider>
-    <tablaGastos />
+    <tablaGastos ref="hijo" />
   </v-card>
 </template>
 
@@ -143,6 +143,7 @@ export default {
           color: "success",
           message: "gasto registrado corectamente",
         };
+        this.$refs.hijo.obtenerGastos()
       } catch (error) {
         console.log(error);
         this.alert = {

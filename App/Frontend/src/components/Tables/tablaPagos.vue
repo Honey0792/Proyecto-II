@@ -5,7 +5,18 @@
     :items-per-page-options="itemsPerPage"
     v-model:items-per-page="paginacion.items"
     v-model:page="paginacion.pagina"
+    :search="search"
   >
+  <template v-slot:top>
+      <v-text-field
+                  v-model="search"
+                  placeholder="Buscar"
+                  prepend-inner-icon="mdi-magnify"
+                  clearable
+                  density="compact"
+                  single-line
+                ></v-text-field>
+    </template>
     <template v-slot:item.fecha_pago="{ item }">
       {{ item.fecha_pago.split("T")[0] }}
     </template>
@@ -108,6 +119,7 @@ export default {
     CartaEditPago,
   },
   data: () => ({
+    search: null,
     dialog_1: false,
     dialog_2: false,
     dialog_3: false,

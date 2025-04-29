@@ -1,8 +1,16 @@
 <template>
-  <v-data-table :items="inscripciones" :headers>
-    <template v-slot:item.id_inscripcion="{item}">
-
+  <v-data-table :search="search" :items="inscripciones" :headers>
+    <template v-slot:top>
+      <v-text-field
+        v-model="search"
+        placeholder="Buscar"
+        prepend-inner-icon="mdi-magnify"
+        clearable
+        density="compact"
+        single-line
+      ></v-text-field>
     </template>
+    <template v-slot:item.id_inscripcion="{ item }"> </template>
     <template v-slot:item.actions="{ item }">
       <div class="d-flex ga-2 justify-center">
         <v-icon
@@ -72,15 +80,16 @@ import CartaEditInscripcion from "../Cards/CartaEditInscripcion.vue";
 import CartaVerInscripcion from "../Cards/CartaVerInscripcion.vue";
 
 export default {
-  components:{
-CartaEditInscripcion,
-CartaVerInscripcion
+  components: {
+    CartaEditInscripcion,
+    CartaVerInscripcion,
   },
   data: () => ({
+    search: null,
     dialog_1: false,
     dialog_2: false,
     dialog_3: false,
-  id_inscripcion: null,
+    id_inscripcion: null,
     inscripciones: [],
     headers: [
       { title: "Orden", align: "center", key: "id_inscripcion" },
@@ -104,15 +113,15 @@ CartaVerInscripcion
       }
     },
 
-    async eliminarInscripcion(){
+    async eliminarInscripcion() {
       try {
-        const id = {id_inscripcion: this.id_inscripcion}
-        const res = await newGoalService.deleteInscripcion(id)
-        console.log(res)
-        this.obtenerInscripciones()
-        this.dialog_3 = false
+        const id = { id_inscripcion: this.id_inscripcion };
+        const res = await newGoalService.deleteInscripcion(id);
+        console.log(res);
+        this.obtenerInscripciones();
+        this.dialog_3 = false;
       } catch (error) {
-        console.log(error)
+        console.log(error);
       }
     },
 
@@ -132,12 +141,11 @@ CartaVerInscripcion
       console.log("hola");
       this.dialog_3 = true;
       console.log(id);
-    }, 
+    },
   },
 
   mounted() {
     this.obtenerInscripciones();
   },
-
 };
 </script>

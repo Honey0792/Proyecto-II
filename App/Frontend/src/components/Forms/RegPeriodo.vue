@@ -15,8 +15,8 @@
     >
   </v-dialog>
   <v-card width="1200">
-    <h3 class="pa-3">Nuevo Periodo</h3>
-    <v-form @submit="crearPeriodo">
+    <h3 class="pa-3">Nuevo Trimestre</h3>
+    <v-form @submit.prevent="crearPeriodo">
       <v-divider></v-divider>
       <v-container class="">
         <v-row>
@@ -75,7 +75,7 @@
     <v-divider></v-divider>
     <h3 class="pa-3">Periodos Academicos</h3>
     <v-divider></v-divider>
-    <tablaPeriodos />
+    <tablaPeriodos ref="hijo" />
   </v-card>
 </template>
 
@@ -117,6 +117,7 @@ export default {
           color: "success",
           message: "Periodo creado corectamente",
         };
+        this.$refs.hijo.obtenerPeriodos()
       } catch (error) {
         console.log(error);
         this.alert = {

@@ -9,6 +9,7 @@
   >
   <v-card class="d-flex mx-10 ma-7">
     <v-data-table
+    :search="search"
       height="460"
       :headers="headers"
       :sort-by="[{ key: 'id_etd', order: 'desc' }]"
@@ -17,6 +18,20 @@
       v-model:items-per-page="paginacion.items"
       v-model:page="paginacion.pagina"
     >
+    <template v-slot:top>
+      <v-text-field
+                  v-model="search"
+                  placeholder="Buscar"
+                  prepend-inner-icon="mdi-magnify"
+                  clearable
+                  density="compact"
+                  single-line
+                  hint="Te recomendamos buscar por el número de cédula"
+                ></v-text-field>
+    </template>
+    <template v-slot:item.id_etd="{item}">
+
+    </template>
       <template v-slot:item.nombre_etd="{ item }">
         {{ item.nombre_etd }}
       </template>
@@ -102,6 +117,7 @@ export default {
     CartaVerEstudiante,
   },
   data: () => ({
+    search: null,
     nombreEliminar: "",
     apellidoEliminar: "",
     paginacion: {
@@ -120,11 +136,12 @@ export default {
     dialog_3: false,
     estudiantes: [], // Lista de estudiantes
     headers: [
-      { title: "ID", key: "id_etd" }, // Columna para el estado
+      { title: "Orden", key: "id_etd" }, // Columna para el estado
       { title: "Estado", key: "estado" }, // Columna para el estado
       { title: "Nombre", key: "nombre_etd" }, // Columna para el nombre
       { title: "Apellido", key: "apellido_etd" }, // Columna para el apellido
       { title: "Correo", key: "correo_etd" }, // Columna para el correo
+      { title: "Cedula", key: "cedula_etd" }, // Columna para el correo
       { title: "Actions", key: "actions", align: "end", sortable: false }, //columna para las acciones
       // Agrega más columnas según los datos que tengas
     ],

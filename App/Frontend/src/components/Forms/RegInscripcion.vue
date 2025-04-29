@@ -1,6 +1,21 @@
 <template>
+  <v-dialog
+      v-model="alert.show"
+      width="auto"
+      class="justify-center align-center"
+    >
+      <v-alert
+        v-model="alert.show"
+        :color="alert.color"
+        variant="elevated"
+        prominent
+        closable
+        width="400px"
+        >{{ alert.message }}</v-alert
+      >
+    </v-dialog>
   <v-card class="ma-7">
-    <v-form @submit="registrarInscripcion">
+    <v-form @submit.prevent="registrarInscripcion">
       <h3 class="pa-3">Datos de la Inscripcion</h3>
       <v-divider></v-divider>
       <v-container class="">
@@ -65,7 +80,7 @@
       </v-container>
     </v-form>
       <v-divider></v-divider>
-      <TablaInscripciones />
+      <TablaInscripciones ref="hijo" />
   </v-card>
 </template>
 
@@ -76,6 +91,7 @@ import TablaInscripciones from "../Tables/tablaInscripciones.vue";
 export default {
   components:{TablaInscripciones},
   data: () => ({
+    alert: { show: false, message: "" },
     periodos: [],
     nivelInscripcion: [],
     estudiantes: [],
@@ -122,10 +138,20 @@ export default {
     try {
       console.log(this.inscripcion)
       const res = await newGoalService.postInscripcion(this.inscripcion)
-      console.log(res)
-    } catch (error) {
-      console.log(error)
-    }
+        this.alert = {
+          show: true,
+          color: "success",
+          message: "Inscripción registrada corectamente",
+        };
+        this.$refs.hijo.obtenerInscripciones()
+      } catch (error) {
+        console.log(error);
+        this.alert = {
+          show: true,
+          color: "warning",
+          message: "Inscripción no registrada",
+        };
+      }
    }
   },
   mounted() {

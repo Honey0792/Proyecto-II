@@ -1,5 +1,15 @@
 <template>
-  <v-data-table :items="notas" :headers>
+  <v-data-table :search="search" :items="notas" :headers>
+    <template v-slot:top>
+      <v-text-field
+                  v-model="search"
+                  placeholder="Buscar"
+                  prepend-inner-icon="mdi-magnify"
+                  clearable
+                  density="compact"
+                  single-line
+                ></v-text-field>
+    </template>
 <template v-slot:item.id_nota="{item}">
 
 </template>
@@ -77,6 +87,7 @@ export default {
     CartaVerNota,
   },
   data: () => ({
+    search: null,
     dialog_1: false,
     dialog_2: false,
     dialog_3: false,
