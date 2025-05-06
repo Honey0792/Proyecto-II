@@ -117,6 +117,7 @@ export default {
       { title: "Nombre", key: "nombre_rt" }, // Columna para el nombre
       { title: "Apellido", key: "apellido_rt" }, // Columna para el apellido
       { title: "Telefono", key: "telefono_rt" }, // Columna para el estado
+      { title: "Cedula", key: "cedula_rt" }, // Columna para el correo
       { title: "Correo", key: "correo_rt" }, // Columna para el correo
       { title: "Actions", key: "actions", align: "end", sortable: false }, //columna para las acciones
       // Agrega más columnas según los datos que tengas

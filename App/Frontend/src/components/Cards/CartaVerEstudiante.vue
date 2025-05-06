@@ -111,7 +111,7 @@
                 readonly
                 label="Representante"
                 variant="outlined"
-                v-model="estudiante.representante"
+                :model-value="fullName"
               ></v-text-field>
             </v-col>
           </v-row>
@@ -206,6 +206,7 @@ export default {
     estudiante: {
       id_estudiante: null,
       representante: null,
+      apellido_representante: null,
       estado: null, //Devuelve el nombre pero no el id, necesitamos el id
       discapacidad: null, //Devuelve el nombre pero no el id, necesitamos el id
       genero: null,
@@ -225,6 +226,7 @@ export default {
   }),
 
   methods: {
+
     async obtenerEstudianteById(id) {
       id = this.id;
       try {
@@ -233,6 +235,7 @@ export default {
         const datosApi = res.data[0];
 
         this.estudiante.id_estudiante = datosApi.id_etd;
+        this.estudiante.apellido_representante = datosApi.apellido_representante;
         this.estudiante.representante = datosApi.nombre_representante;
         this.estudiante.estado = datosApi.estado;
         this.estudiante.discapacidad = datosApi.nombre_discapacidad;
@@ -267,6 +270,9 @@ export default {
     },
   },
   computed: {
+    fullName(){
+      return `${this.estudiante.representante || ''} ${this.estudiante.apellido_representante || ''}`.trim();
+    },
     edad() {
       if (!this.estudiante.fecha_canimiento) return "";
 

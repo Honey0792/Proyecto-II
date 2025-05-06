@@ -15,7 +15,7 @@
     >
   </v-dialog>
   <v-card class="ma-7">
-    <v-form @submit.prevent="registrarRepresentante">
+    <v-form ref="form" @submit.prevent="registrarRepresentante">
       <v-card-title class="bg-cyan-lighten-5">
         Registro de Representante
       </v-card-title>
@@ -30,6 +30,7 @@
                 variant="outlined"
                 label="Nombres"
                 v-model="representante.nombre"
+                :rules="nombresRules"
               ></v-text-field>
             </v-col>
             <v-col>
@@ -37,6 +38,7 @@
                 variant="outlined"
                 label="Apellidos"
                 v-model="representante.apellido"
+                :rules="nombresRules"
               ></v-text-field>
             </v-col>
             <v-col>
@@ -47,6 +49,7 @@
                 item-title="nombre_genero"
                 item-value="id_genero"
                 v-model="representante.id_genero"
+                :rules="globalRules"
               ></v-select>
             </v-col>
             <v-divider class="mx-8"></v-divider>
@@ -59,6 +62,7 @@
                 variant="outlined"
                 label="Cedula"
                 v-model="representante.cedula"
+                :rules="cedulaRules"
               >
               </v-text-field>
             </v-col>
@@ -67,6 +71,7 @@
                 variant="outlined"
                 label="Numero de Telefono"
                 v-model="representante.telefono"
+                :rules="phoneRules"
               ></v-text-field>
             </v-col>
             <v-col>
@@ -75,6 +80,7 @@
                 variant="outlined"
                 label="Correo Electronico"
                 v-model="representante.correo"
+                :rules="emailRules"
               >
               </v-text-field>
             </v-col>
@@ -91,6 +97,7 @@
                 variant="outlined"
                 label="Dirección"
                 v-model="representante.direccion"
+                :rules="globalRules"
               >
               </v-textarea>
             </v-col>
@@ -98,10 +105,13 @@
         </v-container>
         <v-divider class="mx-8"></v-divider>
         <v-container class="">
-          <v-row>
-            <v-btn class="text-white bg-orange-lighten-2 mx-auto" type="submit"
+          <v-row >
+            <v-col class="d-flex justify-center">
+            <v-btn class="text-white bg-orange-lighten-2 ma-3" type="submit"
               >Registrar</v-btn
             >
+            <v-btn class="text-white bg-orange-lighten-2 ma-3" @click="limpiarFormulario">Limpiar</v-btn>
+          </v-col>
           </v-row>
         </v-container>
       </v-card-text>
@@ -125,6 +135,31 @@ export default {
       correo: "",
       telefono: "",
     },
+    globalRules: [(value) => !!value || "Requerido"],
+    cedulaRules: [
+      (v) => !!v || "requerido",
+      (v) =>
+        !v ||
+        /^[VEJPG]-\d{6,8}$/.test(v) ||
+        "Formato inválido (Ej: V-12345678)",
+    ],
+    emailRules: [
+      (v) => !!v || "Requerido",
+      (v) => /.+@.+\..+/.test(v) || "Correo electrónico no válido",
+    ],
+    phoneRules: [
+      (v) => !!v || "Requerido",
+      (v) => /^(0)?(414|412|416|424|426)\d{7}$/.test(v) || "Teléfono inválido",
+    ],
+    nombresRules: [
+      (value) => !!value || "Requerido",
+      (value) =>
+        /^[a-zA-Zñáéíóúü\s]+$/i.test(value) || "Solo se admiten letras",
+      (value) => value.length >= 3 || "El campo debe tener mínimo 3 caracteres",
+      (value) =>
+        !/(.)\1{2,}/.test(value) ||
+        "No se permiten caracteres repetidos consecutivamente",
+    ],
   }),
 
   methods: {
@@ -141,6 +176,16 @@ export default {
 
     //PETICIONES POST
     async registrarRepresentante() {
+      const { valid } = await this.$refs.form.validate();
+
+      if (!valid) {
+        this.alert = {
+          show: true,
+          color: "warning",
+          message: "Complete todos los campos requeridos",
+        };
+        return;
+      }
       try {
         const res = await newGoalService.postRepresentante(this.representante);
         this.alert = {
@@ -156,6 +201,17 @@ export default {
           message: "Error al intentar registrar representante",
         };
       }
+    },
+    limpiarFormulario(){
+     this.representante = {
+      id_genero: null,
+      cedula: "",
+      nombre: "",
+      apellido: "",
+      direccion: "",
+      correo: "",
+      telefono: "",
+    }
     },
   },
   mounted() {

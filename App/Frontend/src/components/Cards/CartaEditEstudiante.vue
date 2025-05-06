@@ -1,5 +1,5 @@
 <template>
-      <v-dialog
+  <v-dialog
     v-model="alert.show"
     width="auto"
     class="justify-center align-center"
@@ -15,7 +15,7 @@
     >
   </v-dialog>
   <v-card class="ma-7">
-      <v-form @submit="modificarEstudiante">
+    <v-form @submit="modificarEstudiante">
       <v-card-title class="bg-cyan-lighten-5">
         Registro de Estudiante
       </v-card-title>
@@ -85,15 +85,14 @@
               </v-select>
             </v-col>
             <v-col>
-              <v-select 
-              variant="outlined"
-              label="Nacionalidad"
-              v-model="estudiante.nacionalidad"
-              :items="nacionalidades"
-              item-title="nombre_ncd"
-              item-value="id_ncd"
+              <v-select
+                variant="outlined"
+                label="Nacionalidad"
+                v-model="estudiante.nacionalidad"
+                :items="nacionalidades"
+                item-title="nombre_ncd"
+                item-value="id_ncd"
               >
-
               </v-select>
             </v-col>
           </v-row>
@@ -123,11 +122,14 @@
               </v-select>
             </v-col>
             <v-col>
-              <v-text-field
-                label="Representante"
+              <v-autocomplete
+                label="representante"
                 variant="outlined"
                 v-model="estudiante.representante"
-              ></v-text-field>
+                :items="representantes"
+                :item-title="fullName"
+                item-value="id_rt"
+              ></v-autocomplete>
             </v-col>
           </v-row>
         </v-container>
@@ -192,100 +194,104 @@
           </v-row>
         </v-container>
         <v-container class="d-flex aling-center">
-          <v-btn type="submit"
-          >Guardar</v-btn>
+          <v-btn type="submit">Guardar</v-btn>
         </v-container>
       </v-card-text>
     </v-form>
-    </v-card>
+  </v-card>
 </template>
 
-
 <script>
-import newGoalService from '@/services/newGoalService';
+import newGoalService from "@/services/newGoalService";
 export default {
-  props:{
+  props: {
     id: {
-      type : Number,
-      required : true
-    }
+      type: Number,
+      required: true,
+    },
   },
-data: () => ({
-  alert: { show: false, message: "" },
-  nacionalidades: [],
+  data: () => ({
+    alert: { show: false, message: "" },
+    nacionalidades: [],
     levelEnglish: [],
     nivelEducativo: [],
     discapacidades: [],
     estados: [],
     generos: [],
-    estudiante:{
-    id_estudiante: null,
-    representante: null,
-    estado: null, //Devuelve el nombre pero no el id, necesitamos el id
-    discapacidad: null, //Devuelve el nombre pero no el id, necesitamos el id
-    genero: null,
-    nivel_edu: null,
-    nacionalidad: null,
-    nivel_ingles: null,
-    nombre: null,
-    apellido: null,
-    fecha_canimiento: "",
-    cedula: null,
-    direccion: null,
-    telefono: null,
-    correo: null,
-    contacto_emergencia: null,
-    quien_retira: null
-}
-}),
-methods: {
+    representantes: [],
+    estudiante: {
+      id_estudiante: null,
+      representante: null,
+      estado: null, //Devuelve el nombre pero no el id, necesitamos el id
+      discapacidad: null, //Devuelve el nombre pero no el id, necesitamos el id
+      genero: null,
+      nivel_edu: null,
+      nacionalidad: null,
+      nivel_ingles: null,
+      nombre: null,
+      apellido: null,
+      fecha_canimiento: "",
+      cedula: null,
+      direccion: null,
+      telefono: null,
+      correo: null,
+      contacto_emergencia: null,
+      quien_retira: null,
+    },
+  }),
+  methods: {
+    async obtenerRepresentantes() {
+      try {
+        const res = await newGoalService.getRepresentante();
+        this.representantes = res.data;
+        console.log(this.representantes);
+      } catch (error) {
+        console.log(error);
+      }
+    },
 
+    async obtenerEstudianteById(id) {
+      id = this.id;
+      try {
+        const res = await newGoalService.getEstudianteById(id);
 
-async obtenerEstudianteById (id){
-  id = this.id
-try {
+        const datosApi = res.data[0];
 
-    const res = await newGoalService.getEstudianteById(id)
-  
-    const datosApi = res.data[0];
-    
-    
-    this.estudiante.id_estudiante = datosApi.id_etd
-    // this.estudiante.representante = datosApi.
-     this.estudiante.estado = datosApi.id_estado
-     this.estudiante.discapacidad = datosApi.id_discd
-     this.estudiante.genero = datosApi.id_genero
- this.estudiante.nivel_edu = datosApi.id_nv_edu
- this.estudiante.nacionalidad = datosApi.id_ncd
- this.estudiante.nivel_ingles = datosApi.id_nivel_ingles
-this.estudiante.nombre = datosApi.nombre_etd
-this.estudiante.apellido = datosApi.apellido_etd
- this.estudiante.fecha_canimiento = datosApi.fecha_nacimiento_etd
- this.estudiante.cedula = datosApi.cedula_etd
-this.estudiante.direccion = datosApi.direccion_etd
-this.estudiante.telefono = datosApi.telefono_etd
-this.estudiante.correo = datosApi.correo_etd
-this.estudiante.contacto_emergencia = datosApi.contacto_emergencia_etd
-this.estudiante.quien_retira = datosApi.quien_retira_etd
-console.log('--------------------')
-console.log(datosApi)
-console.log('--------------------')
-// Este ciclo es una mierda por eso lo comento
-// Itera sobre las propiedades de `estudiante`
-// for (const key in this.estudiante) {
-//   if (datosApi.hasOwnProperty(key)) {
-//     this.estudiante[key] = datosApi[key];
-//   }
-// }
+        this.estudiante.id_estudiante = datosApi.id_etd;
+        this.estudiante.representante = datosApi.id_rt;
+        this.estudiante.estado = datosApi.id_estado;
+        this.estudiante.discapacidad = datosApi.id_discd;
+        this.estudiante.genero = datosApi.id_genero;
+        this.estudiante.nivel_edu = datosApi.id_nv_edu;
+        this.estudiante.nacionalidad = datosApi.id_ncd;
+        this.estudiante.nivel_ingles = datosApi.id_nivel_ingles;
+        this.estudiante.nombre = datosApi.nombre_etd;
+        this.estudiante.apellido = datosApi.apellido_etd;
+        this.estudiante.fecha_canimiento = datosApi.fecha_nacimiento_etd;
+        this.estudiante.cedula = datosApi.cedula_etd;
+        this.estudiante.direccion = datosApi.direccion_etd;
+        this.estudiante.telefono = datosApi.telefono_etd;
+        this.estudiante.correo = datosApi.correo_etd;
+        this.estudiante.contacto_emergencia = datosApi.contacto_emergencia_etd;
+        this.estudiante.quien_retira = datosApi.quien_retira_etd;
+        console.log("--------------------");
+        console.log(datosApi);
+        console.log("--------------------");
+        // Este ciclo es una mierda por eso lo comento
+        // Itera sobre las propiedades de `estudiante`
+        // for (const key in this.estudiante) {
+        //   if (datosApi.hasOwnProperty(key)) {
+        //     this.estudiante[key] = datosApi[key];
+        //   }
+        // }
 
-// console.log("Estudiante actualizado:", this.estudiante);
-} catch (error) {
-    console.log(error)
-}
-},
+        // console.log("Estudiante actualizado:", this.estudiante);
+      } catch (error) {
+        console.log(error);
+      }
+    },
 
-
-async leerNacionalidades() {
+    async leerNacionalidades() {
       try {
         const res = await newGoalService.getNacionalidad();
         this.nacionalidades = res.data.datos;
@@ -337,11 +343,14 @@ async leerNacionalidades() {
         console.log(error);
       }
     },
+    fullName(item) {
+      return `${item.nombre_rt} ${item.apellido_rt}`;
+    },
 
-    async modificarEstudiante(){
+    async modificarEstudiante() {
       try {
-       const res = await newGoalService.putEstudiante(this.estudiante)
-       this.alert = {
+        const res = await newGoalService.putEstudiante(this.estudiante);
+        this.alert = {
           show: true,
           color: "success",
           message: "Estudiante modificado corectamente",
@@ -354,18 +363,19 @@ async leerNacionalidades() {
           message: "Error al intentar modificar estudiante",
         };
       }
-    }
-},
+    },
+  },
 
-    mounted(){
-        // this.obtenerEstudiantes()
-    this.obtenerEstudianteById()
+  mounted() {
+    // this.obtenerEstudiantes()
+    this.obtenerEstudianteById();
     this.leerEstados();
     this.leerDiscapacidades();
     this.leerGeneros();
     this.leerNivelEducativo();
     this.leerNivelIngles();
-    this.leerNacionalidades()
-    }
-}
+    this.leerNacionalidades();
+    this.obtenerRepresentantes();
+  },
+};
 </script>
