@@ -139,9 +139,8 @@ export default {
     cedulaRules: [
       (v) => !!v || "requerido",
       (v) =>
-        !v ||
-        /^[VEJPG]-\d{6,8}$/.test(v) ||
-        "Formato inválido (Ej: V-12345678)",
+        /^\d{7,8}$/.test(v) || // Solo números, 7 u 8 dígitos
+        "Formato inválido (Ej: 12345678)",
     ],
     emailRules: [
       (v) => !!v || "Requerido",

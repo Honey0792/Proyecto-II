@@ -91,7 +91,7 @@
       title="Oprimiste eliminar"
       color="warning"
     >
-      <v-card-text> ¿Estas seguro de querer elimanar a {{ this.nombreEliminar }} {{ this.apellidoEliminar }}? </v-card-text>
+      <v-card-text> ¿Estas seguro de querer eliminar a {{ this.nombreEliminar }} {{ this.apellidoEliminar }}? </v-card-text>
       <template v-slot:actions>
         <v-spacer></v-spacer>
         <v-btn

@@ -184,12 +184,53 @@
         </v-container>
       </v-card-text>
     </v-form>
+    <v-divider></v-divider>
+    <div class="pa-3">
+      <h3 class="pa-3">Alergias</h3>
+      <v-btn @click="showCarta"> Añadir Alergias </v-btn>
+      <v-data-table-virtual :items="alergias" :headers width="400">
+        <template v-slot:item.actions="{ item }">
+          <v-icon
+            color="medium-emphasis"
+            icon="mdi-delete"
+            size="small"
+            @click="eliminar(item.id_alergia_etd)"
+          ></v-icon>
+        </template>
+      </v-data-table-virtual>
+    </div>
   </v-card>
+  <v-dialog v-model="this.dialogAlergia">
+    <CartaAlergias :id="id" @actualizar_alergias="obtenerAlergiasById" />
+  </v-dialog>
+  <v-dialog v-model="this.dialog_1" width="auto">
+    <v-card
+      max-width="400"
+      prepend-icon="mdi-delete-alert"
+      title="Oprimiste eliminar"
+      color="warning"
+    >
+      <v-card-text> ¿Estas seguro de querer eliminar esta alergia? </v-card-text>
+      <template v-slot:actions>
+        <v-spacer></v-spacer>
+        <v-btn
+          class="ms-auto"
+          text="Cancelar"
+          @click="this.dialog_1 = false"
+        ></v-btn>
+        <v-btn class="ms-auto" text="Ok" @click="eliminarAlergia"></v-btn>
+      </template>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script>
 import newGoalService from "@/services/newGoalService";
+import CartaAlergias from "./CartaAlergias.vue";
 export default {
+  components: {
+    CartaAlergias,
+  },
   props: {
     id: {
       type: Number,
@@ -197,12 +238,21 @@ export default {
     },
   },
   data: () => ({
+    dialog_1: null,
+    id_alergia: null,
+    alergias: [],
     nacionalidades: [],
     levelEnglish: [],
     nivelEducativo: [],
     discapacidades: [],
     estados: [],
     generos: [],
+    headers: [
+      { title: "Alergias", key: "nombre_alergia" }, // Columna para el estado
+      { title: "Severidad", key: "severidad_alergia" }, // Columna para el estado
+      { title: "actions", key: "actions" }, // Columna para el estado
+      // Agrega más columnas según los datos que tengas
+    ],
     estudiante: {
       id_estudiante: null,
       representante: null,
@@ -223,10 +273,15 @@ export default {
       contacto_emergencia: null,
       quien_retira: null,
     },
+    dialogAlergia: false,
   }),
 
   methods: {
-
+    eliminar(id) {
+    this.id_alergia = id
+      this.dialog_1 = true
+    
+    },
     async obtenerEstudianteById(id) {
       id = this.id;
       try {
@@ -235,7 +290,8 @@ export default {
         const datosApi = res.data[0];
 
         this.estudiante.id_estudiante = datosApi.id_etd;
-        this.estudiante.apellido_representante = datosApi.apellido_representante;
+        this.estudiante.apellido_representante =
+          datosApi.apellido_representante;
         this.estudiante.representante = datosApi.nombre_representante;
         this.estudiante.estado = datosApi.estado;
         this.estudiante.discapacidad = datosApi.nombre_discapacidad;
@@ -268,10 +324,38 @@ export default {
         console.log(error);
       }
     },
+    showCarta() {
+      this.dialogAlergia = true;
+      console.log("ejecutando");
+    },
+    async obtenerAlergiasById(id) {
+      id = this.id;
+      try {
+        const res = await newGoalService.getAlergiasById(id);
+        this.alergias = res.data;
+        console.log(res);
+      } catch (error) {
+        console.log(error);
+      }
+    },
+   async eliminarAlergia(){
+    try {
+       const id = { id_alergia_etd: this.id_alergia };
+      const res = await newGoalService.deletealergia(id)
+      console.log(id)
+      this.obtenerAlergiasById()
+      this.dialog_1 = false
+      
+    } catch (error) {
+      console.log(error)
+    }
+   },
   },
   computed: {
-    fullName(){
-      return `${this.estudiante.representante || ''} ${this.estudiante.apellido_representante || ''}`.trim();
+    fullName() {
+      return `${this.estudiante.representante || ""} ${
+        this.estudiante.apellido_representante || ""
+      }`.trim();
     },
     edad() {
       if (!this.estudiante.fecha_canimiento) return "";
@@ -295,6 +379,7 @@ export default {
 
   mounted() {
     this.obtenerEstudianteById();
+    this.obtenerAlergiasById();
   },
 };
 </script>

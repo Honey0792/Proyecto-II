@@ -16,7 +16,7 @@
   </v-dialog>
   <v-card width="1200">
     <h3 class="pa-3">Nuevo Trimestre</h3>
-    <v-form @submit.prevent="crearPeriodo">
+    <v-form ref="form" @submit.prevent="crearPeriodo">
       <v-divider></v-divider>
       <v-container class="">
         <v-row>
@@ -25,6 +25,7 @@
               variant="outlined"
               label="Nombre"
               v-model="periodo.nombre"
+              :rules="globalRules"
             ></v-text-field>
           </v-col>
         </v-row>
@@ -35,6 +36,7 @@
               type="date"
               label="Fecha de Inicio"
               v-model="periodo.fecha_inicio"
+              :rules="fechaInicioRules"
             ></v-text-field>
           </v-col>
           <v-col>
@@ -43,6 +45,7 @@
               type="date"
               label="Fecha de Culminacion"
               v-model="periodo.fecha_fin"
+              :rules="fechaFinRules"
             ></v-text-field>
           </v-col>
         </v-row>
@@ -64,6 +67,7 @@
               item-title="nombre_estado"
               item-value="id_estado"
               v-model="periodo.id_estado"
+              :rules="globalRules"
             ></v-select>
           </v-col>
         </v-row>
@@ -96,6 +100,25 @@ export default {
       fecha_fin: null,
       anio_academico: null,
     },
+     fechaRules: [
+      (v) => !!v || "La fecha es requerida",
+      (v) => {
+        const fechaSeleccionada = new Date(v);
+        const fechaActual = new Date();
+        return (
+          fechaSeleccionada <= fechaActual || "La fecha no puede ser futura"
+        );
+      },
+      (v) => {
+        const fechaMinima = new Date();
+        fechaMinima.setFullYear(fechaMinima.getFullYear() - 100);
+        return (
+          new Date(v) >= fechaMinima ||
+          "Fecha demasiado antigua (máximo 100 años)"
+        );
+      },
+    ],
+    globalRules: [(value) => !!value || "Requerido"],
   }),
   methods: {
     async leerEstados() {
@@ -110,6 +133,16 @@ export default {
 
     async crearPeriodo() {
       try {
+                const { valid } = await this.$refs.form.validate();
+
+        if (!valid) {
+          this.alert = {
+            show: true,
+            color: "warning",
+            message: "Complete todos los campos requeridos",
+          };
+          return;
+        }
         const res = await newGoalService.postPeriodo(this.periodo);
         console.log(res)
         this.alert = {
@@ -128,7 +161,39 @@ export default {
       }
     },
   },
-  computed: {},
+computed: {
+  fechaInicioRules() {
+    return [
+      (v) => !!v || 'Fecha de inicio es requerida',
+      (v) => !isNaN(new Date(v)) || 'Fecha inválida',
+      (v) => {
+        if (!this.periodo.fecha_fin) return true;
+        return new Date(v) <= new Date(this.periodo.fecha_fin) || 'Debe ser anterior a la fecha de culminación';
+      }
+    ];
+  },
+  fechaFinRules() {
+    return [
+      (v) => !!v || 'Fecha de culminación es requerida',
+      (v) => !isNaN(new Date(v)) || 'Fecha inválida',
+      (v) => {
+        if (!this.periodo.fecha_inicio) return true;
+        const start = new Date(this.periodo.fecha_inicio);
+        const end = new Date(v);
+        
+        // Validación 1: La fecha fin no puede ser menor a la inicio
+        if (end < start) return 'No puede ser anterior a la fecha de inicio';
+        
+        // Validación 2: Diferencia mínima de 2 meses y medio (75 días aprox)
+        const minEndDate = new Date(start);
+        minEndDate.setMonth(minEndDate.getMonth() + 2);
+        minEndDate.setDate(minEndDate.getDate() + 15);
+        
+        return end >= minEndDate || 'Mínimo 2 meses y medio de diferencia requeridos';
+      }
+    ];
+  }
+},
   mounted() {
     this.leerEstados();
   },

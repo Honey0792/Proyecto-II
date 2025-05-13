@@ -225,8 +225,14 @@
 </template>
 <script>
 import newGoalService from "@/services/newGoalService";
+import { computed } from "vue";
 export default {
   data: () => ({
+    menuFechaNacimiento: false,
+    maxDate: new Date().toISOString().split("T")[0], // Fecha actual
+    minDate: new Date(new Date().setFullYear(new Date().getFullYear() - 100))
+      .toISOString()
+      .split("T")[0], // Hace 100 años
     alert: { show: false, message: "" },
     nacionalidades: [],
     levelEnglish: [],
@@ -279,9 +285,9 @@ export default {
     ],
     cedulaRules: [
       (v) =>
-        !v ||
-        /^[VEJPG]-\d{6,8}$/.test(v) ||
-        "Formato inválido (Ej: V-12345678)",
+        !v || // Permite campo vacío
+        /^\d{7,8}$/.test(v) || // Solo números, 7 u 8 dígitos
+        "Formato inválido (Ej: 12345678)",
     ],
     dateRules: [
       (v) => !!v || "Fecha requerida",
@@ -300,6 +306,14 @@ export default {
     activate: true,
     prueba: null,
   }),
+  computed: {
+    fechaFormateada() {
+      return this.estudiante.fecha_nacimiento
+        ? new Date(this.estudiante.fecha_nacimiento).toLocaleDateString("es-ES")
+        : "";
+    },
+  },
+
   methods: {
     fullName(item) {
       return `${item.nombre_rt} ${item.apellido_rt}`;
@@ -456,6 +470,19 @@ export default {
     this.leerNivelIngles();
     this.leerNacionalidades();
     this.obtenerRepresentantes();
+  },
+
+  watch: {
+    "estudiante.cedula"(newVal) {
+      if (newVal?.trim() === "") {
+        this.estudiante.cedula = null;
+      }
+    },
+    activate(newVal) {
+      if (!newVal) {
+        this.estudiante.cedula = null;
+      }
+    },
   },
 };
 </script>

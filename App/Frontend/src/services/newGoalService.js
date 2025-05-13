@@ -46,6 +46,12 @@ export default {
   postNota(value) {
     return newGoalApi().post("/notas", value);
   },
+
+  //ALERGIAS
+   postAlergia(value) {
+    return newGoalApi().post("/alergiaEstudiantes", value);
+  },
+
   //GET
 
   // SELECTS
@@ -81,6 +87,10 @@ export default {
 
   getNivelInscripcion() {
     return newGoalApi().get("/select/nivel-inscripcion");
+  },
+
+  getSelectAlergias() {
+    return newGoalApi().get("/select/alergias");
   },
   // ESTUDIANTES
   getEstudiante() {
@@ -162,6 +172,15 @@ export default {
 
   getNotasById(id) {
     return newGoalApi().get(`/notas/${id}`);
+  },
+
+  //ALERGIAS
+  getAlergias() {
+    return newGoalApi().get(`/alergiaEstudiantes?pagina=1&limit=1000`);
+  },
+
+  getAlergiasById(id) {
+    return newGoalApi().get(`/alergiaEstudiantes/${id}`);
   },
 
   //PUT
@@ -254,5 +273,10 @@ export default {
    //NOTAS
    deleteNota(value) {
     return newGoalApi().delete("/notas", { data: value });
+  },
+
+  //ALERGIAS
+  deletealergia(value) {
+    return newGoalApi().delete("/alergiaEstudiantes", { data: value });
   },
 };

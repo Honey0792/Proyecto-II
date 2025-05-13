@@ -1,6 +1,6 @@
 <template>
   <v-card class="ma-7">
-    <v-form @submit.prevent="crearSesion">
+    <v-form ref="form" @submit.prevent="crearSesion">
       <h3 class="pa-3">Datos del Usuario</h3>
       <v-divider></v-divider>
       <v-container class="">
@@ -13,6 +13,7 @@
               variant="outlined"
               label="Persona"
               v-model="sesion.id_persona"
+              :rules="globalRules"
             ></v-autocomplete>
           </v-col>
         </v-row>
@@ -22,6 +23,7 @@
               variant="outlined"
               label="Nombre de Usuario"
               v-model="sesion.nombre"
+              :rules="usernameRules"
             ></v-text-field>
           </v-col>
           <v-col>
@@ -29,6 +31,7 @@
               variant="outlined"
               label="Contraseña"
               v-model="sesion.password"
+              :rules="contrasenaRules"
             ></v-text-field>
           </v-col>
           <v-col>
@@ -39,6 +42,7 @@
               item-value="id_rol"
               variant="outlined"
               v-model="sesion.rol"
+              :rules="globalRules"
             ></v-select>
           </v-col>
         </v-row>
@@ -66,6 +70,36 @@ export default {
       password: null,
       rol: null,
     },
+    globalRules: [(value) => !!value || "Requerido"],
+     usernameRules: [
+      (value) => !!value || "Éste campo es requerido",
+      (value) =>
+        !value.includes(" ") ||
+        "El nombre de usuario no puede contener espacios en blanco",
+      (value) =>
+        /^[A-Za-z\s.\d]+$/.test(value) ||
+        "No se permiten caracteres especiales",
+      (value) =>
+        value.length <= 14 ||
+        "El nombre de usuario no puede contener más de 14 caracteres",
+      (value) =>
+        value.length >= 4 ||
+        "El nombre de usuario no puede contener menos de 4 caracteres",
+    ],
+    contrasenaRules: [
+      (value) => !!value || "La contrasena es requerida",
+      (value) =>
+        !value.includes(" ") || "La contraseña no puede contener espacios",
+      (value) =>
+        /^[a-zA-Z0-9\._-]*$/.test(value) ||
+        "La contraseña solo puede contener letras, números, guiones bajos y puntos",
+      (value) =>
+        value.length <= 14 ||
+        "La contraseña no puede tener más de 18 caracteres",
+      (value) =>
+        value.length >= 4 ||
+        "La contraseña no puede tener menos de 4 caracteres",
+    ],
   }),
   methods: {
     fullName(item) {
@@ -73,6 +107,16 @@ export default {
     },
     async crearSesion() {
       try {
+         const { valid } = await this.$refs.form.validate();
+
+      if (!valid) {
+        this.alert = {
+          show: true,
+          color: "warning",
+          message: "Complete todos los campos requeridos",
+        };
+        return;
+      }
         console.log(this.sesion)
         const res = await newGoalService.postSesion(this.sesion);
       } catch (error) {
