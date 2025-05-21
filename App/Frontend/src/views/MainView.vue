@@ -231,13 +231,6 @@ export default {
 
 <template>
   <v-container fluid>
-    <!-- Título -->
-    <v-row class="mb-4">
-      <v-col cols="12">
-        <h2 class="text-h5 text-white">Panel Principal</h2>
-      </v-col>
-    </v-row>
-
     <!-- Resumen de tarjetas -->
     <v-row class="mb-4" align="stretch">
       <v-col cols="12" sm="6" md="4">
