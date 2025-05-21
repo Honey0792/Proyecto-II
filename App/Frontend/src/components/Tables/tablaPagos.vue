@@ -7,15 +7,15 @@
     v-model:page="paginacion.pagina"
     :search="search"
   >
-  <template v-slot:top>
+    <template v-slot:top>
       <v-text-field
-                  v-model="search"
-                  placeholder="Buscar"
-                  prepend-inner-icon="mdi-magnify"
-                  clearable
-                  density="compact"
-                  single-line
-                ></v-text-field>
+        v-model="search"
+        placeholder="Buscar"
+        prepend-inner-icon="mdi-magnify"
+        clearable
+        density="compact"
+        single-line
+      ></v-text-field>
     </template>
     <template v-slot:item.fecha_pago="{ item }">
       {{ item.fecha_pago.split("T")[0] }}
@@ -31,34 +31,30 @@
       >
         {{ item.monto_cancelado_pago }}
       </span>
-
-      
     </template>
-    <template v-slot:item.id_pago="{item}">
-
-    </template>
+    <template v-slot:item.id_pago="{ item }"> </template>
     <template v-slot:item.actions="{ item }">
-        <div class="d-flex ga-2 justify-end">
-          <v-icon
-            color="medium-emphasis"
-            icon="mdi-pencil"
-            size="small"
-            @click="edita(item.id_pago)"
-          ></v-icon>
-          <v-icon
-            color="medium-emphasis"
-            icon="mdi-eye"
-            size="small"
-            @click="ver(item.id_pago)"
-          ></v-icon>
-          <v-icon
-            color="medium-emphasis"
-            icon="mdi-delete"
-            size="small"
-            @click="eliminar(item.id_pago)"
-          ></v-icon>
-        </div>
-      </template>
+      <div class="d-flex ga-2 justify-end">
+        <v-icon
+          color="medium-emphasis"
+          icon="mdi-pencil"
+          size="small"
+          @click="edita(item.id_pago)"
+        ></v-icon>
+        <v-icon
+          color="medium-emphasis"
+          icon="mdi-eye"
+          size="small"
+          @click="ver(item.id_pago)"
+        ></v-icon>
+        <v-icon
+          color="medium-emphasis"
+          icon="mdi-delete"
+          size="small"
+          @click="eliminar(item.id_pago)"
+        ></v-icon>
+      </div>
+    </template>
     <!-- <template v-slot:bottom>
       <div class="text-center pt-2">
         <v-pagination
@@ -66,6 +62,11 @@
         ></v-pagination>
       </div>
     </template> -->
+    <template v-slot:footer.prepend>
+      <div class="mx-3">
+        <v-btn @click="reportePagos">Generar Listado</v-btn>
+      </div>
+    </template>
   </v-data-table>
 
   <v-dialog v-model="this.dialog_1">
@@ -114,7 +115,7 @@ import CartaVerPago from "../Cards/CartaVerPago.vue";
 import CartaEditPago from "../Cards/CartaEditPago.vue";
 
 export default {
-  components:{
+  components: {
     CartaVerPago,
     CartaEditPago,
   },
@@ -171,6 +172,31 @@ export default {
         this.obtenerPagos();
       } catch (error) {
         console.log(error);
+      }
+    },
+
+    async reportePagos() {
+      try {
+        const response = await newGoalService.getReportePagos();
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement("a");
+        link.href = url;
+
+        // Obtener el nombre del archivo desde las cabeceras (si el servidor lo envía)
+        const contentDisposition = response.headers["content-disposition"];
+        const fileName = contentDisposition
+          ? contentDisposition.split("filename=")[1].replace(/"/g, "")
+          : `Reporte_Pagos_${new Date().toISOString()}.xlsx`; // Nombre por defecto si no hay header
+
+        link.setAttribute("download", fileName);
+        document.body.appendChild(link);
+        link.click();
+
+        // Limpiar recursos
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+      } catch (error) {
+        console.error("Error:", error.response?.data || error.message);
       }
     },
 

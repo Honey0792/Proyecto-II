@@ -49,7 +49,7 @@
               variant="outlined"
               type="date"
               label="Fecha del Gasto"
-              v-model="gasto.fecha.split('T')[0]"
+              v-model="gasto.fecha"
             ></v-text-field>
           </v-col>
           <v-col>
@@ -146,7 +146,7 @@ export default {
         this.gasto.tipo_gasto = datosApi.id_tipo_gasto;
         this.gasto.nombre = datosApi.nombre_gasto;
         this.gasto.descripcion = datosApi.descripcion_gasto;
-        this.gasto.fecha = datosApi.fecha_gasto;
+        this.gasto.fecha = datosApi.fecha_gasto.split('T')[0];
         this.gasto.cantidad = datosApi.cantidad_gasto;
         console.log();
       } catch (error) {

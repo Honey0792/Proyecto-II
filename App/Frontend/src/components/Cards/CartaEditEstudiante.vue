@@ -15,7 +15,7 @@
     >
   </v-dialog>
   <v-card class="ma-7">
-    <v-form @submit="modificarEstudiante">
+    <v-form ref="form" @submit.prevent="modificarEstudiante">
       <v-card-title class="bg-cyan-lighten-5">
         Registro de Estudiante
       </v-card-title>
@@ -30,6 +30,7 @@
                 v-model="estudiante.nombre"
                 variant="outlined"
                 label="Nombres"
+                :rules="nombresRules"
               ></v-text-field>
             </v-col>
             <v-col>
@@ -37,15 +38,17 @@
                 variant="outlined"
                 v-model="estudiante.apellido"
                 label="Apellidos"
+                :rules="nombresRules"
               >
               </v-text-field>
             </v-col>
             <v-col>
               <v-text-field
-                v-model="estudiante.fecha_canimiento.split('T')[0]"
+                v-model="estudiante.fecha_canimiento"
                 variant="outlined"
                 type="date"
                 label="Fecha de Nacimiento"
+                :rules="dateRules"
               ></v-text-field>
             </v-col>
           </v-row>
@@ -61,6 +64,7 @@
                 item-title="nombre_nv_edu"
                 item-value="id_nv_edu"
                 v-model="estudiante.nivel_edu"
+                :rules="globalRules"
               ></v-select>
             </v-col>
             <v-col>
@@ -71,6 +75,7 @@
                 :items="levelEnglish"
                 item-title="nombre_nivel_ingles"
                 item-value="id_nivel_ingles"
+                :rules="globalRules"
               ></v-select>
             </v-col>
             <v-col>
@@ -81,6 +86,7 @@
                 :items="estados"
                 item-title="nombre_estado"
                 item-value="id_estado"
+                :rules="globalRules"
               >
               </v-select>
             </v-col>
@@ -92,6 +98,7 @@
                 :items="nacionalidades"
                 item-title="nombre_ncd"
                 item-value="id_ncd"
+                :rules="globalRules"
               >
               </v-select>
             </v-col>
@@ -108,6 +115,7 @@
                 :items="discapacidades"
                 item-title="nombre_discd"
                 item-value="id_discd"
+                :rules="globalRules"
               ></v-select>
             </v-col>
             <v-col>
@@ -118,6 +126,7 @@
                 :items="generos"
                 item-title="nombre_genero"
                 item-value="id_genero"
+                :rules="globalRules"
               >
               </v-select>
             </v-col>
@@ -143,6 +152,7 @@
                 hint="Desmarque la casilla si el estudiante no posee cedula"
                 label="Cedula"
                 v-model="estudiante.cedula"
+                :rules="cedulaRules"
               >
               </v-text-field>
             </v-col>
@@ -151,6 +161,7 @@
                 v-model="estudiante.contacto_emergencia"
                 variant="outlined"
                 label="Contacto de emergencia"
+                :rules="globalRules"
               >
               </v-text-field>
             </v-col>
@@ -172,6 +183,7 @@
                 variant="outlined"
                 label="Numero de Telefono"
                 v-model="estudiante.telefono"
+                :rules="phoneRules"
               ></v-text-field>
             </v-col>
             <v-col>
@@ -179,6 +191,7 @@
                 v-model="estudiante.direccion"
                 variant="outlined"
                 label="Direccion"
+                :rules="globalRules"
               >
               </v-text-field>
             </v-col>
@@ -188,6 +201,7 @@
                 type="email"
                 variant="outlined"
                 label="Correo Electronico"
+                :rules="emailRules"
               >
               </v-text-field>
             </v-col>
@@ -238,6 +252,47 @@ export default {
       contacto_emergencia: null,
       quien_retira: null,
     },
+     emailRules: [
+      (v) => !!v || "Requerido",
+      (v) => /.+@.+\..+/.test(v) || "Correo electrónico no válido",
+    ],
+    globalRules: [(value) => !!value || "Requerido"],
+    nombresRules: [
+      (value) => !!value || "Requerido",
+      (value) =>
+        /^[a-zA-Zñáéíóúü\s]+$/i.test(value) || "Solo se admiten letras",
+      (value) => value.length >= 3 || "El campo debe tener mínimo 3 caracteres",
+      (value) =>
+        !/(.)\1{2,}/.test(value) ||
+        "No se permiten caracteres repetidos consecutivamente",
+    ],
+    phoneRules: [
+      (v) => !!v || "Requerido",
+      (v) => /^(0)?(414|412|416|424|422|426)\d{7}$/.test(v) || "Teléfono inválido",
+    ],
+    emergencyContactRules: [
+      (v) => !!v || "Requerido",
+      (v) => /^\d{10,11}$/.test(v) || "Número inválido",
+    ],
+    cedulaRules: [
+      (v) =>
+        !v || // Permite campo vacío
+        /^\d{7,8}$/.test(v) || // Solo números, 7 u 8 dígitos
+        "Formato inválido (Ej: 12345678)",
+    ],
+    dateRules: [
+      (v) => !!v || "Fecha requerida",
+      (v) => {
+        const date = new Date(v);
+        const minDate = new Date();
+        minDate.setFullYear(minDate.getFullYear() - 100);
+        const maxDate = new Date();
+        maxDate.setFullYear(maxDate.getFullYear() - 3);
+        return (
+          (date >= minDate && date <= maxDate) || "Edad inválida (3-100 años)"
+        );
+      },
+    ],
   }),
   methods: {
     async obtenerRepresentantes() {
@@ -267,7 +322,7 @@ export default {
         this.estudiante.nivel_ingles = datosApi.id_nivel_ingles;
         this.estudiante.nombre = datosApi.nombre_etd;
         this.estudiante.apellido = datosApi.apellido_etd;
-        this.estudiante.fecha_canimiento = datosApi.fecha_nacimiento_etd;
+        this.estudiante.fecha_canimiento = datosApi.fecha_nacimiento_etd.split('T')[0];
         this.estudiante.cedula = datosApi.cedula_etd;
         this.estudiante.direccion = datosApi.direccion_etd;
         this.estudiante.telefono = datosApi.telefono_etd;
@@ -348,6 +403,16 @@ export default {
     },
 
     async modificarEstudiante() {
+      const { valid } = await this.$refs.form.validate();
+
+      if (!valid) {
+        this.alert = {
+          show: true,
+          color: "warning",
+          message: "Complete todos los campos requeridos",
+        };
+        return;
+      }
       try {
         const res = await newGoalService.putEstudiante(this.estudiante);
         this.alert = {
@@ -355,6 +420,7 @@ export default {
           color: "success",
           message: "Estudiante modificado corectamente",
         };
+        this.$emit('actualizar_tabla')
       } catch (error) {
         console.log(error);
         this.alert = {
@@ -364,6 +430,13 @@ export default {
         };
       }
     },
+        formFecha(){
+    this.estudiante.fecha_canimiento.split('T')[0]
+    }
+  },
+
+  computed:{
+
   },
 
   mounted() {
@@ -376,6 +449,7 @@ export default {
     this.leerNivelIngles();
     this.leerNacionalidades();
     this.obtenerRepresentantes();
+    // this.formFecha()
   },
 };
 </script>

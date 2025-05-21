@@ -63,7 +63,7 @@
       color="white"
       @click="this.dialog_1 = false"
     ></v-icon>
-    <CartaEditRepresentante :id="id_rt" />
+    <CartaEditRepresentante @actualizar_tabla="obtenerRepresentantes" :id="id_rt" />
   </v-dialog>
   <v-dialog v-model="this.dialog_2">
     <v-icon

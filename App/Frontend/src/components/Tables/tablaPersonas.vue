@@ -2,14 +2,14 @@
   <v-data-table :search="search" :items="personas" :headers height="200">
     <template v-slot:top>
       <v-text-field
-                  v-model="search"
-                  placeholder="Buscar"
-                  prepend-inner-icon="mdi-magnify"
-                  clearable
-                  density="compact"
-                  single-line
-                  hint="Te recomendamos buscar por el número de cédula"
-                ></v-text-field>
+        v-model="search"
+        placeholder="Buscar"
+        prepend-inner-icon="mdi-magnify"
+        clearable
+        density="compact"
+        single-line
+        hint="Te recomendamos buscar por el número de cédula"
+      ></v-text-field>
     </template>
     <template v-slot:item.id_persona="{ item }"> </template>
     <template v-slot:item.actions="{ item }">
@@ -31,6 +31,11 @@
           size="small"
           @click="eliminar(item.id_persona)"
         ></v-icon>
+      </div>
+    </template>
+    <template v-slot:footer.prepend>
+      <div class="mx-3">
+        <v-btn @click="reportePersonas">Generar Listado</v-btn>
       </div>
     </template>
   </v-data-table>
@@ -97,15 +102,40 @@ export default {
       }
     },
 
-    async eliminarPersona(){
-        const id = { id_persona: this.id_persona };
-        try {
-            const res = await newGoalService.deletePersona(id)
-            this.obtenerPersonas()
-            this.dialog_3 = false
-        } catch (error) {
-            console.log(error)
-        }
+    async eliminarPersona() {
+      const id = { id_persona: this.id_persona };
+      try {
+        const res = await newGoalService.deletePersona(id);
+        this.obtenerPersonas();
+        this.dialog_3 = false;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+
+            async reportePersonas() {
+      try {
+        const response = await newGoalService.getReportePersonas();
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement("a");
+        link.href = url;
+
+        // Obtener el nombre del archivo desde las cabeceras (si el servidor lo envía)
+        const contentDisposition = response.headers["content-disposition"];
+        const fileName = contentDisposition
+          ? contentDisposition.split("filename=")[1].replace(/"/g, "")
+          : `Reporte_Empleados_${new Date().toISOString()}.xlsx`; // Nombre por defecto si no hay header
+
+        link.setAttribute("download", fileName);
+        document.body.appendChild(link);
+        link.click();
+
+        // Limpiar recursos
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+      } catch (error) {
+        console.error("Error:", error.response?.data || error.message);
+      }
     },
 
     edita(id) {

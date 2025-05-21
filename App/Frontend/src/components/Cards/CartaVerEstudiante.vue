@@ -199,6 +199,14 @@
         </template>
       </v-data-table-virtual>
     </div>
+    <v-divider></v-divider>
+    <div class="pa-3">
+      <h3 class="pa-3">Inscripciones</h3>
+    </div>
+    <!-- <v-divider></v-divider>
+    <div class="pa-3">
+      <h3 class="pa-3">Pagos</h3>
+    </div> -->
   </v-card>
   <v-dialog v-model="this.dialogAlergia">
     <CartaAlergias :id="id" @actualizar_alergias="obtenerAlergiasById" />
@@ -210,7 +218,9 @@
       title="Oprimiste eliminar"
       color="warning"
     >
-      <v-card-text> ¿Estas seguro de querer eliminar esta alergia? </v-card-text>
+      <v-card-text>
+        ¿Estas seguro de querer eliminar esta alergia?
+      </v-card-text>
       <template v-slot:actions>
         <v-spacer></v-spacer>
         <v-btn
@@ -278,9 +288,8 @@ export default {
 
   methods: {
     eliminar(id) {
-    this.id_alergia = id
-      this.dialog_1 = true
-    
+      this.id_alergia = id;
+      this.dialog_1 = true;
     },
     async obtenerEstudianteById(id) {
       id = this.id;
@@ -324,6 +333,16 @@ export default {
         console.log(error);
       }
     },
+
+    async obtenerPagosEstudiante() {
+      try {
+        const res = await newGoalService.getPagosEstudiante(this.id)
+        console.log(res)
+
+      } catch (error) {
+        console.log(error)
+      }
+    },
     showCarta() {
       this.dialogAlergia = true;
       console.log("ejecutando");
@@ -338,18 +357,17 @@ export default {
         console.log(error);
       }
     },
-   async eliminarAlergia(){
-    try {
-       const id = { id_alergia_etd: this.id_alergia };
-      const res = await newGoalService.deletealergia(id)
-      console.log(id)
-      this.obtenerAlergiasById()
-      this.dialog_1 = false
-      
-    } catch (error) {
-      console.log(error)
-    }
-   },
+    async eliminarAlergia() {
+      try {
+        const id = { id_alergia_etd: this.id_alergia };
+        const res = await newGoalService.deletealergia(id);
+        console.log(id);
+        this.obtenerAlergiasById();
+        this.dialog_1 = false;
+      } catch (error) {
+        console.log(error);
+      }
+    },
   },
   computed: {
     fullName() {
@@ -380,6 +398,7 @@ export default {
   mounted() {
     this.obtenerEstudianteById();
     this.obtenerAlergiasById();
+    // this.obtenerPagosEstudiante()
   },
 };
 </script>

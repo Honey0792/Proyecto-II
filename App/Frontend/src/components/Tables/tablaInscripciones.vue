@@ -33,6 +33,11 @@
         ></v-icon>
       </div>
     </template>
+    <template v-slot:footer.prepend>
+      <div class="mx-3">
+        <v-btn @click="reporteInscripciones">Generar Listado</v-btn>
+      </div>
+    </template>
   </v-data-table>
 
   <v-dialog v-model="this.dialog_1">
@@ -110,6 +115,31 @@ export default {
         console.log(this.inscripciones);
       } catch (error) {
         console.log(error);
+      }
+    },
+
+     async reporteInscripciones() {
+      try {
+        const response = await newGoalService.getReporteInscripciones();
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement("a");
+        link.href = url;
+
+        // Obtener el nombre del archivo desde las cabeceras (si el servidor lo envía)
+        const contentDisposition = response.headers["content-disposition"];
+        const fileName = contentDisposition
+          ? contentDisposition.split("filename=")[1].replace(/"/g, "")
+          : `Reporte_Inscripciones_${new Date().toISOString()}.xlsx`; // Nombre por defecto si no hay header
+
+        link.setAttribute("download", fileName);
+        document.body.appendChild(link);
+        link.click();
+
+        // Limpiar recursos
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+      } catch (error) {
+        console.error("Error:", error.response?.data || error.message);
       }
     },
 

@@ -48,13 +48,18 @@ export default {
   },
 
   //ALERGIAS
-   postAlergia(value) {
+  postAlergia(value) {
     return newGoalApi().post("/alergiaEstudiantes", value);
   },
 
   //GET
 
   // SELECTS
+
+  getHome() {
+    return newGoalApi().get("/select/home");
+  },
+
   getNacionalidad() {
     return newGoalApi().get("/select/nacionalidad");
   },
@@ -100,6 +105,12 @@ export default {
   getEstudianteById(id) {
     return newGoalApi().get(`/estudiantes/${id}`);
   },
+
+  getReporteEstudiantes() {
+    return newGoalApi().get("/estudiantes/reporte", {
+      responseType: "blob", // Para manejar archivos
+    });
+  },
   // REPRESENTANTES
   getRepresentante() {
     return newGoalApi().get("/representantes?pagina=1&limit=1000");
@@ -118,13 +129,29 @@ export default {
     return newGoalApi().get(`/periodos/${id}`);
   },
 
+    getReportePeriodos() {
+    return newGoalApi().get("/periodos/reporte", {
+      responseType: "blob", // Para manejar archivos
+    });
+  },
+
   //PAGOS
   getPagos() {
     return newGoalApi().get(`/pagos?pagina=1&limit=1000`);
   },
-
+  
   getPagoById(id) {
     return newGoalApi().get(`/pagos/${id}`);
+  },
+
+   getPagosEstudiante(value) {
+    return newGoalApi().get(`/pagos/estudiante`, {body:{id :value}});
+  },
+
+  getReportePagos() {
+    return newGoalApi().get("/pagos/reporte", {
+      responseType: "blob", // Para manejar archivos
+    });
   },
 
   //GASTOS
@@ -136,6 +163,12 @@ export default {
     return newGoalApi().get(`/gastos/${id}`);
   },
 
+  getReporteGastos() {
+    return newGoalApi().get("/gastos/reporte", {
+      responseType: "blob", // Para manejar archivos
+    });
+  },
+
   //PERSONAS
   getPersonas() {
     return newGoalApi().get(`/personas?pagina=1&limit=1000`);
@@ -143,6 +176,12 @@ export default {
 
   getPersonaById(id) {
     return newGoalApi().get(`/personas/${id}`);
+  },
+
+      getReportePersonas() {
+    return newGoalApi().get("/personas/reporte", {
+      responseType: "blob", // Para manejar archivos
+    });
   },
 
   //SESIONES
@@ -165,6 +204,12 @@ export default {
     return newGoalApi().get(`/inscripciones/${id}`);
   },
 
+  getReporteInscripciones() {
+    return newGoalApi().get("/inscripciones/reporte", {
+      responseType: "blob", // Para manejar archivos
+    });
+  },
+
   //NOTAS
   getNotas() {
     return newGoalApi().get(`/notas?pagina=1&limit=1000`);
@@ -172,6 +217,12 @@ export default {
 
   getNotasById(id) {
     return newGoalApi().get(`/notas/${id}`);
+  },
+
+  getReporteNotas() {
+    return newGoalApi().get("/notas/reporte", {
+      responseType: "blob", // Para manejar archivos
+    });
   },
 
   //ALERGIAS
@@ -270,8 +321,8 @@ export default {
     return newGoalApi().delete("/inscripciones", { data: value });
   },
 
-   //NOTAS
-   deleteNota(value) {
+  //NOTAS
+  deleteNota(value) {
     return newGoalApi().delete("/notas", { data: value });
   },
 

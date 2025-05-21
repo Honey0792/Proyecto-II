@@ -9,7 +9,8 @@
   >
   <v-card class="d-flex mx-10 ma-7">
     <v-data-table
-    :search="search"
+      :loading="loadingConfig"
+      :search="search"
       height="460"
       :headers="headers"
       :sort-by="[{ key: 'id_etd', order: 'desc' }]"
@@ -18,20 +19,18 @@
       v-model:items-per-page="paginacion.items"
       v-model:page="paginacion.pagina"
     >
-    <template v-slot:top>
-      <v-text-field
-                  v-model="search"
-                  placeholder="Buscar"
-                  prepend-inner-icon="mdi-magnify"
-                  clearable
-                  density="compact"
-                  single-line
-                  hint="Te recomendamos buscar por el número de cédula"
-                ></v-text-field>
-    </template>
-    <template v-slot:item.id_etd="{item}">
-
-    </template>
+      <template v-slot:top>
+        <v-text-field
+          v-model="search"
+          placeholder="Buscar"
+          prepend-inner-icon="mdi-magnify"
+          clearable
+          density="compact"
+          single-line
+          hint="Te recomendamos buscar por el número de cédula"
+        ></v-text-field>
+      </template>
+      <template v-slot:item.id_etd="{ item }"> </template>
       <template v-slot:item.nombre_etd="{ item }">
         {{ item.nombre_etd }}
       </template>
@@ -63,6 +62,11 @@
           ></v-icon>
         </div>
       </template>
+      <template v-slot:footer.prepend>
+        <div class="mx-3">
+          <v-btn @click="reporteEstudiante">Generar Listado</v-btn>
+        </div>
+      </template>
     </v-data-table>
   </v-card>
 
@@ -73,7 +77,7 @@
       color="white"
       @click="this.dialog_1 = false"
     ></v-icon>
-    <CartaEditEstudiante :id="id_etd" />
+    <CartaEditEstudiante @actualizar_tabla="obtenerEstudiantes" :id="id_etd" />
   </v-dialog>
   <v-dialog v-model="this.dialog_2">
     <v-icon
@@ -91,7 +95,10 @@
       title="Oprimiste eliminar"
       color="warning"
     >
-      <v-card-text> ¿Estas seguro de querer eliminar a {{ this.nombreEliminar }} {{ this.apellidoEliminar }}? </v-card-text>
+      <v-card-text>
+        ¿Estas seguro de querer eliminar a {{ this.nombreEliminar }}
+        {{ this.apellidoEliminar }}?
+      </v-card-text>
       <template v-slot:actions>
         <v-spacer></v-spacer>
         <v-btn
@@ -117,6 +124,7 @@ export default {
     CartaVerEstudiante,
   },
   data: () => ({
+    loadingConfig:true,
     search: null,
     nombreEliminar: "",
     apellidoEliminar: "",
@@ -148,11 +156,49 @@ export default {
   }),
 
   methods: {
+    async reporteEstudiante() {
+      // try {
+      //   const res = await newGoalService.getReporteEstudiantes();
+      //   // Abrir en nueva pestaña
+      //   window.open(
+      //     "http://localhost:3000/estudiantes/reporte",
+      //     "_self" // <- Este es el cambio clave
+      //   );
+      // } catch (error) {
+      //   console.error("Error abriendo reporte:", error);
+      //   alert("No se pudo abrir el reporte");
+      // }
+       try {
+        const response = await newGoalService.getReporteEstudiantes()
+        console.log(response)
+       // Crear un enlace temporal para descargar el archivo
+  const url = window.URL.createObjectURL(new Blob([response.data]));
+  const link = document.createElement("a");
+  link.href = url;
+  
+  // Obtener el nombre del archivo desde las cabeceras (si el servidor lo envía)
+  const contentDisposition = response.headers["content-disposition"];
+  const fileName = contentDisposition
+    ? contentDisposition.split("filename=")[1].replace(/"/g, '')
+    : `reporte_estudiantes_${new Date().toISOString()}.xlsx`; // Nombre por defecto si no hay header
+
+  link.setAttribute("download", fileName);
+  document.body.appendChild(link);
+  link.click();
+  
+  // Limpiar recursos
+  document.body.removeChild(link);
+  window.URL.revokeObjectURL(url);
+        } catch (error) {
+          console.error("Error:", error.response?.data || error.message);
+        }
+    },
     async obtenerEstudiantes() {
       try {
         const res = await newGoalService.getEstudiante();
         this.estudiantes = res.data;
         console.log(this.estudiantes);
+        this.loadingConfig = false
       } catch (error) {
         console.log(error);
       }

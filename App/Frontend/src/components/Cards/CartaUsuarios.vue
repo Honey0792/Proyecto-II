@@ -24,7 +24,7 @@
           <template v-slot:actions>
             <v-spacer></v-spacer>
             <v-btn variant="outlined" size="small" color="#00ACC1" @click="modificarUsuario(cards.id_usuario)">Modificar</v-btn>
-            <v-btn variant="outlined" size="small" color="#E65100" @click="eliminar(cards.id_usuario)">Elminar</v-btn>
+            <v-btn variant="outlined" size="small" color="#E65100" @click="eliminar(cards.id_usuario)">Eliminar</v-btn>
 
           </template>
           <!-- <template v-slot:append>

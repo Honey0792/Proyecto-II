@@ -1,5 +1,10 @@
 <template>
-  <v-data-table :search="search" :items="gastos" :headers>
+  <v-data-table
+    :loading="loadingConfig"
+    :search="search"
+    :items="gastos"
+    :headers
+  >
     <template v-slot:top>
       <v-text-field
         v-model="search"
@@ -34,6 +39,11 @@
           size="small"
           @click="eliminar(item.id_gasto)"
         ></v-icon>
+      </div>
+    </template>
+    <template v-slot:footer.prepend>
+      <div class="mx-3">
+        <v-btn @click="reporteGastos">Generar Listado</v-btn>
       </div>
     </template>
   </v-data-table>
@@ -84,6 +94,7 @@ import CartaVerGasto from "../Cards/CartaVerGasto.vue";
 export default {
   components: { CartaEditGasto, CartaVerGasto },
   data: () => ({
+    loadingConfig: true,
     search: null,
     dialog_1: false,
     dialog_2: false,
@@ -105,6 +116,8 @@ export default {
         const res = await newGoalService.getGastos();
         console.log(res);
         this.gastos = res.data;
+        this.loadingConfig = false
+
       } catch (error) {
         console.log(error);
       }
@@ -138,6 +151,30 @@ export default {
       console.log("hola");
       this.dialog_3 = true;
       console.log(id);
+    },
+    async reporteGastos() {
+      try {
+        const response = await newGoalService.getReporteGastos();
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement("a");
+        link.href = url;
+
+        // Obtener el nombre del archivo desde las cabeceras (si el servidor lo envía)
+        const contentDisposition = response.headers["content-disposition"];
+        const fileName = contentDisposition
+          ? contentDisposition.split("filename=")[1].replace(/"/g, "")
+          : `Reporte_Gastos_${new Date().toISOString()}.xlsx`; // Nombre por defecto si no hay header
+
+        link.setAttribute("download", fileName);
+        document.body.appendChild(link);
+        link.click();
+
+        // Limpiar recursos
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+      } catch (error) {
+        console.error("Error:", error.response?.data || error.message);
+      }
     },
   },
 
