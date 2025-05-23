@@ -1,5 +1,11 @@
 <template>
-  <v-data-table :search="search" :items="personas" :headers height="200">
+  <v-data-table
+    :loading="loadingConfig"
+    :search="search"
+    :items="personas"
+    :headers
+    height="200"
+  >
     <template v-slot:top>
       <v-text-field
         v-model="search"
@@ -47,7 +53,7 @@
       color="white"
       @click="this.dialog_1 = false"
     ></v-icon>
-    <CartaEditPersona :id="id_persona" />
+    <CartaEditPersona @actualizar_tabla="obtenerPersonas" :id="id_persona" />
   </v-dialog>
   <v-dialog v-model="this.dialog_3" width="auto">
     <v-card
@@ -77,6 +83,7 @@ import CartaEditPersona from "../Cards/CartaEditPersona.vue";
 export default {
   components: { CartaEditPersona },
   data: () => ({
+    loadingConfig: true,
     search: null,
     dialog_1: false,
     dialog_3: false,
@@ -97,6 +104,7 @@ export default {
         const res = await newGoalService.getPersonas();
         this.personas = res.data;
         console.log(res);
+        this.loadingConfig = false;
       } catch (error) {
         console.log(error);
       }
@@ -113,7 +121,7 @@ export default {
       }
     },
 
-            async reportePersonas() {
+    async reportePersonas() {
       try {
         const response = await newGoalService.getReportePersonas();
         const url = window.URL.createObjectURL(new Blob([response.data]));

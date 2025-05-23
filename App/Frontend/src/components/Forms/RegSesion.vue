@@ -1,4 +1,19 @@
 <template>
+  <v-dialog
+    v-model="alert.show"
+    width="auto"
+    class="justify-center align-center"
+  >
+    <v-alert
+      v-model="alert.show"
+      :color="alert.color"
+      variant="elevated"
+      prominent
+      closable
+      width="400px"
+      >{{ alert.message }}</v-alert
+    >
+  </v-dialog>
   <v-card class="ma-7">
     <v-form ref="form" @submit.prevent="crearSesion">
       <h3 class="pa-3">Datos del Usuario</h3>
@@ -64,6 +79,7 @@ export default {
       { id_rol: 2, nombre_rol: "Empleado" },
     ],
     personas: [],
+    alert: { show: false, message: "" },
     sesion: {
       id_persona: null,
       nombre: null,
@@ -71,7 +87,7 @@ export default {
       rol: null,
     },
     globalRules: [(value) => !!value || "Requerido"],
-     usernameRules: [
+    usernameRules: [
       (value) => !!value || "Éste campo es requerido",
       (value) =>
         !value.includes(" ") ||
@@ -107,19 +123,29 @@ export default {
     },
     async crearSesion() {
       try {
-         const { valid } = await this.$refs.form.validate();
+        const { valid } = await this.$refs.form.validate();
 
-      if (!valid) {
+        if (!valid) {
+          this.alert = {
+            show: true,
+            color: "warning",
+            message: "Complete todos los campos requeridos",
+          };
+          return;
+        }
+        console.log(this.sesion);
+        const res = await newGoalService.postSesion(this.sesion);
+        this.alert = {
+          show: true,
+          color: "success",
+          message: "Usuario creado correctamente",
+        };
+      } catch (error) {
         this.alert = {
           show: true,
           color: "warning",
-          message: "Complete todos los campos requeridos",
+          message: "Error al crear usuario",
         };
-        return;
-      }
-        console.log(this.sesion)
-        const res = await newGoalService.postSesion(this.sesion);
-      } catch (error) {
         console.log(error);
       }
     },

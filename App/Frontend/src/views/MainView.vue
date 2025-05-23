@@ -234,29 +234,30 @@ export default {
     <!-- Resumen de tarjetas -->
     <v-row class="mb-4" align="stretch">
       <v-col cols="12" sm="6" md="4">
-        <v-card color="#4CE08E" dark>
+        <v-card color="#4CE08E" min-height="120" dark>
           <v-card-text>
-            <h3 class="text-h6 mb-1">Total estudiantes</h3>
+            <h3 class="text-h7 mb-1">Total estudiantes</h3>
             <div class="text-h4 font-weight-bold">{{ estudiantes.length }}</div>
           </v-card-text>
         </v-card>
       </v-col>
 
       <v-col cols="12" sm="6" md="4">
-        <v-card color="#4CA0E0" dark>
+        <v-card color="#4CA0E0" min-height="120" dark>
           <v-card-text>
-            <h3 class="text-h6 mb-1">Total inscripciones</h3>
+            <h3 class="text-h7 mb-1">Total inscripciones</h3>
             <div class="text-h4 font-weight-bold">
               {{ totalInscripciones }}
             </div>
           </v-card-text>
+          <v-card-subtitle> Ultimos 5 Trimestres </v-card-subtitle>
         </v-card>
       </v-col>
 
       <v-col cols="12" sm="6" md="4">
-        <v-card color="#4CE0C1" dark>
+        <v-card color="#4CE0C1" min-height="120" dark>
           <v-card-text>
-            <h3 class="text-h6 mb-1">Último período</h3>
+            <h3 class="text-h7 mb-1">Último Trimestre</h3>
             <div class="text-h6">
               {{ latestPeriodo?.nombre_periodo || "---" }}
             </div>
@@ -267,7 +268,7 @@ export default {
 
     <!-- Gráficos: sparkline y dona -->
     <v-row class="mb-4" align="stretch">
-      <!-- Sparkline -->
+      <!-- Stacked bar/line chart -->
       <v-col cols="12" md="6">
         <v-card
           class="mx-auto text-center"
@@ -276,27 +277,8 @@ export default {
           height="270"
           dark
         >
-          <v-card-text>
-            <v-sheet color="rgba(0, 0, 0, .12)">
-              <v-sparkline
-                :model-value="chartData.values"
-                :labels="chartData.labels"
-                color="rgba(255, 255, 255, .7)"
-                height="100"
-                padding="24"
-                stroke-linecap="round"
-                smooth
-              >
-                <template v-slot:label="{ index }">
-
-                    {{ chartData.labels[index] }}:{{ chartData.values[index] }}
-
-                </template>
-              </v-sparkline>
-            </v-sheet>
-            <v-card-text class="text-white">
-              Inscripciones en los últimos periodos
-            </v-card-text>
+          <v-card-text style="height: 100%">
+            <Bar :data="chartDataBarLine" :options="chartOptionsBarLine" />
           </v-card-text>
         </v-card>
       </v-col>
@@ -311,7 +293,7 @@ export default {
               :items="periodoOptions"
               item-title="nombre"
               item-value="id"
-             variant=" outlined"
+              variant=" outlined"
               style="max-width: 160px"
             />
           </v-card-title>
@@ -331,7 +313,7 @@ export default {
         <v-card>
           <v-card-title class="text-h6">Estudiantes registrados</v-card-title>
           <v-data-table-virtual
-            :items="estudiantes"
+            :items="estudiantesFiltrados"
             :headers="headers"
             height="400"
             fixed-header
@@ -344,17 +326,41 @@ export default {
 
 <script>
 import {
+  Chart as ChartJS,
+  Title,
+  Tooltip,
+  Legend,
+  BarElement,
+  LineElement,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+} from "chart.js";
+import { Bar } from "vue-chartjs";
+
+ChartJS.register(
+  Title,
+  Tooltip,
+  Legend,
+  BarElement,
+  LineElement,
+  CategoryScale,
+  LinearScale,
+  PointElement
+);
+import {
   Chart,
   DoughnutController,
   ArcElement,
-  Tooltip,
-  Legend,
+  // Tooltip,
+  // Legend,
 } from "chart.js";
 import newGoalService from "@/services/newGoalService";
 
 Chart.register(DoughnutController, ArcElement, Tooltip, Legend);
 
 export default {
+  components: { Bar },
   data() {
     return {
       datosMain: [],
@@ -370,6 +376,82 @@ export default {
     };
   },
   computed: {
+    estudiantesFiltrados() {
+      // Toma los últimos 10 (suponiendo que el array está ordenado del más antiguo al más reciente)
+      return [...this.estudiantes].slice(-10).reverse();
+    },
+
+    chartDataBarLine() {
+      const sorted = [...this.datosMain].sort(
+        (a, b) => a.id_periodo - b.id_periodo
+      );
+
+      return {
+        labels: sorted.map((p) => p.nombre_periodo.trim()),
+        datasets: [
+          {
+            type: "bar",
+            label: "Inscripciones",
+            data: sorted.map((p) => Number(p.total_inscripciones)),
+            backgroundColor: "#00bcd4",
+            stack: "total",
+          },
+          {
+            type: "line",
+            label: "Mayores de edad",
+            data: sorted.map((p) => Number(p.mayores_edad)),
+            borderColor: "#4caf50",
+            backgroundColor: "#4caf50",
+            fill: false,
+            tension: 0.3,
+            stack: "edad",
+          },
+          {
+            type: "line",
+            label: "Menores de edad",
+            data: sorted.map((p) => Number(p.menores_edad)),
+            borderColor: "#ff9800",
+            backgroundColor: "#ff9800",
+            fill: false,
+            tension: 0.3,
+            stack: "edad",
+          },
+        ],
+      };
+    },
+    chartOptionsBarLine() {
+      return {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: "top",
+            labels: {
+              color: "#fff",
+            },
+          },
+          title: {
+            display: true,
+            text: "Inscripciones por periodo",
+            color: "#fff",
+          },
+        },
+        scales: {
+          x: {
+            stacked: true,
+            ticks: {
+              color: "#fff",
+            },
+          },
+          y: {
+            stacked: true,
+            ticks: {
+              color: "#fff",
+            },
+          },
+        },
+      };
+    },
     chartData() {
       const sorted = [...this.datosMain].sort(
         (a, b) => b.id_periodo - a.id_periodo
@@ -408,6 +490,7 @@ export default {
       try {
         const res = await newGoalService.getHome();
         this.datosMain = res.data.datos;
+        console.log(res);
 
         // Selecciona el último período por defecto
         if (this.datosMain.length > 0) {

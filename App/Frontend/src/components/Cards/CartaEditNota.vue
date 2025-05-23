@@ -1,6 +1,21 @@
 <template>
+  <v-dialog
+    v-model="alert.show"
+    width="auto"
+    class="justify-center align-center"
+  >
+    <v-alert
+      v-model="alert.show"
+      :color="alert.color"
+      variant="elevated"
+      prominent
+      closable
+      width="400px"
+      >{{ alert.message }}</v-alert
+    >
+  </v-dialog>
   <v-card class="ma-7">
-    <v-form @submit="modificarNota">
+    <v-form ref="form" @submit.prevent="modificarNota">
       <h3 class="pa-3">Modificar Nota</h3>
       <v-divider></v-divider>
       <v-container>
@@ -24,7 +39,7 @@
               variant="outlined"
               type="date"
               label="Fecha de Nota"
-              v-model="nota.fecha_creacion.split('T')[0]"
+              v-model="nota.fecha_creacion"
             ></v-text-field>
           </v-col>
           <v-col>
@@ -53,11 +68,12 @@
             ></v-select>
           </v-col>
           <v-col>
-            <v-text-field
+            <v-select
               variant="outlined"
               label="Nota"
               v-model="nota.valor_nota"
-            ></v-text-field>
+              :items="valorNota"
+            ></v-select>
           </v-col>
         </v-row>
         <div class="d-flex pa-4 justify-center">
@@ -79,7 +95,9 @@ export default {
     },
   },
   data: () => ({
+    alert: { show: false, message: "" },
     nivelInscripcion: [],
+    valorNota:['Aprobado','Moderado','Reprobado'],
     periodos: [],
     estudiantes: [],
     nota: {
@@ -100,8 +118,8 @@ export default {
       try {
         const res = await newGoalService.getNotasById(id);
         const datosApi = res.data[0];
-        this.nota.id_nota = datosApi.id_nota
-        this.nota.fecha_creacion = datosApi.fecha_creacion_nota;
+        this.nota.id_nota = datosApi.id_nota;
+        this.nota.fecha_creacion = datosApi.fecha_creacion_nota.split("T")[0];
         this.nota.id_estudiante = datosApi.id_etd;
         this.nota.id_nivel = datosApi.id_nivel;
         this.nota.id_periodo = datosApi.id_periodo;
@@ -112,13 +130,35 @@ export default {
       }
     },
 
-    async modificarNota(){
-        try {
-            const res = await newGoalService.putNota(this.nota)
-            console.log(res)
-        } catch (error) {
-            console.log(error)
-        }
+    async modificarNota() {
+      const { valid } = await this.$refs.form.validate();
+
+      if (!valid) {
+        this.alert = {
+          show: true,
+          color: "warning",
+          message: "Complete todos los campos requeridos",
+        };
+        this.$emit("actualizar_tabla");
+        return;
+      }
+      try {
+        const res = await newGoalService.putNota(this.nota);
+        console.log(res);
+        this.alert = {
+          show: true,
+          color: "success",
+          message: "Nota modificada corectamente",
+        };
+        this.$emit("actualizar_tabla");
+      } catch (error) {
+        console.log(error);
+        this.alert = {
+          show: true,
+          color: "warning",
+          message: "Inscripción no Modificada",
+        };
+      }
     },
 
     async obtenerEstudiantes() {

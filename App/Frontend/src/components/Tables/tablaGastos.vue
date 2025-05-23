@@ -54,7 +54,7 @@
       color="white"
       @click="this.dialog_1 = false"
     ></v-icon>
-    <CartaEditGasto :id="id_gasto" />
+    <CartaEditGasto @actualizar_tabla="obtenerGastos" :id="id_gasto" />
   </v-dialog>
   <v-dialog v-model="this.dialog_2">
     <v-icon
@@ -105,6 +105,7 @@ export default {
       { title: "Orden", align: "start", key: "id_gasto" },
       { title: "Nombre", align: "start", key: "nombre_gasto" },
       { title: "Tipo", align: "end", key: "nombre_tipo_gasto" },
+      { title: "Monto", align: "end", key: "cantidad_gasto" },
       { title: "Metodo de pago", align: "end", key: "nombre_metodo_pago" },
       { title: "Fecha", align: "end", key: "fecha_gasto" },
       { title: "Acciones", align: "end", key: "actions" },

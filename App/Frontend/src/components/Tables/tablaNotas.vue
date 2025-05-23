@@ -1,18 +1,21 @@
 <template>
-  <v-data-table :search="search" :items="notas" :headers>
+  <v-data-table
+    :loading="loadingConfig"
+    :search="search"
+    :items="notas"
+    :headers
+  >
     <template v-slot:top>
       <v-text-field
-                  v-model="search"
-                  placeholder="Buscar"
-                  prepend-inner-icon="mdi-magnify"
-                  clearable
-                  density="compact"
-                  single-line
-                ></v-text-field>
+        v-model="search"
+        placeholder="Buscar"
+        prepend-inner-icon="mdi-magnify"
+        clearable
+        density="compact"
+        single-line
+      ></v-text-field>
     </template>
-<template v-slot:item.id_nota="{item}">
-
-</template>
+    <template v-slot:item.id_nota="{ item }"> </template>
     <template v-slot:item.actions="{ item }">
       <div class="d-flex ga-2 justify-center">
         <v-icon
@@ -35,7 +38,7 @@
         ></v-icon>
       </div>
     </template>
-      <template v-slot:footer.prepend>
+    <template v-slot:footer.prepend>
       <div class="mx-3">
         <v-btn @click="reporteNotas">Generar Listado</v-btn>
       </div>
@@ -49,7 +52,7 @@
       color="white"
       @click="this.dialog_1 = false"
     ></v-icon>
-    <CartaEditNota :id="id_nota" />
+    <CartaEditNota @actualizar_tabla="obtenerNotas" :id="id_nota" />
   </v-dialog>
   <v-dialog v-model="this.dialog_2">
     <v-icon
@@ -92,12 +95,13 @@ export default {
     CartaVerNota,
   },
   data: () => ({
+    loadingConfig: true,
     search: null,
     dialog_1: false,
     dialog_2: false,
     dialog_3: false,
     id_nota: null,
-    notas:[],
+    notas: [],
     headers: [
       { title: "Orden", align: "center", key: "id_nota" },
       { title: "Nombres", align: "center", key: "nombre_etd" },
@@ -114,22 +118,23 @@ export default {
     async obtenerNotas() {
       try {
         const res = await newGoalService.getNotas();
-        this.notas = res.data
+        this.notas = res.data;
         console.log(this.notas);
+        this.loadingConfig = false
       } catch (error) {
         console.log(error);
       }
     },
 
-    async eliminarNota(){
+    async eliminarNota() {
       try {
-        const id = {id_nota: this.id_nota}
-        const res = await newGoalService.deleteNota(id)
-        console.log(res)
-        this.obtenerNotas()
-        this.dialog_3 = false
+        const id = { id_nota: this.id_nota };
+        const res = await newGoalService.deleteNota(id);
+        console.log(res);
+        this.obtenerNotas();
+        this.dialog_3 = false;
       } catch (error) {
-        console.log(error)
+        console.log(error);
       }
     },
 
@@ -174,7 +179,7 @@ export default {
       console.log("hola");
       this.dialog_3 = true;
       console.log(id);
-    }, 
+    },
   },
   mounted() {
     this.obtenerNotas();

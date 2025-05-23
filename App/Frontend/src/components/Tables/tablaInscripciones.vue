@@ -1,5 +1,10 @@
 <template>
-  <v-data-table :search="search" :items="inscripciones" :headers>
+  <v-data-table
+    :loading="loadingConfig"
+    :search="search"
+    :items="inscripciones"
+    :headers
+  >
     <template v-slot:top>
       <v-text-field
         v-model="search"
@@ -47,7 +52,10 @@
       color="white"
       @click="this.dialog_1 = false"
     ></v-icon>
-    <CartaEditInscripcion :id="id_inscripcion" />
+    <CartaEditInscripcion
+      @actualizar_tabla="obtenerInscripciones"
+      :id="id_inscripcion"
+    />
   </v-dialog>
   <v-dialog v-model="this.dialog_2">
     <v-icon
@@ -90,6 +98,7 @@ export default {
     CartaVerInscripcion,
   },
   data: () => ({
+    loadingConfig: true,
     search: null,
     dialog_1: false,
     dialog_2: false,
@@ -113,12 +122,13 @@ export default {
         const res = await newGoalService.getInscripciones();
         this.inscripciones = res.data;
         console.log(this.inscripciones);
+        this.loadingConfig = false
       } catch (error) {
         console.log(error);
       }
     },
 
-     async reporteInscripciones() {
+    async reporteInscripciones() {
       try {
         const response = await newGoalService.getReporteInscripciones();
         const url = window.URL.createObjectURL(new Blob([response.data]));

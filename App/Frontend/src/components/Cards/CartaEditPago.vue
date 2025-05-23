@@ -15,7 +15,7 @@
     >
   </v-dialog>
   <v-card class="ma-7">
-    <v-form @submit.prevent="actualizarPago">
+    <v-form ref="form" @submit.prevent="actualizarPago">
       <h3 class="pa-3">Datos del Pago</h3>
       <v-divider></v-divider>
       <v-container>
@@ -28,6 +28,7 @@
               variant="outlined"
               label="Estudiante"
               v-model="pago.id_estudiante"
+              :rules="globalRules"
             ></v-autocomplete>
           </v-col>
         </v-row>
@@ -39,7 +40,8 @@
               variant="outlined"
               type="date"
               label="Fecha del Pago"
-              v-model="pago.fecha_pago.split('T')[0]"
+              v-model="pago.fecha_pago"
+              :rules="fechaRules"
             ></v-text-field>
           </v-col>
           <v-col>
@@ -50,6 +52,7 @@
               label="Metodo de Pago"
               variant="outlined"
               v-model="pago.metodo_pago"
+              :rules="globalRules"
             ></v-select>
           </v-col>
         </v-row>
@@ -62,6 +65,7 @@
               variant="outlined"
               label="Monto Total"
               v-model="pago.monto_total"
+              :rules="montoTotalRules"
             ></v-text-field>
           </v-col>
           <v-col>
@@ -70,6 +74,7 @@
               type="number"
               label="Monto Cancelado"
               v-model="pago.monto_cancelado"
+              :rules="montoCanceladoRules"
             ></v-text-field>
           </v-col>
         </v-row>
@@ -120,16 +125,46 @@ export default {
       monto_total: null,
       monto_cancelado: null,
     },
+    globalRules: [(value) => !!value || "Requerido"],
+    fechaRules: [
+      (v) => !!v || "La fecha es requerida",
+      (v) => {
+        const fechaSeleccionada = new Date(v);
+        const fechaActual = new Date();
+        return (
+          fechaSeleccionada <= fechaActual || "La fecha no puede ser futura"
+        );
+      },
+      (v) => {
+        const fechaMinima = new Date();
+        fechaMinima.setFullYear(fechaMinima.getFullYear() - 100);
+        return (
+          new Date(v) >= fechaMinima ||
+          "Fecha demasiado antigua (máximo 100 años)"
+        );
+      },
+    ],
   }),
   methods: {
     async actualizarPago() {
+      const { valid } = await this.$refs.form.validate();
+
+      if (!valid) {
+        this.alert = {
+          show: true,
+          color: "warning",
+          message: "Complete todos los campos requeridos",
+        };
+        return;
+      }
       try {
-        const res = await newGoalService.putPago(this.pago)
+        const res = await newGoalService.putPago(this.pago);
         this.alert = {
           show: true,
           color: "success",
           message: "Pago modificado corectamente",
         };
+        this.$emit("actualizar_tabla");
       } catch (error) {
         console.log(error);
         this.alert = {
@@ -160,7 +195,7 @@ export default {
         this.pago.id_pago = datosApi.id_pago;
         this.pago.id_estudiante = datosApi.id_etd;
         this.pago.metodo_pago = datosApi.id_metodo_pago;
-        this.pago.fecha_pago = datosApi.fecha_pago;
+        this.pago.fecha_pago = datosApi.fecha_pago.split("T")[0];
         this.pago.monto_total = datosApi.monto_total_pago;
         this.pago.monto_cancelado = datosApi.monto_cancelado_pago;
 
@@ -179,7 +214,24 @@ export default {
       }
     },
   },
-  computed: {},
+  computed: {
+    montoTotalRules() {
+      return [
+        (v) => !!v || "Monto total es requerido",
+        (v) => Number(v) > 0 || "Debe ser mayor a 0",
+      ];
+    },
+    montoCanceladoRules() {
+      return [
+        (v) => !!v || "Monto cancelado es requerido",
+        (v) => Number(v) >= 0 || "No puede ser negativo",
+        (v) => {
+          const total = Number(this.pago.monto_total || 0);
+          return Number(v) <= total || `Máximo permitido: ${total}`;
+        },
+      ];
+    },
+  },
   mounted() {
     this.obtenerEstudiantes();
     this.obtenerPagoById();

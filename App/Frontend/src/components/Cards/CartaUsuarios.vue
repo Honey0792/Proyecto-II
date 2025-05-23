@@ -24,7 +24,7 @@
           <template v-slot:actions>
             <v-spacer></v-spacer>
             <v-btn variant="outlined" size="small" color="#00ACC1" @click="modificarUsuario(cards.id_usuario)">Modificar</v-btn>
-            <v-btn variant="outlined" size="small" color="#E65100" @click="eliminar(cards.id_usuario)">Eliminar</v-btn>
+            <v-btn variant="outlined" size="small" color="#E65100" v-if="cards.nombre_usuario != 'admin' " @click="eliminar(cards.id_usuario)">Eliminar</v-btn>
 
           </template>
           <!-- <template v-slot:append>
@@ -42,7 +42,7 @@
       color="white"
       @click="this.dialog_1 = false"
     ></v-icon>
-    <CartaEditUsuario :id="id"/>
+    <CartaEditUsuario @actualizar_tabla="obtenerUsuarios" :id="id"/>
   </v-dialog>
 
   <v-dialog v-model="this.dialog_2" width="auto">

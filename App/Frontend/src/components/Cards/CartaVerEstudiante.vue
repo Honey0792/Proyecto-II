@@ -188,7 +188,12 @@
     <div class="pa-3">
       <h3 class="pa-3">Alergias</h3>
       <v-btn @click="showCarta"> Añadir Alergias </v-btn>
-      <v-data-table-virtual :items="alergias" :headers width="400">
+      <v-data-table-virtual
+        max-height="400"
+        :items="alergias"
+        :headers
+        width="400"
+      >
         <template v-slot:item.actions="{ item }">
           <v-icon
             color="medium-emphasis"
@@ -203,10 +208,35 @@
     <div class="pa-3">
       <h3 class="pa-3">Inscripciones</h3>
     </div>
-    <!-- <v-divider></v-divider>
+    <v-data-table-virtual max-height="400" :headers="headersNotas" :items="notas">
+              <template v-slot:item.fecha_creacion_nota="{ item }">
+          {{ item.fecha_creacion_nota.split("T")[0] }}
+        </template>
+    </v-data-table-virtual>
+    <v-divider></v-divider>
     <div class="pa-3">
       <h3 class="pa-3">Pagos</h3>
-    </div> -->
+      <v-data-table-virtual
+        max-height="400"
+        :headers="headersPagos"
+        :items="pagos"
+      >
+        <template v-slot:item.fecha_pago="{ item }">
+          {{ item.fecha_pago.split("T")[0] }}
+        </template>
+        <template v-slot:item.monto_cancelado_pago="{ item }">
+          <span
+            :class="{
+              'bg-success': item.monto_cancelado_pago === item.monto_total_pago,
+              'bg-warning': item.monto_cancelado_pago !== item.monto_total_pago,
+            }"
+            class="pa-2 rounded"
+          >
+            {{ item.monto_cancelado_pago }}
+          </span>
+        </template>
+      </v-data-table-virtual>
+    </div>
   </v-card>
   <v-dialog v-model="this.dialogAlergia">
     <CartaAlergias :id="id" @actualizar_alergias="obtenerAlergiasById" />
@@ -251,6 +281,8 @@ export default {
     dialog_1: null,
     id_alergia: null,
     alergias: [],
+    pagos: [],
+    notas: [],
     nacionalidades: [],
     levelEnglish: [],
     nivelEducativo: [],
@@ -262,6 +294,18 @@ export default {
       { title: "Severidad", key: "severidad_alergia" }, // Columna para el estado
       { title: "actions", key: "actions" }, // Columna para el estado
       // Agrega más columnas según los datos que tengas
+    ],
+    headersPagos: [
+      { title: "Fecha", key: "fecha_pago" }, // Columna para el estado
+      { title: "Metodo de Pago", key: "nombre_metodo_pago" }, // Columna para el estado
+      { title: "Monto Cancelado", key: "monto_cancelado_pago" }, // Columna para el estado
+      { title: "Monto Total", key: "monto_total_pago" }, // Columna para el estado
+    ],
+    headersNotas: [
+      { title: "Periodo", key: "nombre_periodo" }, // Columna para el estado
+      { title: "Fecha", key: "fecha_creacion_nota" }, // Columna para el estado
+      { title: "Nivel", key: "nombre_nivel" }, // Columna para el estado
+      { title: "Calificación", key: "valor_nota" }, // Columna para el estado
     ],
     estudiante: {
       id_estudiante: null,
@@ -336,11 +380,20 @@ export default {
 
     async obtenerPagosEstudiante() {
       try {
-        const res = await newGoalService.getPagosEstudiante(this.id)
-        console.log(res)
-
+        const res = await newGoalService.getPagosEstudiante(this.id);
+        console.log(res);
+        this.pagos = res.data;
       } catch (error) {
-        console.log(error)
+        console.log(error);
+      }
+    },
+    async obtenerNotasEstudiante() {
+      try {
+        const res = await newGoalService.getNotasByEstudiante(this.id);
+        console.log(res);
+        this.notas = res.data;
+      } catch (error) {
+        console.log(error);
       }
     },
     showCarta() {
@@ -398,7 +451,8 @@ export default {
   mounted() {
     this.obtenerEstudianteById();
     this.obtenerAlergiasById();
-    // this.obtenerPagosEstudiante()
+    this.obtenerPagosEstudiante();
+    this.obtenerNotasEstudiante();
   },
 };
 </script>

@@ -1,5 +1,10 @@
 <template>
-  <v-data-table :search="search" :headers="headers" :items="periodos">
+  <v-data-table
+    :loading="loadingConfig"
+    :search="search"
+    :headers="headers"
+    :items="periodos"
+  >
     <template v-slot:top>
       <v-text-field
         v-model="search"
@@ -46,7 +51,6 @@
     </template>
   </v-data-table>
 
-
   <v-dialog v-model="this.dialog_1">
     <v-icon
       icon="mdi-close"
@@ -55,7 +59,7 @@
       @click="this.dialog_1 = false"
     ></v-icon>
     <div class="d-flex justify-center">
-      <CartaEditPeriodo :id="id_periodo" />
+      <CartaEditPeriodo @actualizar_tabla="obtenerPeriodos" :id="id_periodo" />
     </div>
   </v-dialog>
   <v-dialog v-model="this.dialog_2">
@@ -101,6 +105,7 @@ export default {
     CartaVerPeriodo,
   },
   data: () => ({
+    loadingConfig: true,
     search: null,
     dialog_1: false,
     dialog_2: false,
@@ -124,6 +129,7 @@ export default {
         const res = await newGoalService.getPeriodos();
         this.periodos = res.data;
         console.log(res);
+        this.loadingConfig = false;
       } catch (error) {
         console.log(error);
       }
@@ -139,7 +145,7 @@ export default {
       }
     },
 
-        async reportePeriodos() {
+    async reportePeriodos() {
       try {
         const response = await newGoalService.getReportePeriodos();
         const url = window.URL.createObjectURL(new Blob([response.data]));

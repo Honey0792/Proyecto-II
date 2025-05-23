@@ -68,11 +68,12 @@
             ></v-select>
           </v-col>
           <v-col>
-            <v-text-field
+            <v-select
               variant="outlined"
               label="Nota"
               v-model="nota.valor_nota"
-            ></v-text-field>
+              :items="valorNota"
+            ></v-select>
           </v-col>
         </v-row>
         <div class="d-flex pa-4 justify-center">
@@ -96,6 +97,7 @@ export default {
   data: () => ({
     alert: { show: false, message: "" },
     nivelInscripcion: [],
+    valorNota:['Aprobado','Moderado','Reprobado'],
     periodos: [],
     estudiantes: [],
     nota: {

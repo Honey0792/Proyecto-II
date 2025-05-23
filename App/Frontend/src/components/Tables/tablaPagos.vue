@@ -1,5 +1,6 @@
 <template>
   <v-data-table
+    :loading="loadingConfig"
     :items="pagos"
     :headers
     :items-per-page-options="itemsPerPage"
@@ -76,7 +77,7 @@
       color="white"
       @click="this.dialog_1 = false"
     ></v-icon>
-    <CartaEditPago :id="id_pago" />
+    <CartaEditPago @actualizar_tabla="obtenerPagos" :id="id_pago" />
   </v-dialog>
   <v-dialog v-model="this.dialog_2">
     <v-icon
@@ -120,6 +121,7 @@ export default {
     CartaEditPago,
   },
   data: () => ({
+    loadingConfig: true,
     search: null,
     dialog_1: false,
     dialog_2: false,
@@ -160,6 +162,7 @@ export default {
         const res = await newGoalService.getPagos();
         this.pagos = res.data;
         console.log(res);
+        this.loadingConfig = false;
       } catch (error) {
         console.log(error);
       }

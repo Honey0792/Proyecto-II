@@ -1,21 +1,21 @@
 <template>
-    <v-dialog
+  <v-dialog
+    v-model="alert.show"
+    width="auto"
+    class="justify-center align-center"
+  >
+    <v-alert
       v-model="alert.show"
-      width="auto"
-      class="justify-center align-center"
+      :color="alert.color"
+      variant="elevated"
+      prominent
+      closable
+      width="400px"
+      >{{ alert.message }}</v-alert
     >
-      <v-alert
-        v-model="alert.show"
-        :color="alert.color"
-        variant="elevated"
-        prominent
-        closable
-        width="400px"
-        >{{ alert.message }}</v-alert
-      >
-    </v-dialog>
+  </v-dialog>
   <v-card class="ma-7">
-    <v-form @submit.prevent="modificarPersona">
+    <v-form ref="form" @submit.prevent="modificarPersona">
       <h3 class="pa-3">Registrar Persona</h3>
       <v-divider></v-divider>
       <v-container class="">
@@ -25,6 +25,7 @@
               variant="outlined"
               label="Nombre"
               v-model="persona.nombre"
+              :rules="nombresRules"
             ></v-text-field>
           </v-col>
           <v-col>
@@ -32,6 +33,7 @@
               label="Apellido"
               variant="outlined"
               v-model="persona.apellido"
+              :rules="nombresRules"
             ></v-text-field>
           </v-col>
         </v-row>
@@ -43,6 +45,7 @@
               variant="outlined"
               label="Cedula"
               v-model="persona.cedula"
+              :rules="cedulaRules"
             ></v-text-field>
           </v-col>
           <v-col>
@@ -50,6 +53,7 @@
               variant="outlined"
               label="Cargo"
               v-model="persona.cargo"
+              :rules="globalRules"
             ></v-text-field>
           </v-col>
         </v-row>
@@ -81,25 +85,49 @@ export default {
       cedula: null,
       cargo: null,
     },
+    globalRules: [(value) => !!value || "Requerido"],
+    nombresRules: [
+      (value) => !!value || "Requerido",
+      (value) =>
+        /^[a-zA-Zñáéíóúü\s]+$/i.test(value) || "Solo se admiten letras",
+      (value) => value.length >= 3 || "El campo debe tener mínimo 3 caracteres",
+      (value) =>
+        !/(.)\1{2,}/.test(value) ||
+        "No se permiten caracteres repetidos consecutivamente",
+    ],
+    cedulaRules: [
+      (v) => !!v || "Cédula es requerida", // Validación de campo obligatorio
+      (v) => /^\d{7,8}$/.test(v) || "Formato inválido (Ej: 12345678)",
+    ],
   }),
   methods: {
     async modificarPersona() {
+      const { valid } = await this.$refs.form.validate();
+
+      if (!valid) {
+        this.alert = {
+          show: true,
+          color: "warning",
+          message: "Complete todos los campos requeridos",
+        };
+        return;
+      }
       try {
         const res = newGoalService.putPersona(this.persona);
         console.log(res);
         this.alert = {
           show: true,
-          color: 'success',
+          color: "success",
           message: "Persona Modificada corectamente",
-        }
+        };
+        this.$emit("actualizar_tabla");
       } catch (error) {
         console.log(error);
         this.alert = {
           show: true,
-          color: 'warning',
+          color: "warning",
           message: "Persona no modificada",
-        }
-        
+        };
       }
     },
     async obtenerPersona(id) {

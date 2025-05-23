@@ -144,8 +144,8 @@ export default {
     return newGoalApi().get(`/pagos/${id}`);
   },
 
-   getPagosEstudiante(value) {
-    return newGoalApi().get(`/pagos/estudiante`, {body:{id :value}});
+   getPagosEstudiante(id) {
+    return newGoalApi().get(`/pagos/estudiante/${id}`);
   },
 
   getReportePagos() {
@@ -217,6 +217,10 @@ export default {
 
   getNotasById(id) {
     return newGoalApi().get(`/notas/${id}`);
+  },
+
+    getNotasByEstudiante(id) {
+    return newGoalApi().get(`/notas/estudiante/${id}`);
   },
 
   getReporteNotas() {

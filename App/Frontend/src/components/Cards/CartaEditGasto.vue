@@ -15,7 +15,7 @@
     >
   </v-dialog>
   <v-card class="ma-7">
-    <v-form @submit.prevent="actualizarGasto">
+       <v-form ref="form" @submit.prevent="actualizarGasto">
       <h3 class="pa-3">Datos del Gasto</h3>
       <v-divider></v-divider>
       <v-container class="">
@@ -28,6 +28,7 @@
               label="Tipo de Gasto"
               variant="outlined"
               v-model="gasto.tipo_gasto"
+              :rules="globalRules"
             ></v-select>
           </v-col>
           <v-col>
@@ -38,6 +39,7 @@
               label="Metodo de Pago"
               variant="outlined"
               v-model="gasto.metodo_pago"
+              :rules="globalRules"
             ></v-select>
           </v-col>
         </v-row>
@@ -50,6 +52,7 @@
               type="date"
               label="Fecha del Gasto"
               v-model="gasto.fecha"
+              :rules="fechaRules"
             ></v-text-field>
           </v-col>
           <v-col>
@@ -58,6 +61,7 @@
               type="number"
               label="Monto"
               v-model="gasto.cantidad"
+              :rules="montoRules"
             ></v-text-field>
           </v-col>
         </v-row>
@@ -69,6 +73,7 @@
               variant="outlined"
               label="Nombre del Gasto"
               v-model="gasto.nombre"
+              :rules="globalRules"
             ></v-text-field>
           </v-col>
         </v-row>
@@ -82,6 +87,7 @@
               v-model="gasto.descripcion"
               rows="4"
               no-resize
+              :rules="globalRules"
             ></v-textarea>
           </v-col>
         </v-row>
@@ -117,9 +123,42 @@ export default {
       fecha: "",
       cantidad: null,
     },
+      globalRules: [(value) => !!value || "Requerido"],
+    montoRules: [
+      (value) => !!value || "Requerido",
+      (v) => Number(v) > 0 || "Debe ser mayor a 0",
+    ],
+    fechaRules: [
+      (v) => !!v || "La fecha es requerida",
+      (v) => {
+        const fechaSeleccionada = new Date(v);
+        const fechaActual = new Date();
+        return (
+          fechaSeleccionada <= fechaActual || "La fecha no puede ser futura"
+        );
+      },
+      (v) => {
+        const fechaMinima = new Date();
+        fechaMinima.setFullYear(fechaMinima.getFullYear() - 100);
+        return (
+          new Date(v) >= fechaMinima ||
+          "Fecha demasiado antigua (máximo 100 años)"
+        );
+      },
+    ],
   }),
   methods: {
     async actualizarGasto(){
+       const { valid } = await this.$refs.form.validate();
+
+      if (!valid) {
+        this.alert = {
+          show: true,
+          color: "warning",
+          message: "Complete todos los campos requeridos",
+        };
+        return;
+      }
         try {
             const res = await newGoalService.putGasto(this.gasto)
             this.alert = {
@@ -127,6 +166,7 @@ export default {
           color: "success",
           message: "Gasto modificado corectamente",
         };
+        this.$emit('actualizar_tabla')
       } catch (error) {
         console.log(error);
         this.alert = {

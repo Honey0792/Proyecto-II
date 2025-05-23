@@ -9,6 +9,7 @@
   >
   <v-card class="d-flex mx-10 ma-7">
     <v-data-table
+      :loading="loadingConfig"
       height="460"
       :headers="headers"
       :sort-by="[{ key: 'id_rt', order: 'desc' }]"
@@ -106,6 +107,7 @@ export default {
     CartaEditRepresentante,
   },
   data: () => ({
+    loadingConfig:true,
     search: null,
     id_rt: null,
     dialog_1: false,
@@ -129,6 +131,7 @@ export default {
         const res = await newGoalService.getRepresentante();
         this.representantes = res.data;
         console.log(this.representantes);
+        this.loadingConfig = false
       } catch (error) {
         console.log(error);
       }

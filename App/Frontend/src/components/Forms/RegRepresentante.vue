@@ -148,7 +148,7 @@ export default {
     ],
     phoneRules: [
       (v) => !!v || "Requerido",
-      (v) => /^(0)?(414|412|416|424|426)\d{7}$/.test(v) || "Teléfono inválido",
+      (v) => /^(0)?(414|412|416|424|422|426)\d{7}$/.test(v) || "Teléfono inválido",
     ],
     nombresRules: [
       (value) => !!value || "Requerido",

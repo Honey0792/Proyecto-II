@@ -11,7 +11,7 @@
       <v-spacer></v-spacer>
 
       <template v-if="$vuetify.display.mdAndUp">
-        <v-btn icon="mdi-logout" variant="text" @click="cerrarSesion()"></v-btn>
+        <v-btn title="Salir" icon="mdi-logout" variant="text" @click="cerrarSesion()"></v-btn>
       </template>
     </v-app-bar>
 
@@ -36,24 +36,40 @@
         <v-list-item to="/periodos" prepend-icon="mdi-calendar">
           Periodos
         </v-list-item>
-        <v-list-item to="/transsacciones" prepend-icon="mdi-cash-register">
+        <v-list-item
+          v-show="esVisible"
+          to="/transacciones"
+          prepend-icon="mdi-cash-register"
+        >
           Transacciones
         </v-list-item>
         <v-list-item to="/inscripciones" prepend-icon="mdi-text-box-edit">
           Inscripciones
         </v-list-item>
-        <v-list-item v-show="esVisible" to="/notas" prepend-icon="mdi-chair-school">
+        <v-list-item
+          v-show="esVisible"
+          to="/notas"
+          prepend-icon="mdi-chair-school"
+        >
           Notas
         </v-list-item>
-        <v-list-item v-show="esVisible" to="/usuarios" prepend-icon="mdi-account-group">
+        <v-list-item
+          v-show="esVisible"
+          to="/usuarios"
+          prepend-icon="mdi-account-group"
+        >
           Usuarios
         </v-list-item>
-        <v-list-item v-show="esVisible" to="/empleados" prepend-icon="mdi-briefcase">
+        <v-list-item
+          v-show="esVisible"
+          to="/empleados"
+          prepend-icon="mdi-briefcase"
+        >
           Empleados
         </v-list-item>
-        <v-list-item to="/nuketown" prepend-icon="mdi-nuke">
+        <!-- <v-list-item to="/nuketown" prepend-icon="mdi-nuke">
           Nuketown
-        </v-list-item>
+        </v-list-item> -->
       </v-list>
       <!-- </template> -->
 
@@ -76,10 +92,10 @@ export default {
       });
     },
   },
-  computed:{
+  computed: {
     esVisible() {
-      return sessionStorage.getItem("role") === '1';
-    }
+      return sessionStorage.getItem("role") === "1";
+    },
   },
   watch: {
     group() {
