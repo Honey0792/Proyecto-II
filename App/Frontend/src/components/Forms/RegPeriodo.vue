@@ -77,7 +77,7 @@
       </v-container>
     </v-form>
     <v-divider></v-divider>
-    <h3 class="pa-3">Periodos Academicos</h3>
+    <h3 class="pa-3">Trimestres Academicos</h3>
     <v-divider></v-divider>
     <tablaPeriodos ref="hijo" />
   </v-card>

@@ -43,24 +43,15 @@
             ></v-text-field>
           </v-col>
           <v-col>
-            <v-select
-              variant="outlined"
-              label="Grupo"
-              :items="nivelInscripcion"
-              item-title="categoria_nivel"
-              :rules="globalRules"
-            ></v-select>
-          </v-col>
-          <v-col>
-            <v-select
+            <v-autocomplete
               label="Nivel"
               variant="outlined"
               :items="nivelInscripcion"
-              item-title="nombre_nivel"
+              :item-title="fullNameNivel"
               item-value="id_nivel"
               v-model="inscripcion.id_nivel"
               :rules="globalRules"
-            ></v-select>
+            ></v-autocomplete>
           </v-col>
           <v-col>
             <v-select
@@ -128,6 +119,10 @@ export default {
   methods: {
     fullName(item) {
       return `${item.nombre_etd} ${item.apellido_etd}`;
+    },
+
+        fullNameNivel(item) {
+      return ` ${item.categoria_nivel} ${item.nombre_nivel}`;
     },
     async obtenerEstudiantes() {
       try {

@@ -108,7 +108,7 @@ export default {
       { title: "Apellidos", align: "center", key: "apellido_etd" },
       { title: "Cedula", align: "center", key: "cedula_etd" },
       { title: "Nivel", align: "center", key: "nombre_nivel" },
-      { title: "Grupo", align: "center", key: "nombre_nivel" },
+      // { title: "Grupo", align: "center", key: "nombre_nivel" },
       { title: "Periodo", align: "center", key: "nombre_periodo" },
       { title: "Notas", align: "center", key: "valor_nota" },
       { title: "Acciones", align: "center", key: "actions" },

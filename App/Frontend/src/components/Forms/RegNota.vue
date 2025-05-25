@@ -1,19 +1,19 @@
 <template>
   <v-dialog
+    v-model="alert.show"
+    width="auto"
+    class="justify-center align-center"
+  >
+    <v-alert
       v-model="alert.show"
-      width="auto"
-      class="justify-center align-center"
+      :color="alert.color"
+      variant="elevated"
+      prominent
+      closable
+      width="400px"
+      >{{ alert.message }}</v-alert
     >
-      <v-alert
-        v-model="alert.show"
-        :color="alert.color"
-        variant="elevated"
-        prominent
-        closable
-        width="400px"
-        >{{ alert.message }}</v-alert
-      >
-    </v-dialog>
+  </v-dialog>
   <v-card class="ma-7">
     <v-form @submit.prevent="registrarNota">
       <h3 class="pa-3">Añadir Nota</h3>
@@ -43,14 +43,14 @@
             ></v-text-field>
           </v-col>
           <v-col>
-            <v-select
+            <v-autocomplete
               label="Nivel"
               variant="outlined"
               :items="nivelInscripcion"
-              item-title="nombre_nivel"
+              :item-title="fullNameNivel"
               item-value="id_nivel"
               v-model="nota.id_nivel"
-            ></v-select>
+            ></v-autocomplete>
           </v-col>
         </v-row>
       </v-container>
@@ -82,7 +82,7 @@
       </v-container>
     </v-form>
     <v-divider></v-divider>
-    <tabla-notas ref="hijo"/>
+    <tabla-notas ref="hijo" />
   </v-card>
 </template>
 
@@ -91,13 +91,13 @@ import newGoalService from "@/services/newGoalService";
 import TablaNotas from "../Tables/tablaNotas.vue";
 
 export default {
-  components:{
-    TablaNotas
+  components: {
+    TablaNotas,
   },
   data: () => ({
     alert: { show: false, message: "" },
     nivelInscripcion: [],
-    valorNota:['Aprobado','Moderado','Reprobado'],
+    valorNota: ["Aprobado", "Moderado", "Reprobado"],
     periodos: [],
     estudiantes: [],
     nota: {
@@ -120,6 +120,10 @@ export default {
       return `${item.nombre_etd} ${item.apellido_etd}`;
     },
 
+    fullNameNivel(item) {
+      return ` ${item.categoria_nivel} ${item.nombre_nivel}`;
+    },
+
     async registrarNota() {
       try {
         const res = await newGoalService.postNota(this.nota);
@@ -129,7 +133,7 @@ export default {
           color: "success",
           message: "Nota registrada corectamente",
         };
-        this.$refs.hijo.obtenerNotas()
+        this.$refs.hijo.obtenerNotas();
       } catch (error) {
         console.log(error);
         this.alert = {
