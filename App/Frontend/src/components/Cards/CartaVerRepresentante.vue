@@ -88,6 +88,10 @@
         <v-divider class="mx-8"></v-divider>
       </v-card-text>
     </v-form>
+    <v-divider>
+      <h3> Representados </h3>
+    </v-divider>
+    <v-data-table-virtual max-height="400" :headers :items="representados"></v-data-table-virtual>
   </v-card>
 </template>
 
@@ -101,6 +105,7 @@ export default {
     },
   },
   data: () => ({
+    representados:[],
     representante: {
       id_representante: null,
       id_genero: null,
@@ -112,6 +117,13 @@ export default {
       correo: null,
       telefono: null,
     },
+      headers: [
+      { title: "Nombre", key: "nombre_estudiante" }, // Columna para el estado
+      { title: "Apellido", key: "apellido_estudiante" }, // Columna para el estado
+      { title: "Telefono", key: "telefono" }, // Columna para el estado
+      { title: "Cedula", key: "cedula_estudiante" }, // Columna para el estado
+      // Agrega más columnas según los datos que tengas
+    ],
   }),
 
   methods: {
@@ -147,10 +159,22 @@ export default {
         console.log(error);
       }
     },
+  async  obtenerRepresentados(){
+    try {
+      const res = await newGoalService.getRepresentados(this.id)
+      console.log(res)
+
+      this.representados = res.data.datos
+      
+    } catch (error) {
+      console.log(error)
+    }
+  },
   },
 
   mounted() {
     this.obtenerRepresentanteById();
+    this.obtenerRepresentados()
   },
 };
 </script>

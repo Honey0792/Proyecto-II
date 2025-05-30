@@ -77,6 +77,21 @@
               :rules="montoCanceladoRules"
             ></v-text-field>
           </v-col>
+          <v-container>
+            <v-row>
+              <v-col>
+                <v-textarea
+                  hint="Anotar referencias bancarias, pagos moviles, pequeñas descripciones de los pagos, etc."
+                  variant="outlined"
+                  label="Descripcion"
+                  rows="4"
+                  no-resize
+                  :rules="globalRules"
+                  v-model="pago.descripcion_pago"
+                ></v-textarea>
+              </v-col>
+            </v-row>
+          </v-container>
         </v-row>
         <div class="d-flex justify-center">
           <v-btn type="submit">Registrar</v-btn>
@@ -85,18 +100,6 @@
       <!-- <v-container>
             <v-row>
         </v-row>
-        </v-container> -->
-      <!-- <v-container>
-            <v-row>
-                <v-col>
-            <v-textarea
-              variant="outlined"
-              label="Descripcion"
-              rows="4"
-              no-resize
-            ></v-textarea>
-          </v-col>
-            </v-row>
         </v-container> -->
     </v-form>
     <v-divider></v-divider>
@@ -120,6 +123,7 @@ export default {
       fecha_pago: "",
       monto_total: null,
       monto_cancelado: null,
+      descripcion_pago: null,
     },
     globalRules: [(value) => !!value || "Requerido"],
     fechaRules: [
@@ -194,10 +198,10 @@ export default {
     },
   },
   computed: {
-       montoTotalRules() {
+    montoTotalRules() {
       return [
         (v) => !!v || "Monto total es requerido",
-        (v) => Number(v) > 0 || "Debe ser mayor a 0"
+        (v) => Number(v) > 0 || "Debe ser mayor a 0",
       ];
     },
     montoCanceladoRules() {
@@ -207,9 +211,9 @@ export default {
         (v) => {
           const total = Number(this.pago.monto_total || 0);
           return Number(v) <= total || `Máximo permitido: ${total}`;
-        }
+        },
       ];
-    }
+    },
   },
   mounted() {
     this.obtenerEstudiantes();

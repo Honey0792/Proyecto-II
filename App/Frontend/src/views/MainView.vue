@@ -230,98 +230,129 @@ export default {
 </style> -->
 
 <template>
-  <v-container fluid>
-    <!-- Resumen de tarjetas -->
-    <v-row class="mb-4" align="stretch">
-      <v-col cols="12" sm="6" md="4">
-        <v-card color="#4CE08E" min-height="120" dark>
-          <v-card-text>
-            <h3 class="text-h7 mb-1">Total estudiantes</h3>
-            <div class="text-h4 font-weight-bold">{{ estudiantes.length }}</div>
-          </v-card-text>
-        </v-card>
-      </v-col>
+  <v-expansion-panels multiple>
+    <v-expansion-panel>
+      <v-expansion-panel-title>
+        📊 Panel de Estadísticas de Inscripciones y Estudiantes
+      </v-expansion-panel-title>
 
-      <v-col cols="12" sm="6" md="4">
-        <v-card color="#4CA0E0" min-height="120" dark>
-          <v-card-text>
-            <h3 class="text-h7 mb-1">Total inscripciones</h3>
-            <div class="text-h4 font-weight-bold">
-              {{ totalInscripciones }}
-            </div>
-          </v-card-text>
-          <v-card-subtitle> Ultimos 5 Trimestres </v-card-subtitle>
-        </v-card>
-      </v-col>
+      <v-expansion-panel-text>
+        <v-container fluid>
+          <!-- Resumen de tarjetas -->
+          <v-row class="mb-4" align="stretch">
+            <!-- Tarjeta Total estudiantes -->
+            <v-col cols="12" sm="6" md="4">
+              <v-card color="#4CE08E" min-height="120" dark>
+                <v-card-text>
+                  <h3 class="text-h7 mb-1">Total estudiantes</h3>
+                  <div class="text-h4 font-weight-bold">
+                    {{ estudiantes.length }}
+                  </div>
+                </v-card-text>
+              </v-card>
+            </v-col>
 
-      <v-col cols="12" sm="6" md="4">
-        <v-card color="#4CE0C1" min-height="120" dark>
-          <v-card-text>
-            <h3 class="text-h7 mb-1">Último Trimestre</h3>
-            <div class="text-h6">
-              {{ latestPeriodo?.nombre_periodo || "---" }}
-            </div>
-          </v-card-text>
-        </v-card>
-      </v-col>
-    </v-row>
+            <!-- Tarjeta Total inscripciones -->
+            <v-col cols="12" sm="6" md="4">
+              <v-card color="#4CA0E0" min-height="120" dark>
+                <v-card-text>
+                  <h3 class="text-h7 mb-1">Total inscripciones</h3>
+                  <div class="text-h4 font-weight-bold">
+                    {{ totalInscripciones }}
+                  </div>
+                </v-card-text>
+                <v-card-subtitle> Últimos 5 Trimestres </v-card-subtitle>
+              </v-card>
+            </v-col>
 
-    <!-- Gráficos: sparkline y dona -->
-    <v-row class="mb-4" align="stretch">
-      <!-- Stacked bar/line chart -->
-      <v-col cols="12" md="6">
-        <v-card
-          class="mx-auto text-center"
-          color="cyan-lighten-2"
-          max-width="600"
-          height="270"
-          dark
-        >
-          <v-card-text style="height: 100%">
-            <Bar :data="chartDataBarLine" :options="chartOptionsBarLine" />
-          </v-card-text>
-        </v-card>
-      </v-col>
+            <!-- Tarjeta Último trimestre -->
+            <v-col cols="12" sm="6" md="4">
+              <v-card color="#4CE0C1" min-height="120" dark>
+                <v-card-text>
+                  <h3 class="text-h7 mb-1">Último Trimestre</h3>
+                  <div class="text-h6">
+                    {{ latestPeriodo?.nombre_periodo || "---" }}
+                  </div>
+                </v-card-text>
+              </v-card>
+            </v-col>
+          </v-row>
 
-      <!-- Dona -->
-      <v-col cols="12" md="6" class="d-flex justify-center">
-        <v-card color="#328994" width="400" height="270" dark>
-          <v-card-title class="d-flex justify-space-between ma-1 text-h6">
-            <span>Distribución por edad</span>
-            <v-select
-              v-model="selectedPeriodoId"
-              :items="periodoOptions"
-              item-title="nombre"
-              item-value="id"
-              variant=" outlined"
-              style="max-width: 160px"
-            />
-          </v-card-title>
-          <v-card-text style="height: 150px">
-            <canvas
-              ref="doughnutCanvas"
-              style="height: 100%; width: 100%"
-            ></canvas>
-          </v-card-text>
-        </v-card>
-      </v-col>
-    </v-row>
+          <!-- Gráficos: bar/line y dona -->
+          <v-row class="mb-4" align="stretch">
+            <!-- Chart bar/line -->
+            <v-col cols="12" md="6">
+              <v-card
+                class="mx-auto text-center"
+                color="cyan-lighten-2"
+                max-width="600"
+                height="270"
+                dark
+              >
+                <v-card-text style="height: 100%">
+                  <Bar
+                    :data="chartDataBarLine"
+                    :options="chartOptionsBarLine"
+                  />
+                </v-card-text>
+              </v-card>
+            </v-col>
 
-    <!-- Tabla de estudiantes -->
-    <v-row>
-      <v-col cols="12">
-        <v-card>
-          <v-card-title class="text-h6">Estudiantes registrados</v-card-title>
-          <v-data-table-virtual
-            :items="estudiantesFiltrados"
-            :headers="headers"
-            height="400"
-            fixed-header
-          />
-        </v-card>
-      </v-col>
-    </v-row>
-  </v-container>
+            <!-- Gráfico dona -->
+            <v-col cols="12" md="6" class="d-flex justify-center">
+              <v-card color="#328994" width="400" height="270" dark>
+                <v-card-title class="d-flex justify-space-between ma-1 text-h6">
+                  <span>Distribución por edad</span>
+                  <v-select
+                    v-model="selectedPeriodoId"
+                    :items="periodoOptions"
+                    item-title="nombre"
+                    item-value="id"
+                    variant="outlined"
+                    style="max-width: 160px"
+                  />
+                </v-card-title>
+                <v-card-text style="height: 150px">
+                  <canvas
+                    ref="doughnutCanvas"
+                    style="height: 100%; width: 100%"
+                  ></canvas>
+                </v-card-text>
+              </v-card>
+            </v-col>
+          </v-row>
+
+          <!-- Tabla de estudiantes -->
+          <v-row>
+            <v-col cols="12">
+              <v-card>
+                <v-card-title class="text-h6"
+                  >Estudiantes registrados</v-card-title
+                >
+                <v-data-table-virtual
+                  :items="estudiantesFiltrados"
+                  :headers="headers"
+                  height="400"
+                  fixed-header
+                />
+              </v-card>
+            </v-col>
+          </v-row>
+        </v-container>
+      </v-expansion-panel-text>
+    </v-expansion-panel>
+  </v-expansion-panels>
+  <v-row class="mt-6" justify="center">
+  <v-col cols="6" md="4">
+    <v-img
+      src="../../src/assets/Logo_Con_Fondo.jpg" 
+      alt="Dashboard Illustration"
+      height=""
+      cover
+      class="rounded-lg"
+    />
+  </v-col>
+</v-row>
 </template>
 
 <script>
@@ -493,9 +524,9 @@ export default {
         console.log(res);
 
         // Selecciona el último período por defecto
-        if (this.datosMain.length > 0) {
-          this.selectedPeriodoId = this.datosMain[0].id_periodo;
-        }
+        // if (this.datosMain.length > 0) {
+        //   this.selectedPeriodoId = this.datosMain[0].id_periodo;
+        // }
       } catch (error) {
         console.error(error);
       }

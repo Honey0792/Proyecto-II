@@ -88,13 +88,7 @@
             ></v-text-field>
           </v-col>
         </v-row>
-      </v-container>
-      <!-- <v-container>
-            <v-row>
-        </v-row>
-        </v-container> -->
-      <!-- <v-container>
-            <v-row>
+                    <v-row>
                 <v-col>
             <v-textarea
               variant="outlined"
@@ -102,10 +96,17 @@
               label="Descripcion"
               rows="4"
               no-resize
+              v-model="pago.descripcion_pago"
             ></v-textarea>
           </v-col>
             </v-row>
+      </v-container>
+      <!-- <v-container>
+            <v-row>
+        </v-row>
         </v-container> -->
+      <!-- <v-container> -->
+        <!-- </v-container> -->
     </v-form>
   </v-card>
 </template>
@@ -136,6 +137,7 @@ export default {
       fecha_pago: "",
       monto_total_pago: null,
       monto_cancelado_pago: null,
+      descripcion_pago: null
     },
   }),
   methods: {

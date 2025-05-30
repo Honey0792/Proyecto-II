@@ -152,7 +152,7 @@ export default {
 
 <style scoped>
 .kbg {
-  background-image: url(../assets/Login_img.webp);
+  background-image: url(../assets/portada_Login.jpg);
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;

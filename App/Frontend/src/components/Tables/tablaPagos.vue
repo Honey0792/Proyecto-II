@@ -33,6 +33,17 @@
         {{ item.monto_cancelado_pago }}
       </span>
     </template>
+    <template v-slot:item.restante="{ item }">
+      <span
+        :class="{
+          'bg-success': item.monto_cancelado_pago === item.monto_total_pago,
+          'bg-warning': item.monto_cancelado_pago !== item.monto_total_pago,
+        }"
+        class="pa-2 rounded"
+      >
+        {{ item.monto_total_pago - item.monto_cancelado_pago }}
+      </span>
+    </template>
     <template v-slot:item.id_pago="{ item }"> </template>
     <template v-slot:item.actions="{ item }">
       <div class="d-flex ga-2 justify-end">
@@ -142,8 +153,9 @@ export default {
       { title: "Apellido", align: "start", key: "apellido_etd" },
       { title: "Fecha", align: "end", key: "fecha_pago" },
       { title: "Metodo de Pago", align: "end", key: "nombre_metodo_pago" },
-      { title: "Monto Cancelado", align: "end", key: "monto_cancelado_pago" },
       { title: "Monto Total", align: "end", key: "monto_total_pago" },
+      { title: "Monto Cancelado", align: "end", key: "monto_cancelado_pago" },
+      { title: "Restante", align: "end", key: "restante" },
       { title: "Acciones", align: "end", key: "actions" },
     ],
     id_pago: null,

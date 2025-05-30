@@ -131,14 +131,13 @@
               </v-select>
             </v-col>
             <v-col>
-              <v-autocomplete
-                label="representante"
+              <v-text-field
+                v-model="estudiante.direccion"
                 variant="outlined"
-                v-model="estudiante.representante"
-                :items="representantes"
-                :item-title="fullName"
-                item-value="id_rt"
-              ></v-autocomplete>
+                label="Direccion"
+                :rules="globalRules"
+              >
+              </v-text-field>
             </v-col>
           </v-row>
         </v-container>
@@ -160,18 +159,19 @@
             </v-col>
             <v-col>
               <v-text-field
-                :rules="emergencyContactRules"
-                v-model="estudiante.contacto_emergencia"
+                :rules="phoneRules"
                 variant="outlined"
-                label="Contacto de emergencia"
-              >
-              </v-text-field>
+                label="Numero de Telefono"
+                v-model="estudiante.telefono"
+              ></v-text-field>
             </v-col>
             <v-col>
               <v-text-field
+                v-model="estudiante.correo"
+                type="email"
                 variant="outlined"
-                label="Encargado/s de retirar el Estudiante"
-                v-model="estudiante.quien_retira"
+                label="Correo Electronico"
+                :rules="emailRules"
               >
               </v-text-field>
             </v-col>
@@ -182,28 +182,29 @@
           <v-row>
             <v-col>
               <v-text-field
-                :rules="phoneRules"
+                :rules="emergencyContactRules"
+                v-model="estudiante.contacto_emergencia"
                 variant="outlined"
-                label="Numero de Telefono"
-                v-model="estudiante.telefono"
-              ></v-text-field>
-            </v-col>
-            <v-col>
-              <v-text-field
-                v-model="estudiante.direccion"
-                variant="outlined"
-                label="Direccion"
-                :rules="globalRules"
+                label="Contacto de emergencia"
               >
               </v-text-field>
             </v-col>
             <v-col>
-              <v-text-field
-                v-model="estudiante.correo"
-                type="email"
+              <v-autocomplete
+                v-if="edadEstudiante !== null && edadEstudiante < 18"
+                label="representante"
                 variant="outlined"
-                label="Correo Electronico"
-                :rules="emailRules"
+                v-model="estudiante.representante"
+                :items="representantes"
+                :item-title="fullName"
+                item-value="id_rt"
+              ></v-autocomplete>
+            </v-col>
+            <v-col>
+              <v-text-field
+                variant="outlined"
+                label="Encargado/s de retirar el Estudiante"
+                v-model="estudiante.quien_retira"
               >
               </v-text-field>
             </v-col>
@@ -277,7 +278,8 @@ export default {
     ],
     phoneRules: [
       (v) => !!v || "Requerido",
-      (v) => /^(0)?(414|412|416|424|422|426)\d{7}$/.test(v) || "Teléfono inválido",
+      (v) =>
+        /^(0)?(414|412|416|424|422|426)\d{7}$/.test(v) || "Teléfono inválido",
     ],
     emergencyContactRules: [
       (v) => !!v || "Requerido",
@@ -470,6 +472,25 @@ export default {
     this.leerNivelIngles();
     this.leerNacionalidades();
     this.obtenerRepresentantes();
+  },
+
+  computed: {
+    fechaFormateada() {
+      return this.estudiante.fecha_nacimiento
+        ? new Date(this.estudiante.fecha_nacimiento).toLocaleDateString("es-ES")
+        : "";
+    },
+    edadEstudiante() {
+      if (!this.estudiante.fecha_canimiento) return null;
+      const hoy = new Date();
+      const nacimiento = new Date(this.estudiante.fecha_canimiento);
+      let edad = hoy.getFullYear() - nacimiento.getFullYear();
+      const m = hoy.getMonth() - nacimiento.getMonth();
+      if (m < 0 || (m === 0 && hoy.getDate() < nacimiento.getDate())) {
+        edad--;
+      }
+      return edad;
+    },
   },
 
   watch: {

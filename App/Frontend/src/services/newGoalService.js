@@ -97,6 +97,10 @@ export default {
   getSelectAlergias() {
     return newGoalApi().get("/select/alergias");
   },
+
+    getSelectPeriodosActivos() {
+    return newGoalApi().get("/select/periodo-activo");
+  },
   // ESTUDIANTES
   getEstudiante() {
     return newGoalApi().get("/estudiantes?pagina=1&limit=1000");
@@ -118,6 +122,10 @@ export default {
 
   getRepresentanteById(id) {
     return newGoalApi().get(`/representantes/${id}`);
+  },
+
+    getRepresentados(id) {
+    return newGoalApi().get(`/representantes/representados?id=${id}`);
   },
 
   // PERIODOS

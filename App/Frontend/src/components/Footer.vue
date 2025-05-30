@@ -1,8 +1,14 @@
 <template>
 
-  <v-footer>
+  <v-footer class="d-flex flex-column">
     <div class="px-4 py-2 bg-cyan-lighten-4 text-center w-100">
       {{ new Date().getFullYear() }} — <strong>New Goal ©</strong>
+    </div>
+            <div class="bg-cyan-darken-1 w-100 px-5 text-center">
+      <strong>Version 1.0</strong>
+
+      <!-- <v-spacer></v-spacer> -->
+
     </div>
   </v-footer>
 </template>

@@ -76,7 +76,7 @@ export default {
   data: () => ({
     roles: [
       { id_rol: 1, nombre_rol: "Administrador" },
-      { id_rol: 2, nombre_rol: "Empleado" },
+      { id_rol: 2, nombre_rol: "Usuario" },
     ],
     personas: [],
     alert: { show: false, message: "" },

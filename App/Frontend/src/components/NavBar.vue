@@ -11,7 +11,12 @@
       <v-spacer></v-spacer>
 
       <template v-if="$vuetify.display.mdAndUp">
-        <v-btn title="Salir" icon="mdi-logout" variant="text" @click="cerrarSesion()"></v-btn>
+        <v-btn
+          title="Salir"
+          icon="mdi-logout"
+          variant="text"
+          @click="cerrarSesion()"
+        ></v-btn>
       </template>
     </v-app-bar>
 
@@ -22,7 +27,7 @@
     >
       <!-- <v-menu>
         <template v-slot:activator="{ props }"> -->
-      <v-list>
+      <!-- <v-list>
         <v-list-item to="/main" prepend-icon="mdi-home"> Home </v-list-item>
         <v-list-item to="/estudiantes" prepend-icon="mdi-account-school">
           Estudiantes
@@ -67,13 +72,85 @@
         >
           Empleados
         </v-list-item>
-        <!-- <v-list-item to="/nuketown" prepend-icon="mdi-nuke">
+        <v-list-item to="/nuketown" prepend-icon="mdi-nuke">
           Nuketown
         </v-list-item> -->
-      </v-list>
+      <!-- </v-list> -->
       <!-- </template> -->
+      <v-list>
+        <!-- Administración -->
+        <v-list-group
+          v-if="esVisible"
+          prepend-icon="mdi-account-group"
+          value="administracion"
+        >
+          <template v-slot:activator="{ props }">
+            <v-list-item v-bind="props" title="Administración" />
+          </template>
 
-      <!-- </v-menu> -->
+          <v-list-item
+            to="/usuarios"
+            title="Usuarios"
+            prepend-icon="mdi-account-group"
+          />
+          <v-list-item
+            to="/empleados"
+            title="Empleados"
+            prepend-icon="mdi-briefcase"
+          />
+        </v-list-group>
+
+        <!-- Financiero -->
+        <v-list-group
+          v-if="esVisible"
+          prepend-icon="mdi-cash-multiple"
+          value="financiero"
+        >
+          <template v-slot:activator="{ props }">
+            <v-list-item v-bind="props" title="Financiero" />
+          </template>
+
+          <v-list-item
+            to="/transacciones"
+            title="Transacciones"
+            prepend-icon="mdi-cash-register"
+          />
+        </v-list-group>
+
+        <!-- Académico -->
+        <v-list-group prepend-icon="mdi-school" value="academico">
+          <template v-slot:activator="{ props }">
+            <v-list-item v-bind="props" title="Académico" />
+          </template>
+
+          <v-list-item to="/main" title="Home" prepend-icon="mdi-home" />
+          <v-list-item
+            to="/estudiantes"
+            title="Estudiantes"
+            prepend-icon="mdi-account-school"
+          />
+          <v-list-item
+            to="/representantes"
+            title="Representantes"
+            prepend-icon="mdi-human-male-female-child"
+          />
+          <v-list-item
+            to="/periodos"
+            title="Periodos"
+            prepend-icon="mdi-calendar"
+          />
+          <v-list-item
+            to="/inscripciones"
+            title="Inscripciones"
+            prepend-icon="mdi-text-box-edit"
+          />
+          <v-list-item
+            to="/notas"
+            title="Notas"
+            prepend-icon="mdi-chair-school"
+          />
+        </v-list-group>
+      </v-list>
     </v-navigation-drawer>
     <v-main style="height: 20px"> </v-main>
   </v-layout>

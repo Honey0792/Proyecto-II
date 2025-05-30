@@ -145,7 +145,7 @@ export default {
     },
     async obtenerPeriodos() {
       try {
-        const res = await newGoalService.getPeriodos();
+        const res = await newGoalService.getSelectPeriodosActivos();
         this.periodos = res.data;
         console.log(res);
       } catch (error) {

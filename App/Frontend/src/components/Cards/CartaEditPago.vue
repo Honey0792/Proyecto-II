@@ -78,6 +78,18 @@
             ></v-text-field>
           </v-col>
         </v-row>
+        <v-row>
+          <v-col>
+            <v-textarea
+              variant="outlined"
+              label="Descripcion"
+              rows="4"
+              no-resize
+              :rules="globalRules"
+              v-model="pago.descripcion_pago"
+            ></v-textarea>
+          </v-col>
+        </v-row>
         <div class="d-flex justify-center">
           <v-btn type="submit">Guardar</v-btn>
         </div>
@@ -86,18 +98,8 @@
             <v-row>
         </v-row>
         </v-container> -->
-      <!-- <v-container>
-            <v-row>
-                <v-col>
-            <v-textarea
-              variant="outlined"
-              label="Descripcion"
-              rows="4"
-              no-resize
-            ></v-textarea>
-          </v-col>
-            </v-row>
-        </v-container> -->
+      <!-- <v-container> -->
+      <!-- </v-container>  -->
     </v-form>
   </v-card>
 </template>
@@ -124,6 +126,7 @@ export default {
       fecha_pago: "",
       monto_total: null,
       monto_cancelado: null,
+      descripcion_pago: null,
     },
     globalRules: [(value) => !!value || "Requerido"],
     fechaRules: [
@@ -198,8 +201,9 @@ export default {
         this.pago.fecha_pago = datosApi.fecha_pago.split("T")[0];
         this.pago.monto_total = datosApi.monto_total_pago;
         this.pago.monto_cancelado = datosApi.monto_cancelado_pago;
+        this.pago.descripcion_pago = datosApi.descripcion_pago;
 
-        console.log(this.pago);
+        console.log(datosApi);
       } catch (error) {
         console.log(error);
       }
