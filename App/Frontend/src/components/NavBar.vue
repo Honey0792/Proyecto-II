@@ -10,9 +10,11 @@
 
       <v-spacer></v-spacer>
 
-     <h4 class="ma-3"> {{ this.datosMain.nombre_persona }} {{ this.datosMain.apellido_persona }} <br>
-    <h5>{{ this.datosMain.cargo_persona }} </h5>
-    </h4>
+      <h4 class="ma-3">
+        {{ this.nombre_persona }}
+        {{ this.apellido_persona }} <br />
+        {{ this.cargo_persona }}
+      </h4>
 
       <template v-if="$vuetify.display.mdAndUp">
         <v-btn
@@ -165,20 +167,24 @@
   </v-layout>
 </template>
 <script>
-import newGoalService from '@/services/newGoalService';
+import newGoalService from "@/services/newGoalService";
 
 export default {
   data: () => ({
-      datosMain: null,
+    nombre_persona: null,
+    apellido_persona: null,
+    cargo_persona: null,
     drawer: false,
     group: null,
   }),
   methods: {
-        async obtenerDatosMain() {
+    async obtenerDatosMain() {
       try {
         const res = await newGoalService.getHome();
-        this.datosMain = res.data.usuario[0];
-        console.log("datos main", this.datosMain);
+        console.log(res.data.usuario)
+        this.nombre_persona = res.data.usuario[0].nombre_persona;
+        this.apellido_persona = res.data.usuario[0].apellido_persona;
+        this.cargo_persona = res.data.usuario[0].cargo_persona;
 
         // Selecciona el último período por defecto
         // if (this.datosMain.length > 0) {
@@ -205,8 +211,8 @@ export default {
       this.drawer = false;
     },
   },
-  mounted(){
-    this.obtenerDatosMain()
-  }
+  mounted() {
+    this.obtenerDatosMain();
+  },
 };
 </script>
