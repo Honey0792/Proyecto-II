@@ -74,6 +74,12 @@ const router = createRouter({
       component: () => import("../views/NotasView.vue"),
       meta: { requiresAuth: true, allowedRoles: ['1'] },
     },
+        {
+      path: "/niveles",
+      name: "Niveles",
+      component: () => import("../views/NivelesView.vue"),
+      meta: { requiresAuth: true, allowedRoles: ['1'] },
+    },
   ],
 });
 // router.beforeEach((to, from, next) => {

@@ -43,7 +43,7 @@
     </template>
     <template v-slot:footer.prepend>
       <div class="mx-3">
-        <v-btn @click="reporteGastos">Generar Listado</v-btn>
+        <v-btn @click="reporte">Generar Listado</v-btn>
       </div>
     </template>
   </v-data-table>
@@ -84,21 +84,32 @@
       </template>
     </v-card>
   </v-dialog>
+  <v-dialog v-model="this.dialog_4">
+    <v-icon
+      icon="mdi-close"
+      class="position-absolute right-0"
+      color="white"
+      @click="this.dialog_4 = false"
+    ></v-icon>
+    <CartaReporteGastos />
+  </v-dialog>
 </template>
 
 <script>
 import newGoalService from "@/services/newGoalService";
 import CartaEditGasto from "../Cards/CartaEditGasto.vue";
 import CartaVerGasto from "../Cards/CartaVerGasto.vue";
+import CartaReporteGastos from "../Cards/CartaReporteGastos.vue";
 
 export default {
-  components: { CartaEditGasto, CartaVerGasto },
+  components: { CartaEditGasto, CartaVerGasto, CartaReporteGastos },
   data: () => ({
     loadingConfig: true,
     search: null,
     dialog_1: false,
     dialog_2: false,
     dialog_3: false,
+    dialog_4: false,
     id_gasto: null,
     gastos: [],
     headers: [
@@ -117,8 +128,7 @@ export default {
         const res = await newGoalService.getGastos();
         console.log(res);
         this.gastos = res.data;
-        this.loadingConfig = false
-
+        this.loadingConfig = false;
       } catch (error) {
         console.log(error);
       }
@@ -133,6 +143,10 @@ export default {
       } catch (error) {
         console.log(error);
       }
+    },
+    reporte() {
+      console.log("hola");
+      this.dialog_4 = true;
     },
 
     edita(id) {
@@ -153,30 +167,31 @@ export default {
       this.dialog_3 = true;
       console.log(id);
     },
-    async reporteGastos() {
-      try {
-        const response = await newGoalService.getReporteGastos();
-        const url = window.URL.createObjectURL(new Blob([response.data]));
-        const link = document.createElement("a");
-        link.href = url;
 
-        // Obtener el nombre del archivo desde las cabeceras (si el servidor lo envía)
-        const contentDisposition = response.headers["content-disposition"];
-        const fileName = contentDisposition
-          ? contentDisposition.split("filename=")[1].replace(/"/g, "")
-          : `Reporte_Gastos_${new Date().toISOString()}.xlsx`; // Nombre por defecto si no hay header
+    // async reporteGastos() {
+    //   try {
+    //     const response = await newGoalService.getReporteGastos();
+    //     const url = window.URL.createObjectURL(new Blob([response.data]));
+    //     const link = document.createElement("a");
+    //     link.href = url;
 
-        link.setAttribute("download", fileName);
-        document.body.appendChild(link);
-        link.click();
+    //     // Obtener el nombre del archivo desde las cabeceras (si el servidor lo envía)
+    //     const contentDisposition = response.headers["content-disposition"];
+    //     const fileName = contentDisposition
+    //       ? contentDisposition.split("filename=")[1].replace(/"/g, "")
+    //       : `Reporte_Gastos_${new Date().toISOString()}.xlsx`; // Nombre por defecto si no hay header
 
-        // Limpiar recursos
-        document.body.removeChild(link);
-        window.URL.revokeObjectURL(url);
-      } catch (error) {
-        console.error("Error:", error.response?.data || error.message);
-      }
-    },
+    //     link.setAttribute("download", fileName);
+    //     document.body.appendChild(link);
+    //     link.click();
+
+    //     // Limpiar recursos
+    //     document.body.removeChild(link);
+    //     window.URL.revokeObjectURL(url);
+    //   } catch (error) {
+    //     console.error("Error:", error.response?.data || error.message);
+    //   }
+    // },
   },
 
   mounted() {

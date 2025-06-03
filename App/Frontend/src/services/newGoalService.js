@@ -52,6 +52,11 @@ export default {
     return newGoalApi().post("/alergiaEstudiantes", value);
   },
 
+  //NIVELES
+  postNivel(value) {
+    return newGoalApi().post("/nivel", value);
+  },
+
   //GET
 
   // SELECTS
@@ -98,7 +103,7 @@ export default {
     return newGoalApi().get("/select/alergias");
   },
 
-    getSelectPeriodosActivos() {
+  getSelectPeriodosActivos() {
     return newGoalApi().get("/select/periodo-activo");
   },
   // ESTUDIANTES
@@ -124,7 +129,7 @@ export default {
     return newGoalApi().get(`/representantes/${id}`);
   },
 
-    getRepresentados(id) {
+  getRepresentados(id) {
     return newGoalApi().get(`/representantes/representados?id=${id}`);
   },
 
@@ -137,7 +142,7 @@ export default {
     return newGoalApi().get(`/periodos/${id}`);
   },
 
-    getReportePeriodos() {
+  getReportePeriodos() {
     return newGoalApi().get("/periodos/reporte", {
       responseType: "blob", // Para manejar archivos
     });
@@ -147,18 +152,24 @@ export default {
   getPagos() {
     return newGoalApi().get(`/pagos?pagina=1&limit=1000`);
   },
-  
+
   getPagoById(id) {
     return newGoalApi().get(`/pagos/${id}`);
   },
 
-   getPagosEstudiante(id) {
+  getPagosEstudiante(id) {
     return newGoalApi().get(`/pagos/estudiante/${id}`);
   },
 
   getReportePagos() {
     return newGoalApi().get("/pagos/reporte", {
       responseType: "blob", // Para manejar archivos
+    });
+  },
+
+  generarReportePagos(params) {
+    return newGoalApi().get(`/pagos/reporte?${params.toString()}`, {
+      responseType: "blob",
     });
   },
 
@@ -177,6 +188,12 @@ export default {
     });
   },
 
+  generarReporteGastos(params) {
+    return newGoalApi().get(`/gastos/reporte?${params.toString()}`, {
+      responseType: "blob",
+    });
+  },
+
   //PERSONAS
   getPersonas() {
     return newGoalApi().get(`/personas?pagina=1&limit=1000`);
@@ -186,7 +203,7 @@ export default {
     return newGoalApi().get(`/personas/${id}`);
   },
 
-      getReportePersonas() {
+  getReportePersonas() {
     return newGoalApi().get("/personas/reporte", {
       responseType: "blob", // Para manejar archivos
     });
@@ -227,7 +244,7 @@ export default {
     return newGoalApi().get(`/notas/${id}`);
   },
 
-    getNotasByEstudiante(id) {
+  getNotasByEstudiante(id) {
     return newGoalApi().get(`/notas/estudiante/${id}`);
   },
 
@@ -244,6 +261,15 @@ export default {
 
   getAlergiasById(id) {
     return newGoalApi().get(`/alergiaEstudiantes/${id}`);
+  },
+
+  //NIVELES
+  getNiveles() {
+    return newGoalApi().get(`/nivel?pagina=1&limit=1000`);
+  },
+
+  getNivel(id) {
+    return newGoalApi().get(`/nivel/${id}`);
   },
 
   //PUT
@@ -291,6 +317,12 @@ export default {
   putNota(value) {
     return newGoalApi().put("/notas", value);
   },
+
+  //NIVEL
+  putNivel(value) {
+    return newGoalApi().put("/nivel", value);
+  },
+
   //DELETE
 
   //ESTUDIANTES
@@ -341,5 +373,10 @@ export default {
   //ALERGIAS
   deletealergia(value) {
     return newGoalApi().delete("/alergiaEstudiantes", { data: value });
+  },
+
+  //NIVEL
+  deleteNivel(value) {
+    return newGoalApi().delete("/nivel", { data: value });
   },
 };

@@ -76,7 +76,7 @@
     </template> -->
     <template v-slot:footer.prepend>
       <div class="mx-3">
-        <v-btn @click="reportePagos">Generar Listado</v-btn>
+        <v-btn @click="reporte">Generar reporte</v-btn>
       </div>
     </template>
   </v-data-table>
@@ -118,6 +118,15 @@
       </template>
     </v-card>
   </v-dialog>
+  <v-dialog v-model="this.dialog_4">
+    <v-icon
+      icon="mdi-close"
+      class="position-absolute right-0"
+      color="white"
+      @click="this.dialog_4 = false"
+    ></v-icon>
+    <CartaReportePagos />
+  </v-dialog>
 </template>
 
 <script>
@@ -125,11 +134,13 @@ import newGoalService from "@/services/newGoalService";
 import { ref } from "vue";
 import CartaVerPago from "../Cards/CartaVerPago.vue";
 import CartaEditPago from "../Cards/CartaEditPago.vue";
+import CartaReportePagos from "../Cards/CartaReportePagos.vue";
 
 export default {
   components: {
     CartaVerPago,
     CartaEditPago,
+    CartaReportePagos,
   },
   data: () => ({
     loadingConfig: true,
@@ -137,6 +148,7 @@ export default {
     dialog_1: false,
     dialog_2: false,
     dialog_3: false,
+    dialog_4: false,
     paginacion: {
       items: 10,
       pagina: 1,
@@ -190,35 +202,40 @@ export default {
       }
     },
 
-    async reportePagos() {
-      try {
-        const response = await newGoalService.getReportePagos();
-        const url = window.URL.createObjectURL(new Blob([response.data]));
-        const link = document.createElement("a");
-        link.href = url;
+    // async reportePagos() {
+    //   try {
+    //     const response = await newGoalService.getReportePagos();
+    //     const url = window.URL.createObjectURL(new Blob([response.data]));
+    //     const link = document.createElement("a");
+    //     link.href = url;
 
-        // Obtener el nombre del archivo desde las cabeceras (si el servidor lo envía)
-        const contentDisposition = response.headers["content-disposition"];
-        const fileName = contentDisposition
-          ? contentDisposition.split("filename=")[1].replace(/"/g, "")
-          : `Reporte_Pagos_${new Date().toISOString()}.xlsx`; // Nombre por defecto si no hay header
+    //     // Obtener el nombre del archivo desde las cabeceras (si el servidor lo envía)
+    //     const contentDisposition = response.headers["content-disposition"];
+    //     const fileName = contentDisposition
+    //       ? contentDisposition.split("filename=")[1].replace(/"/g, "")
+    //       : `Reporte_Pagos_${new Date().toISOString()}.xlsx`; // Nombre por defecto si no hay header
 
-        link.setAttribute("download", fileName);
-        document.body.appendChild(link);
-        link.click();
+    //     link.setAttribute("download", fileName);
+    //     document.body.appendChild(link);
+    //     link.click();
 
-        // Limpiar recursos
-        document.body.removeChild(link);
-        window.URL.revokeObjectURL(url);
-      } catch (error) {
-        console.error("Error:", error.response?.data || error.message);
-      }
-    },
+    //     // Limpiar recursos
+    //     document.body.removeChild(link);
+    //     window.URL.revokeObjectURL(url);
+    //   } catch (error) {
+    //     console.error("Error:", error.response?.data || error.message);
+    //   }
+    // },
 
     edita(id) {
       this.id_pago = id;
       console.log("hola");
       this.dialog_1 = true;
+    },
+
+    reporte() {
+      console.log("hola");
+      this.dialog_4 = true;
     },
 
     ver(id) {

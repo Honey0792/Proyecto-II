@@ -10,6 +10,10 @@
 
       <v-spacer></v-spacer>
 
+     <h4 class="ma-3"> {{ this.datosMain.nombre_persona }} {{ this.datosMain.apellido_persona }} <br>
+    <h5>{{ this.datosMain.cargo_persona }} </h5>
+    </h4>
+
       <template v-if="$vuetify.display.mdAndUp">
         <v-btn
           title="Salir"
@@ -98,6 +102,11 @@
             title="Empleados"
             prepend-icon="mdi-briefcase"
           />
+          <v-list-item
+            to="/niveles"
+            title="Niveles"
+            prepend-icon="mdi-book-multiple"
+          ></v-list-item>
         </v-list-group>
 
         <!-- Financiero -->
@@ -156,12 +165,29 @@
   </v-layout>
 </template>
 <script>
+import newGoalService from '@/services/newGoalService';
+
 export default {
   data: () => ({
+      datosMain: null,
     drawer: false,
     group: null,
   }),
   methods: {
+        async obtenerDatosMain() {
+      try {
+        const res = await newGoalService.getHome();
+        this.datosMain = res.data.usuario[0];
+        console.log("datos main", this.datosMain);
+
+        // Selecciona el último período por defecto
+        // if (this.datosMain.length > 0) {
+        //   this.selectedPeriodoId = this.datosMain[0].id_periodo;
+        // }
+      } catch (error) {
+        console.error(error);
+      }
+    },
     cerrarSesion() {
       sessionStorage.clear();
       this.$router.push("/").then(() => {
@@ -179,5 +205,8 @@ export default {
       this.drawer = false;
     },
   },
+  mounted(){
+    this.obtenerDatosMain()
+  }
 };
 </script>
