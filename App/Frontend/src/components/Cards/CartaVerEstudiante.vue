@@ -224,6 +224,17 @@
         <template v-slot:item.fecha_pago="{ item }">
           {{ item.fecha_pago.split("T")[0] }}
         </template>
+            <template v-slot:item.restante="{ item }">
+      <span
+        :class="{
+          'bg-success': item.monto_cancelado_pago === item.monto_total_pago,
+          'bg-warning': item.monto_cancelado_pago !== item.monto_total_pago,
+        }"
+        class="pa-2 rounded"
+      >
+        {{ item.monto_total_pago - item.monto_cancelado_pago }}
+      </span>
+    </template>
         <template v-slot:item.monto_cancelado_pago="{ item }">
           <span
             :class="{
@@ -298,8 +309,9 @@ export default {
     headersPagos: [
       { title: "Fecha", key: "fecha_pago" }, // Columna para el estado
       { title: "Metodo de Pago", key: "nombre_metodo_pago" }, // Columna para el estado
-      { title: "Monto Cancelado", key: "monto_cancelado_pago" }, // Columna para el estado
       { title: "Monto Total", key: "monto_total_pago" }, // Columna para el estado
+      { title: "Monto Cancelado", key: "monto_cancelado_pago" }, // Columna para el estado
+      { title: "Restante", key: "restante" }, // Columna para el estado
     ],
     headersNotas: [
       { title: "Periodo", key: "nombre_periodo" }, // Columna para el estado

@@ -14,7 +14,7 @@
       >{{ alert.message }}</v-alert
     >
   </v-dialog>
-  <v-card>
+  <v-card class="ma-7">
     <h3 class="pa-3">Generar Listado</h3>
     <v-divider></v-divider>
     <v-container>

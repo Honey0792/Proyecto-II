@@ -77,7 +77,7 @@
     <v-card
       max-width="400"
       prepend-icon="mdi-delete-alert"
-      text="¿Estas Seguro/a de querer eliminar a este estdiante?"
+      text="¿Estas Seguro/a de querer eliminar a este periodo?"
       title="Oprimiste eliminar"
       color="warning"
     >
