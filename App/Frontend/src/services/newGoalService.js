@@ -299,12 +299,20 @@ export default {
     return newGoalApi().get(`/indicador/balance/rango?${params.toString()}`);
   },
 
+    getBalanceTrimestral(params) {
+    return newGoalApi().get(`/indicador/balance/trimestral?${params.toString()}`);
+  },
+
     getMorosidadRango(params) {
     return newGoalApi().get(`/indicador/morosidad/rango?${params.toString()}`);
   },
 
     getRetencionRango(params) {
     return newGoalApi().get(`/indicador/retencion/rango?${params.toString()}`);
+  },
+
+      getRetencionTrimestral(params) {
+    return newGoalApi().get(`/indicador/retencion/Trimestral?${params.toString()}`);
   },
 
   //PUT

@@ -266,6 +266,16 @@
     <!-- Retención dentro de Académico -->
   
 
+    <!-- Gráficas Trimestrales -->
+    <v-row class="mt-4">
+      <v-col cols="12" md="6">
+        <BalanceTrimestralChart :anio="parseInt(anioSeleccionado)" />
+      </v-col>
+      <v-col cols="12" md="6">
+        <RetencionTrimestralChart :anio="parseInt(anioSeleccionado)" />
+      </v-col>
+    </v-row>
+
     <!-- ===== CHARTS ===== -->
     <v-row>
       <!-- BAR + LINE -->
@@ -323,6 +333,8 @@ import {
 
 import { Bar, Doughnut } from "vue-chartjs";
 import newGoalService from "@/services/newGoalService";
+import BalanceTrimestralChart from "./BalanceTrimestralChart.vue";
+import RetencionTrimestralChart from "./RetencionTrimestralChart.vue";
 
 Chart.register(
   Title,
@@ -338,7 +350,7 @@ Chart.register(
 );
 
 export default {
-  components: { Bar, Doughnut },
+  components: { Bar, Doughnut, BalanceTrimestralChart, RetencionTrimestralChart },
 
   data() {
     return {
@@ -354,6 +366,8 @@ export default {
       morosidad: null,
       // Retención
       retencion: null,
+      // Gráficas trimestrales
+      anioSeleccionado: new Date().getFullYear(),
     };
   },
 
