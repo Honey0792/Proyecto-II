@@ -57,6 +57,14 @@ export default {
     return newGoalApi().post("/nivel", value);
   },
 
+  postTasa(value) {
+    return newGoalApi().post("/tasas", value);
+  },
+
+  //CUOTAS
+  postCuotas(value) {
+    return newGoalApi().post("/subpagos/", value);
+  },
   //GET
 
   // SELECTS
@@ -272,6 +280,33 @@ export default {
     return newGoalApi().get(`/nivel/${id}`);
   },
 
+  //Tasa Cambiaria
+
+  getTasa() {
+    return newGoalApi().get("/tasas");
+  },
+
+  getSubPagosById(id) {
+    return newGoalApi().get(`/subpagos/${id}`);
+  },
+
+  getSubPagoById(id) {
+    return newGoalApi().get(`/subpagos/sp/${id}`);
+  },
+
+  //Indicadores
+  getBalanceRango(params) {
+    return newGoalApi().get(`/balance/rango?${params.toString()}`);
+  },
+
+    getMorosidadRango(params) {
+    return newGoalApi().get(`/morosidad/rango?${params.toString()}`);
+  },
+
+    getRetencionRango(params) {
+    return newGoalApi().get(`/retencion/rango?${params.toString()}`);
+  },
+
   //PUT
 
   //REPRESENTANTES
@@ -292,6 +327,12 @@ export default {
   //PAGOS
   putPago(value) {
     return newGoalApi().put("/pagos", value);
+  },
+
+  //SUBPAGOS
+
+  putSubPagos(id) {
+    return newGoalApi().get(`/subpagos/`);
   },
 
   //GASTOS

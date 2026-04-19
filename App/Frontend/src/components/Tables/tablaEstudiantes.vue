@@ -124,7 +124,7 @@ export default {
     CartaVerEstudiante,
   },
   data: () => ({
-    loadingConfig:true,
+    loadingConfig: true,
     search: null,
     nombreEliminar: "",
     apellidoEliminar: "",
@@ -168,37 +168,37 @@ export default {
       //   console.error("Error abriendo reporte:", error);
       //   alert("No se pudo abrir el reporte");
       // }
-       try {
-        const response = await newGoalService.getReporteEstudiantes()
-        console.log(response)
-       // Crear un enlace temporal para descargar el archivo
-  const url = window.URL.createObjectURL(new Blob([response.data]));
-  const link = document.createElement("a");
-  link.href = url;
-  
-  // Obtener el nombre del archivo desde las cabeceras (si el servidor lo envía)
-  const contentDisposition = response.headers["content-disposition"];
-  const fileName = contentDisposition
-    ? contentDisposition.split("filename=")[1].replace(/"/g, '')
-    : `reporte_estudiantes_${new Date().toISOString()}.xlsx`; // Nombre por defecto si no hay header
+      try {
+        const response = await newGoalService.getReporteEstudiantes();
+        console.log(response);
+        // Crear un enlace temporal para descargar el archivo
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement("a");
+        link.href = url;
 
-  link.setAttribute("download", fileName);
-  document.body.appendChild(link);
-  link.click();
-  
-  // Limpiar recursos
-  document.body.removeChild(link);
-  window.URL.revokeObjectURL(url);
-        } catch (error) {
-          console.error("Error:", error.response?.data || error.message);
-        }
+        // Obtener el nombre del archivo desde las cabeceras (si el servidor lo envía)
+        const contentDisposition = response.headers["content-disposition"];
+        const fileName = contentDisposition
+          ? contentDisposition.split("filename=")[1].replace(/"/g, "")
+          : `reporte_estudiantes_${new Date().toISOString()}.xlsx`; // Nombre por defecto si no hay header
+
+        link.setAttribute("download", fileName);
+        document.body.appendChild(link);
+        link.click();
+
+        // Limpiar recursos
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+      } catch (error) {
+        console.error("Error:", error.response?.data || error.message);
+      }
     },
     async obtenerEstudiantes() {
       try {
         const res = await newGoalService.getEstudiante();
         this.estudiantes = res.data;
         console.log(this.estudiantes);
-        this.loadingConfig = false
+        this.loadingConfig = false;
       } catch (error) {
         console.log(error);
       }

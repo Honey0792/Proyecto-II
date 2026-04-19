@@ -14,10 +14,43 @@
       >{{ alert.message }}</v-alert
     >
   </v-dialog>
-  <v-card class="ma-7">
+
+  <v-dialog
+    v-model="dialog_tasa"
+    class="justify-center align-center"
+    max-width="500px"
+    transition="dialog-transition"
+  >
+    <CartaTasa @actualizarTasa="obtenerTasa" />
+  </v-dialog>
+  <v-card class="ma-8">
     <v-form ref="form" @submit.prevent="registrarPago">
       <h3 class="pa-3">Datos del Pago</h3>
       <v-divider></v-divider>
+      <v-container>
+        <v-row>
+          <v-col>
+            <v-btn @click="openDialogTasa" class="mt-8" color=""
+              >Registrar Tasa Cambiaria</v-btn
+            >
+          </v-col>
+          <v-col>
+            <v-card
+              color="teal-darken-2"
+              class="d-flex flex-column align-center justify-center pa-4 text-white"
+              elevation="6"
+            >
+              <h2 class="font-weight-bold mb-1">
+                {{ tasa?.tasaBolivares }} BS
+              </h2>
+
+              <span class="text-caption">
+                {{ tasa?.fechaTasa }}
+              </span>
+            </v-card>
+          </v-col>
+        </v-row>
+      </v-container>
       <v-container>
         <v-row>
           <v-col>
@@ -110,13 +143,19 @@
 <script>
 import newGoalService from "@/services/newGoalService";
 import tablaPagos from "../Tables/tablaPagos.vue";
+import CartaTasa from "../Cards/CartaTasa.vue";
 
 export default {
-  components: { tablaPagos },
+  components: { tablaPagos, CartaTasa },
   data: () => ({
     alert: { show: false, message: "" },
+    dialog_tasa: false,
     metodos_pago: [],
     estudiantes: [], // Lista de estudiantes
+    tasa: {
+      tasaBolivares: null,
+      fechaTasa: null,
+    },
     pago: {
       id_estudiante: null,
       metodo_pago: null,
@@ -187,11 +226,25 @@ export default {
         };
       }
     },
+
+    openDialogTasa() {
+      this.dialog_tasa = true;
+    },
     async obtenerEstudiantes() {
       try {
         const res = await newGoalService.getEstudiante();
         this.estudiantes = res.data;
         console.log(this.estudiantes);
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async obtenerTasa() {
+      try {
+        const res = await newGoalService.getTasa();
+        this.tasa.tasaBolivares = res.data.tasaBolivares;
+        this.tasa.fechaTasa = res.data.fechaTasa.split("T")[0];
+        console.log(res);
       } catch (error) {
         console.log(error);
       }
@@ -208,16 +261,13 @@ export default {
       return [
         (v) => !!v || "Monto cancelado es requerido",
         (v) => Number(v) >= 0 || "No puede ser negativo",
-        (v) => {
-          const total = Number(this.pago.monto_total || 0);
-          return Number(v) <= total || `Máximo permitido: ${total}`;
-        },
       ];
     },
   },
   mounted() {
     this.obtenerEstudiantes();
     this.leerMetodosdePago();
+    this.obtenerTasa();
   },
 };
 </script>

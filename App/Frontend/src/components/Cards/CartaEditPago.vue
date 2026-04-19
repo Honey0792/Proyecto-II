@@ -229,10 +229,6 @@ export default {
       return [
         (v) => !!v || "Monto cancelado es requerido",
         (v) => Number(v) >= 0 || "No puede ser negativo",
-        (v) => {
-          const total = Number(this.pago.monto_total || 0);
-          return Number(v) <= total || `Máximo permitido: ${total}`;
-        },
       ];
     },
   },

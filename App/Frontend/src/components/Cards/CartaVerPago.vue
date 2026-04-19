@@ -1,5 +1,5 @@
 <template>
-  <v-card class="ma-7">
+  <v-card class="ma-3">
     <v-form>
       <h3 class="pa-3">Persona que registro el pago</h3>
       <v-divider></v-divider>
@@ -22,8 +22,8 @@
             ></v-text-field>
           </v-col>
         </v-row>
-    </v-container>
-    <v-divider></v-divider>
+      </v-container>
+      <v-divider></v-divider>
       <h3 class="pa-3">Datos del Pago</h3>
       <v-divider></v-divider>
       <v-container>
@@ -59,6 +59,15 @@
           </v-col>
           <v-col>
             <v-text-field
+              variant="outlined"
+              readonly
+              type="text"
+              label="Tasa"
+              v-model="pago.tasa_bolivares"
+            ></v-text-field>
+          </v-col>
+          <v-col>
+            <v-text-field
               label="Metodo de Pago"
               variant="outlined"
               readonly
@@ -88,8 +97,8 @@
             ></v-text-field>
           </v-col>
         </v-row>
-                    <v-row>
-                <v-col>
+        <v-row>
+          <v-col>
             <v-textarea
               variant="outlined"
               readonly
@@ -99,22 +108,59 @@
               v-model="pago.descripcion_pago"
             ></v-textarea>
           </v-col>
-            </v-row>
+        </v-row>
+        <v-divider class="text-button">CUOTAS</v-divider>
+        <v-row>
+          <v-col>
+            <v-btn @click="cartaCuotas" color="success">Establecer número de cuotas</v-btn>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col  class="d-flex pa-0">
+            <TablaCuotas :id="id" />
+          </v-col>
+        </v-row>
       </v-container>
       <!-- <v-container>
             <v-row>
         </v-row>
         </v-container> -->
       <!-- <v-container> -->
-        <!-- </v-container> -->
+      <!-- </v-container> -->
     </v-form>
   </v-card>
+
+  <v-dialog
+    v-model="dialogCuotas"
+     max-width="500px"
+    transition="dialog-transition"
+  >
+  <v-container grid-list-xs class="dflex justify-center align-center">
+    
+    <v-card>
+      <v-container grid-list-xs>
+        <v-form @submit.prevent="establecerCuotas">
+          <v-text-field
+          v-model="cuotas.numero_cuotas"
+            name="name"
+            label="Numero de Cuotas"
+            variant="outlined"
+            type="number"
+          ></v-text-field>
+          <v-btn type="submit" color="success">Establecer</v-btn>
+        </v-form>
+      </v-container>
+    </v-card>
+  </v-container>
+  </v-dialog>
 </template>
 
 <script>
 import newGoalService from "@/services/newGoalService";
+import TablaCuotas from "../Tables/tablaCuotas.vue";
 
 export default {
+  components:{TablaCuotas},
   props: {
     id: {
       type: Number,
@@ -122,6 +168,7 @@ export default {
     },
   },
   data: () => ({
+    dialogCuotas: false,
     nombre_completo_etd: "",
     pago: {
       id_pago: null,
@@ -137,10 +184,27 @@ export default {
       fecha_pago: "",
       monto_total_pago: null,
       monto_cancelado_pago: null,
-      descripcion_pago: null
+      descripcion_pago: null,
+      tasa_bolivares: null,
+    },
+    cuotas:{
+      numero_cuotas: null
     },
   }),
   methods: {
+        cartaCuotas(){
+      this.dialogCuotas = true
+    },
+
+    async establecerCuotas(){
+      try {
+        const res = await newGoalService.postCuotas({id_pago: this.id, numero_cuotas: this.cuotas.numero_cuotas})
+        console.log(res)
+      } catch (error) {
+        console.log(error)
+      }
+    },
+
     fullName(item) {
       return `${this.pago.nombre_etd} ${this.pago.apellido_etd}`;
     },

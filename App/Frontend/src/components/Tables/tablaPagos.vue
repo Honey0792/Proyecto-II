@@ -1,7 +1,7 @@
 <template>
   <v-data-table
     :loading="loadingConfig"
-    :items="pagos"
+    :items="pagosFormateados"
     :headers
     :items-per-page-options="itemsPerPage"
     v-model:items-per-page="paginacion.items"
@@ -9,41 +9,95 @@
     :search="search"
   >
     <template v-slot:top>
-      <v-text-field
-        v-model="search"
-        placeholder="Buscar"
-        prepend-inner-icon="mdi-magnify"
-        clearable
-        density="compact"
-        single-line
-      ></v-text-field>
+      <div class="d-flex ga-3 align-center">
+        <v-text-field
+          variant="outlined"
+          v-model="search"
+          placeholder="Buscar"
+          prepend-inner-icon="mdi-magnify"
+          clearable
+          density="compact"
+          class="ma-2"
+          single-line
+        />
+
+        <v-select
+          class="ma-2"
+          v-model="modoMoneda"
+          :items="modosMoneda"
+          variant="outlined"
+          item-title="title"
+          item-value="value"
+          label="Mostrar montos en"
+          density="compact"
+          style="max-width: 220px"
+        />
+      </div>
     </template>
     <template v-slot:item.fecha_pago="{ item }">
-      {{ item.fecha_pago.split("T")[0] }}
-    </template>
+  {{ item.fecha_pago.split("T")[0] }}
+</template>
+
+
+    <template v-slot:item.monto_total_pago="{ item }">
+  <div class="d-flex flex-column">
+    
+    <!-- principal -->
+    <span>
+      {{ formatoMoneda(item.monto_total_visual, item.moneda_base) }}
+    </span>
+
+    <!-- 🔥 dual -->
+    <small v-if="modoMoneda === 'dual'" class="text-grey">
+      {{ item.moneda_base === 'USD'
+        ? formatoMoneda(item.monto_total_bs, 'BS')
+        : formatoMoneda(item.monto_total_pago, 'USD')
+      }}
+    </small>
+
+  </div>
+</template>
 
     <template v-slot:item.monto_cancelado_pago="{ item }">
-      <span
-        :class="{
-          'bg-success': item.monto_cancelado_pago === item.monto_total_pago,
-          'bg-warning': item.monto_cancelado_pago !== item.monto_total_pago,
-        }"
-        class="pa-2 rounded"
-      >
-        {{ item.monto_cancelado_pago }}
-      </span>
-    </template>
+  <div
+    class="pa-2 rounded"
+    :class="{
+      'bg-success': item.monto_cancelado_visual === item.monto_total_visual,
+      'bg-warning': item.monto_cancelado_visual !== item.monto_total_visual,
+    }"
+  >
+    <div>
+      {{ formatoMoneda(item.monto_cancelado_visual, item.moneda_base) }}
+    </div>
+
+    <small v-if="modoMoneda === 'dual'" class="text-grey">
+      {{ item.moneda_base === 'USD'
+        ? formatoMoneda(item.monto_cancelado_bs, 'BS')
+        : formatoMoneda(item.monto_cancelado_pago, 'USD')
+      }}
+    </small>
+  </div>
+</template>
+
+
     <template v-slot:item.restante="{ item }">
-      <span
-        :class="{
-          'bg-success': item.monto_cancelado_pago === item.monto_total_pago,
-          'bg-warning': item.monto_cancelado_pago !== item.monto_total_pago,
-        }"
-        class="pa-2 rounded"
-      >
-        {{ item.monto_total_pago - item.monto_cancelado_pago }}
-      </span>
-    </template>
+  <div class="pa-2 rounded">
+    
+    <div>
+      {{ formatoMoneda(item.restante_visual, item.moneda_base) }}
+    </div>
+
+    <small v-if="modoMoneda === 'dual'" class="text-grey">
+      {{
+        item.moneda_base === "USD"
+          ? formatoMoneda(item.monto_total_bs - item.monto_cancelado_bs, "BS")
+          : formatoMoneda(item.monto_total_pago - item.monto_cancelado_pago, "USD")
+      }}
+    </small>
+
+  </div>
+</template>
+
     <template v-slot:item.id_pago="{ item }"> </template>
     <template v-slot:item.actions="{ item }">
       <div class="d-flex ga-2 justify-end">
@@ -136,6 +190,12 @@ import CartaVerPago from "../Cards/CartaVerPago.vue";
 import CartaEditPago from "../Cards/CartaEditPago.vue";
 import CartaReportePagos from "../Cards/CartaReportePagos.vue";
 
+const METODOS_USD = [5, 6, 7, 8, 9];
+// Zelle, Divisas, Binance, Banesco Panama, Mercantil Panama
+
+const METODOS_BS = [1, 2, 3, 4];
+// Efectivo, Pago Móvil, Punto, Transferencia
+
 export default {
   components: {
     CartaVerPago,
@@ -153,6 +213,13 @@ export default {
       items: 10,
       pagina: 1,
     },
+    modoMoneda: "default",
+    modosMoneda: [
+      { title: "Según método de pago", value: "metodo" },
+      { title: "Todo en USD", value: "usd" },
+      { title: "Todo en Bs", value: "bs" },
+      { title: "Ambas monedas", value: "dual" }, // 🔥 PRO
+    ],
     itemsPerPage: [
       { value: 10, title: "10" },
       { value: 25, title: "25" },
@@ -160,16 +227,18 @@ export default {
       { value: 100, title: "100" },
     ],
     headers: [
-      { title: "Orden", align: "start", key: "id_pago" },
-      { title: "Nombre", align: "start", key: "nombre_etd" },
-      { title: "Apellido", align: "start", key: "apellido_etd" },
-      { title: "Fecha", align: "end", key: "fecha_pago" },
-      { title: "Metodo de Pago", align: "end", key: "nombre_metodo_pago" },
-      { title: "Monto Total", align: "end", key: "monto_total_pago" },
-      { title: "Monto Cancelado", align: "end", key: "monto_cancelado_pago" },
-      { title: "Restante", align: "end", key: "restante" },
-      { title: "Acciones", align: "end", key: "actions" },
+      { title: "ID", key: "id_pago" },
+      { title: "Nombre", key: "nombre_etd" },
+      { title: "Apellido", key: "apellido_etd" },
+      { title: "Fecha", key: "fecha_pago" },
+      { title: "Método de Pago", key: "nombre_metodo_pago" },
+      { title: "Tasa (Bs)", key: "tasa_bolivares" },
+      { title: "Monto Total ($)", key: "monto_total_pago" },
+      { title: "Monto Cancelado ($)", key: "monto_cancelado_pago" },
+      { title: "Restante ($)", key: "restante" },
+      { title: "Acciones", key: "actions", sortable: false },
     ],
+
     id_pago: null,
     pago: {
       id_estudiante: null,
@@ -177,10 +246,12 @@ export default {
       fecha_pago: "",
       monto_total: null,
       monto_cancelado: null,
+      tasa_bolivares: null,
     },
     pagos: [],
   }),
   methods: {
+  
     async obtenerPagos() {
       try {
         const res = await newGoalService.getPagos();
@@ -227,6 +298,20 @@ export default {
     //   }
     // },
 
+    formatoMoneda(valor, monedaBase) {
+      let simbolo = "";
+
+      if (this.modoMoneda === "default") {
+        simbolo = monedaBase === "USD" ? "$" : "Bs";
+      } else if (this.modoMoneda === "usd") {
+        simbolo = "$";
+      } else {
+        simbolo = "Bs";
+      }
+
+      return `${simbolo} ${Number(valor).toFixed(2)}`;
+    },
+
     edita(id) {
       this.id_pago = id;
       console.log("hola");
@@ -250,6 +335,60 @@ export default {
       console.log(id);
     },
   },
+
+  computed: {
+    pagosFormateados() {
+      return this.pagos.map((p) => {
+        const esUSD = METODOS_USD.includes(p.id_metodo_pago);
+
+        const montoTotalUSD = p.monto_total_pago;
+        const montoCanceladoUSD = p.monto_cancelado_pago;
+
+        const tasa = p.tasa_bolivares;
+
+        let montoTotalVisual = montoTotalUSD;
+        let montoCanceladoVisual = montoCanceladoUSD;
+        let moneda = "USD";
+
+        // 🔁 MODO SEGÚN MÉTODO
+        if (this.modoMoneda === "metodo") {
+          if (!esUSD) {
+            montoTotalVisual = montoTotalUSD * tasa;
+            montoCanceladoVisual = montoCanceladoUSD * tasa;
+            moneda = "BS";
+          }
+        }
+
+        // 🔁 TODO USD
+        if (this.modoMoneda === "usd") {
+          moneda = "USD";
+        }
+
+        // 🔁 TODO BS
+        if (this.modoMoneda === "bs") {
+          montoTotalVisual = montoTotalUSD * tasa;
+          montoCanceladoVisual = montoCanceladoUSD * tasa;
+          moneda = "BS";
+        }
+
+        // 🔥 MODO DUAL (NO cambia valores base)
+        return {
+          ...p,
+          monto_total_visual: montoTotalVisual,
+          monto_cancelado_visual: montoCanceladoVisual,
+          restante_visual: montoTotalVisual - montoCanceladoVisual,
+
+
+          monto_total_bs: montoTotalUSD * tasa,
+          monto_cancelado_bs: montoCanceladoUSD * tasa,
+
+          moneda_base: moneda,
+          esUSD,
+        };
+      });
+    },
+  },
+
   mounted() {
     this.obtenerPagos();
   },

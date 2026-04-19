@@ -1,171 +1,190 @@
 <template>
   <v-layout class="ma-3">
-    <v-app-bar color="#FF9100">
+
+    <!-- ================= APP BAR ================= -->
+    <v-app-bar
+      elevation="4"
+      class="px-4"
+      style="background: linear-gradient(90deg, #FF9100, #FF6D00);"
+    >
       <v-app-bar-nav-icon
         variant="text"
+        color="white"
         @click.stop="drawer = !drawer"
-      ></v-app-bar-nav-icon>
+      />
 
-      <v-toolbar-title>New Goal</v-toolbar-title>
+      <v-toolbar-title class="font-weight-bold text-white">
+        New Goal English Academy
+      </v-toolbar-title>
 
-      <v-spacer></v-spacer>
+      <v-spacer />
 
-      <h4 class="ma-3">
-        {{ this.nombre_persona }}
-        {{ this.apellido_persona }} <br />
-        {{ this.cargo_persona }}
-      </h4>
+      <!-- Usuario -->
+      <div class="d-flex align-center mr-4">
+        <v-avatar color="white" size="40" class="mr-3">
+          <span class="text-orange-darken-2 font-weight-bold">
+            {{ nombre_persona?.charAt(0) }}
+          </span>
+        </v-avatar>
 
-      <template v-if="$vuetify.display.mdAndUp">
-        <v-btn
-          title="Salir"
-          icon="mdi-logout"
-          variant="text"
-          @click="cerrarSesion()"
-        ></v-btn>
-      </template>
+        <div class="text-white text-right">
+          <div class="text-subtitle-2 font-weight-bold">
+            {{ nombre_persona }} {{ apellido_persona }}
+          </div>
+          <div class="text-caption">
+            {{ cargo_persona }}
+          </div>
+        </div>
+      </div>
+
+      <v-btn
+        icon="mdi-logout"
+        variant="text"
+        color="white"
+        title="Cerrar sesión"
+        @click="cerrarSesion"
+      />
     </v-app-bar>
 
+    <!-- ================= DRAWER ================= -->
     <v-navigation-drawer
       v-model="drawer"
-      :location="$vuetify.display.mobile ? 'bottom' : undefined"
-      temporary
+      elevation="6"
+      width="280"
+      permanent
     >
-      <!-- <v-menu>
-        <template v-slot:activator="{ props }"> -->
-      <!-- <v-list>
-        <v-list-item to="/main" prepend-icon="mdi-home"> Home </v-list-item>
-        <v-list-item to="/estudiantes" prepend-icon="mdi-account-school">
-          Estudiantes
-        </v-list-item>
-        <v-list-item
-          to="/representantes"
-          prepend-icon="mdi-human-male-female-child"
-        >
-          Representantes
-        </v-list-item>
-        <v-list-item to="/periodos" prepend-icon="mdi-calendar">
-          Periodos
-        </v-list-item>
-        <v-list-item
-          v-show="esVisible"
-          to="/transacciones"
-          prepend-icon="mdi-cash-register"
-        >
-          Transacciones
-        </v-list-item>
-        <v-list-item to="/inscripciones" prepend-icon="mdi-text-box-edit">
-          Inscripciones
-        </v-list-item>
-        <v-list-item
-          v-show="esVisible"
-          to="/notas"
-          prepend-icon="mdi-chair-school"
-        >
-          Notas
-        </v-list-item>
-        <v-list-item
-          v-show="esVisible"
-          to="/usuarios"
-          prepend-icon="mdi-account-group"
-        >
-          Usuarios
-        </v-list-item>
-        <v-list-item
-          v-show="esVisible"
-          to="/empleados"
-          prepend-icon="mdi-briefcase"
-        >
-          Empleados
-        </v-list-item>
-        <v-list-item to="/nuketown" prepend-icon="mdi-nuke">
-          Nuketown
-        </v-list-item> -->
-      <!-- </v-list> -->
-      <!-- </template> -->
-      <v-list>
-        <!-- Administración -->
+      <!-- Header del Drawer -->
+      <v-sheet
+        color="orange-lighten-5"
+        class="pa-4 text-center"
+      >
+        <v-icon size="40" color="orange-darken-2">mdi-school</v-icon>
+        <div class="text-subtitle-1 font-weight-bold mt-2">
+          Panel Administrativo
+        </div>
+      </v-sheet>
+
+      <v-list nav>
+
+        <!-- ADMINISTRACIÓN -->
         <v-list-group
           v-if="esVisible"
           prepend-icon="mdi-account-group"
           value="administracion"
         >
           <template v-slot:activator="{ props }">
-            <v-list-item v-bind="props" title="Administración" />
+            <v-list-item
+              v-bind="props"
+              title="Administración"
+              class="font-weight-medium"
+            />
           </template>
 
+          <v-list-item
+            to="/analiticas"
+            title="Analíticas"
+            prepend-icon="mdi-home-analytics"
+            class="rounded-lg mx-2 my-1"
+          />
           <v-list-item
             to="/usuarios"
             title="Usuarios"
             prepend-icon="mdi-account-group"
+            class="rounded-lg mx-2 my-1"
           />
           <v-list-item
             to="/empleados"
             title="Empleados"
             prepend-icon="mdi-briefcase"
+            class="rounded-lg mx-2 my-1"
           />
           <v-list-item
             to="/niveles"
             title="Niveles"
             prepend-icon="mdi-book-multiple"
-          ></v-list-item>
+            class="rounded-lg mx-2 my-1"
+          />
         </v-list-group>
 
-        <!-- Financiero -->
+        <!-- FINANCIERO -->
         <v-list-group
-          v-if="esVisible"
           prepend-icon="mdi-cash-multiple"
           value="financiero"
         >
           <template v-slot:activator="{ props }">
-            <v-list-item v-bind="props" title="Financiero" />
+            <v-list-item
+              v-bind="props"
+              title="Financiero"
+              class="font-weight-medium"
+            />
           </template>
 
           <v-list-item
             to="/transacciones"
             title="Transacciones"
             prepend-icon="mdi-cash-register"
+            class="rounded-lg mx-2 my-1"
           />
         </v-list-group>
 
-        <!-- Académico -->
-        <v-list-group prepend-icon="mdi-school" value="academico">
+        <!-- ACADÉMICO -->
+        <v-list-group
+          prepend-icon="mdi-school"
+          value="academico"
+        >
           <template v-slot:activator="{ props }">
-            <v-list-item v-bind="props" title="Académico" />
+            <v-list-item
+              v-bind="props"
+              title="Académico"
+              class="font-weight-medium"
+            />
           </template>
 
-          <v-list-item to="/main" title="Home" prepend-icon="mdi-home" />
+          <v-list-item
+            to="/main"
+            title="Home"
+            prepend-icon="mdi-home"
+            class="rounded-lg mx-2 my-1"
+          />
           <v-list-item
             to="/estudiantes"
             title="Estudiantes"
             prepend-icon="mdi-account-school"
+            class="rounded-lg mx-2 my-1"
           />
           <v-list-item
             to="/representantes"
             title="Representantes"
             prepend-icon="mdi-human-male-female-child"
+            class="rounded-lg mx-2 my-1"
           />
           <v-list-item
             to="/periodos"
             title="Periodos"
             prepend-icon="mdi-calendar"
+            class="rounded-lg mx-2 my-1"
           />
           <v-list-item
             to="/inscripciones"
             title="Inscripciones"
             prepend-icon="mdi-text-box-edit"
+            class="rounded-lg mx-2 my-1"
           />
           <v-list-item
             to="/notas"
             title="Notas"
             prepend-icon="mdi-chair-school"
+            class="rounded-lg mx-2 my-1"
           />
         </v-list-group>
+
       </v-list>
     </v-navigation-drawer>
-    <v-main style="height: 20px"> </v-main>
+
+    <v-main />
   </v-layout>
 </template>
+
 <script>
 import newGoalService from "@/services/newGoalService";
 
@@ -175,25 +194,29 @@ export default {
     apellido_persona: null,
     cargo_persona: null,
     drawer: false,
-    group: null,
   }),
+
+  computed: {
+    esVisible() {
+      return sessionStorage.getItem("role") === "1";
+    },
+  },
+
   methods: {
     async obtenerDatosMain() {
       try {
         const res = await newGoalService.getHome();
-        console.log(res.data.usuario)
-        this.nombre_persona = res.data.usuario[0].nombre_persona;
-        this.apellido_persona = res.data.usuario[0].apellido_persona;
-        this.cargo_persona = res.data.usuario[0].cargo_persona;
+        const usuario = res.data.usuario[0];
 
-        // Selecciona el último período por defecto
-        // if (this.datosMain.length > 0) {
-        //   this.selectedPeriodoId = this.datosMain[0].id_periodo;
-        // }
+        this.nombre_persona = usuario.nombre_persona;
+        this.apellido_persona = usuario.apellido_persona;
+        this.cargo_persona = usuario.cargo_persona;
+
       } catch (error) {
         console.error(error);
       }
     },
+
     cerrarSesion() {
       sessionStorage.clear();
       this.$router.push("/").then(() => {
@@ -201,18 +224,17 @@ export default {
       });
     },
   },
-  computed: {
-    esVisible() {
-      return sessionStorage.getItem("role") === "1";
-    },
-  },
-  watch: {
-    group() {
-      this.drawer = false;
-    },
-  },
+
   mounted() {
     this.obtenerDatosMain();
   },
 };
 </script>
+
+<style scoped>
+.v-list-item--active {
+  background-color: rgba(255, 145, 0, 0.15) !important;
+  border-left: 4px solid #FF9100;
+  border-radius: 8px;
+}
+</style>
