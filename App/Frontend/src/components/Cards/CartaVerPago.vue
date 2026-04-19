@@ -200,6 +200,8 @@ export default {
       try {
         const res = await newGoalService.postCuotas({id_pago: this.id, numero_cuotas: this.cuotas.numero_cuotas})
         console.log(res)
+        // Emitir evento global para actualizar las tablas
+        window.dispatchEvent(new Event("pagoActualizado"));
       } catch (error) {
         console.log(error)
       }

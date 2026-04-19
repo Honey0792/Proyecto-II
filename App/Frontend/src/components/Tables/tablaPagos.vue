@@ -391,6 +391,10 @@ export default {
 
   mounted() {
     this.obtenerPagos();
+    // Escuchar evento global de pago actualizado
+    window.addEventListener("pagoActualizado", () => {
+      this.obtenerPagos();
+    });
   },
 };
 </script>

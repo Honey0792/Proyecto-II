@@ -296,15 +296,15 @@ export default {
 
   //Indicadores
   getBalanceRango(params) {
-    return newGoalApi().get(`/balance/rango?${params.toString()}`);
+    return newGoalApi().get(`/indicador/balance/rango?${params.toString()}`);
   },
 
     getMorosidadRango(params) {
-    return newGoalApi().get(`/morosidad/rango?${params.toString()}`);
+    return newGoalApi().get(`/indicador/morosidad/rango?${params.toString()}`);
   },
 
     getRetencionRango(params) {
-    return newGoalApi().get(`/retencion/rango?${params.toString()}`);
+    return newGoalApi().get(`/indicador/retencion/rango?${params.toString()}`);
   },
 
   //PUT
@@ -329,10 +329,10 @@ export default {
     return newGoalApi().put("/pagos", value);
   },
 
-  //SUBPAGOS
+//SUBPAGOS
 
-  putSubPagos(id) {
-    return newGoalApi().get(`/subpagos/`);
+  putSubPagos(value) {
+    return newGoalApi().put(`/subpagos/`, value);
   },
 
   //GASTOS
@@ -419,5 +419,11 @@ export default {
   //NIVEL
   deleteNivel(value) {
     return newGoalApi().delete("/nivel", { data: value });
+  },
+
+  //SUBPAGOS
+
+    deleteSubPagos(id) {
+    return newGoalApi().delete(`/subpagos/`, { data: { id_sub_pago: id } });
   },
 };
