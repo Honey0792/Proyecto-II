@@ -15,149 +15,167 @@
 
       <!-- Contenedor oculto para PDF -->
       <div ref="reporteContainer" class="reporte-container">
-    <!-- Header -->
-    <div class="reporte-header">
-      <h1>Reporte de Indicadores</h1>
-      <p>{{ fechaReporte }}</p>
-    </div>
+        <!-- Header -->
+        <div class="reporte-header">
+          <h1>Reporte de Indicadores</h1>
+          <p>{{ fechaReporte }}</p>
+        </div>
 
-    <!-- Balance Financiero -->
-    <div class="seccion">
-      <h2>Balance Financiero</h2>
-      <table class="tabla-datos">
-        <tbody>
-          <tr>
-            <td>Ingresos</td>
-            <td class="numero"><span>$</span>{{ formatNumber(balance?.ingresos_usd || 0, 2) }}</td>
-          </tr>
-          <tr>
-            <td>Egresos</td>
-            <td class="numero"><span>$</span>{{ formatNumber(balance?.egresos_usd || 0, 2) }}</td>
-          </tr>
-          <tr>
-            <td>Balance</td>
-            <td class="numero" :class="(balance?.balance_usd || 0) >= 0 ? 'positivo' : 'negativo'">
-              <span>$</span>{{ formatNumber(balance?.balance_usd || 0, 2) }}
-            </td>
-          </tr>
-          <tr>
-            <td>Margen</td>
-            <td class="numero">{{ formatNumber(balance?.margen_porcentaje || 0, 1) }}%</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+        <!-- Balance Financiero -->
+        <div class="seccion">
+          <h2>Balance Financiero</h2>
+          <table class="tabla-datos">
+            <tbody>
+              <tr>
+                <td>Ingresos</td>
+                <td class="numero"><span>$</span>{{ formatNumber(balance?.ingresos_usd || 0, 2) }}</td>
+              </tr>
+              <tr>
+                <td>Egresos</td>
+                <td class="numero"><span>$</span>{{ formatNumber(balance?.egresos_usd || 0, 2) }}</td>
+              </tr>
+              <tr>
+                <td>Balance</td>
+                <td class="numero" :class="(balance?.balance_usd || 0) >= 0 ? 'positivo' : 'negativo'">
+                  <span>$</span>{{ formatNumber(balance?.balance_usd || 0, 2) }}
+                </td>
+              </tr>
+              <tr>
+                <td>Margen</td>
+                <td class="numero">{{ formatNumber(balance?.margen_porcentaje || 0, 1) }}%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
 
-    <!-- Morosidad -->
-    <div class="seccion">
-      <h2>Morosidad</h2>
-      <table class="tabla-datos">
-        <tbody>
-          <tr>
-            <td>Total Estudiantes</td>
-            <td class="numero">{{ morosidad?.total_estudiantes || 0 }}</td>
-          </tr>
-          <tr>
-            <td>Estudiantes Morosos</td>
-            <td class="numero">{{ morosidad?.estudiantes_morosos || 0 }}</td>
-          </tr>
-          <tr>
-            <td>Tasa Morosidad</td>
-            <td class="numero">{{ formatNumber(morosidad?.tasa_morosidad || 0, 1) }}%</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+        <!-- Morosidad -->
+        <div class="seccion">
+          <h2>Morosidad</h2>
+          <table class="tabla-datos">
+            <tbody>
+              <tr>
+                <td>Total Estudiantes</td>
+                <td class="numero">{{ morosidad?.total_estudiantes || 0 }}</td>
+              </tr>
+              <tr>
+                <td>Estudiantes Morosos</td>
+                <td class="numero">{{ morosidad?.estudiantes_morosos || 0 }}</td>
+              </tr>
+              <tr>
+                <td>Tasa Morosidad</td>
+                <td class="numero">{{ formatNumber(morosidad?.tasa_morosidad || 0, 1) }}%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
 
-    <!-- Retención -->
-    <div class="seccion">
-      <h2>Retención de Estudiantes</h2>
-      <table class="tabla-datos">
-        <tbody>
-          <tr>
-            <td>Estudiantes Anterior</td>
-            <td class="numero">{{ retencion?.estudiantes_anterior || 0 }}</td>
-          </tr>
-          <tr>
-            <td>Estudiantes Actual</td>
-            <td class="numero">{{ retencion?.estudiantes_actual || 0 }}</td>
-          </tr>
-          <tr>
-            <td>Estudiantes Retenidos</td>
-            <td class="numero">{{ retencion?.estudiantes_retenidos || 0 }}</td>
-          </tr>
-          <tr>
-            <td>Tasa Retención</td>
-            <td class="numero">{{ formatNumber(retencion?.tasa_retencion || 0, 1) }}%</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+        <!-- Retención -->
+        <div class="seccion">
+          <h2>Retención de Estudiantes</h2>
+          <table class="tabla-datos">
+            <tbody>
+              <tr>
+                <td>Estudiantes Anterior</td>
+                <td class="numero">{{ retencion?.estudiantes_anterior || 0 }}</td>
+              </tr>
+              <tr>
+                <td>Estudiantes Actual</td>
+                <td class="numero">{{ retencion?.estudiantes_actual || 0 }}</td>
+              </tr>
+              <tr>
+                <td>Estudiantes Retenidos</td>
+                <td class="numero">{{ retencion?.estudiantes_retenidos || 0 }}</td>
+              </tr>
+              <tr>
+                <td>Tasa Retención</td>
+                <td class="numero">{{ formatNumber(retencion?.tasa_retencion || 0, 1) }}%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
 
-    <!-- Indicadores Académicos -->
-    <div class="seccion">
-      <h2>Indicadores Académicos</h2>
-      <table class="tabla-datos">
-        <tbody>
-          <tr>
-            <td>Total Estudiantes</td>
-            <td class="numero">{{ estudiantes.length }}</td>
-          </tr>
-          <tr>
-            <td>Total Inscripciones</td>
-            <td class="numero">{{ totalInscripciones }}</td>
-          </tr>
-          <tr>
-            <td>Último Período</td>
-            <td>{{ latestPeriodo?.nombre_periodo || '---' }}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+        <!-- Indicadores Académicos -->
+        <div class="seccion">
+          <h2>Indicadores Académicos</h2>
+          <table class="tabla-datos">
+            <tbody>
+              <tr>
+                <td>Total Estudiantes</td>
+                <td class="numero">{{ estudiantes.length }}</td>
+              </tr>
+              <tr>
+                <td>Total Inscripciones</td>
+                <td class="numero">{{ totalInscripciones }}</td>
+              </tr>
+              <tr>
+                <td>Último Período</td>
+                <td>{{ latestPeriodo?.nombre_periodo || '---' }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
 
-    <!-- Gráficas -->
-    <div class="seccion">
-      <h2>Gráficas</h2>
-      <div class="graficas-row">
-        <div class="grafica"><canvas ref="chartBalanceTrimestral"></canvas></div>
-        <div class="grafica"><canvas ref="chartRetencionTrimestral"></canvas></div>
-        <div class="grafica"><canvas ref="chartInscripciones"></canvas></div>
-        <div class="grafica"><canvas ref="chartEdad"></canvas></div>
+        <!-- Datos de Balance Trimestral -->
+        <div class="seccion">
+          <h2>Datos de Balance Trimestral</h2>
+          <table class="tabla-datos">
+            <thead>
+              <tr><th>Trimestre</th><th>Ingresos</th><th>Egresos</th><th>Balance</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Ene - Mar</td><td class="numero">$100.00</td><td class="numero">$0.00</td><td class="numero positivo">$100.00</td></tr>
+              <tr><td>Abr - Jun</td><td class="numero">$50.00</td><td class="numero">$0.00</td><td class="numero positivo">$50.00</td></tr>
+              <tr><td>Jul - Sep</td><td class="numero">$0.00</td><td class="numero">$0.00</td><td class="numero">$0.00</td></tr>
+              <tr><td>Oct - Dic</td><td class="numero">$0.00</td><td class="numero">$0.00</td><td class="numero">$0.00</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="seccion">
+          <h2>Datos de Retención Trimestral</h2>
+          <table class="tabla-datos">
+            <thead>
+              <tr><th>Período</th><th>Retenidos</th><th>Tasa %</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>T1 → T2</td><td class="numero">1</td><td class="numero">100%</td></tr>
+              <tr><td>T2 → T3</td><td class="numero">0</td><td class="numero">0%</td></tr>
+              <tr><td>T3 → T4</td><td class="numero">0</td><td class="numero">0%</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="seccion">
+          <h2>Inscripciones por Período</h2>
+          <table class="tabla-datos">
+            <thead>
+              <tr><th>Período</th><th>Inscripciones</th><th>Mayores de edad</th></tr>
+            </thead>
+            <tbody>
+              <tr v-for="p in datosMainSorted" :key="p.id_periodo">
+                <td>{{ p.nombre_periodo }}</td>
+                <td class="numero">{{ p.total_inscripciones }}</td>
+                <td class="numero">{{ p.mayores_edad }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="seccion">
+          <h2>Distribución por Edad (Último Período)</h2>
+          <table class="tabla-datos">
+            <tbody>
+              <tr><td>Mayores de edad</td><td class="numero">{{ latestPeriodo?.mayores_edad || 0 }}</td></tr>
+              <tr><td>Menores de edad</td><td class="numero">{{ latestPeriodo?.menores_edad || 0 }}</td></tr>
+            </tbody>
+          </table>
+        </div>
       </div>
-      </div>
-    </div>
     </v-card-text>
   </v-card>
 </template>
 
 <script>
-import {
-  Chart,
-  Title,
-  Tooltip,
-  Legend,
-  BarElement,
-  LineElement,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  ArcElement,
-  DoughnutController,
-} from "chart.js";
-
-Chart.register(
-  Title,
-  Tooltip,
-  Legend,
-  BarElement,
-  LineElement,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  ArcElement,
-  DoughnutController
-);
-
 export default {
   props: {
     generarPDF: { type: Boolean, default: false },
@@ -171,10 +189,6 @@ export default {
   data() {
     return {
       mostrar: true,
-      selectedPeriodoId: null,
-      anioSeleccionado: new Date().getFullYear(),
-      charts: {},
-      datosCargados: false,
     };
   },
 
@@ -205,150 +219,22 @@ export default {
         : null;
     },
 
+    datosMainSorted() {
+      return [...this.datosMain].sort((a, b) => a.id_periodo - b.id_periodo);
+    },
+
     totalInscripciones() {
       return this.datosMain.reduce((sum, p) => sum + Number(p.total_inscripciones), 0);
-    },
-
-    chartDataBalanceTrimestral() {
-      return {
-        labels: ['T1', 'T2', 'T3', 'T4'],
-        datasets: [
-          {
-            type: 'bar',
-            label: 'Ingresos',
-            data: [],
-            backgroundColor: '#4CAF50',
-          },
-          {
-            type: 'bar',
-            label: 'Egresos',
-            data: [],
-            backgroundColor: '#F44336',
-          },
-          {
-            type: 'line',
-            label: 'Balance',
-            data: [],
-            borderColor: '#2196F3',
-            backgroundColor: '#2196F3',
-            tension: 0.3,
-          },
-        ],
-      };
-    },
-
-    chartDataRetencionTrimestral() {
-      return {
-        labels: ['T1', 'T2', 'T3', 'T4'],
-        datasets: [
-          {
-            type: 'bar',
-            label: 'Est. Anterior',
-            data: [],
-            backgroundColor: '#2196F3',
-          },
-          {
-            type: 'bar',
-            label: 'Est. Actual',
-            data: [],
-            backgroundColor: '#4CAF50',
-          },
-          {
-            type: 'line',
-            label: 'Tasa Retención',
-            data: [],
-            borderColor: '#FF9800',
-            backgroundColor: '#FF9800',
-            tension: 0.3,
-          },
-        ],
-      };
-    },
-
-    chartDataBarLine() {
-      const sorted = [...this.datosMain].sort((a, b) => a.id_periodo - b.id_periodo);
-      return {
-        labels: sorted.map((p) => p.nombre_periodo),
-        datasets: [
-          {
-            type: 'bar',
-            label: 'Inscripciones',
-            data: sorted.map((p) => Number(p.total_inscripciones)),
-            backgroundColor: '#00BCD4',
-          },
-          {
-            type: 'line',
-            label: 'Mayores de edad',
-            data: sorted.map((p) => Number(p.mayores_edad)),
-            borderColor: '#4CAF50',
-            backgroundColor: '#4CAF50',
-            tension: 0.3,
-          },
-        ],
-      };
-    },
-
-    chartDataDoughnut() {
-      if (!this.selectedPeriodoId) return null;
-      const p = this.datosMain.find((x) => x.id_periodo === this.selectedPeriodoId);
-      if (!p) return null;
-      return {
-        labels: ['Mayores de edad', 'Menores de edad'],
-        datasets: [
-          {
-            data: [Number(p.mayores_edad), Number(p.menores_edad)],
-            backgroundColor: ['#4CCFE0', '#E08D4C'],
-          },
-        ],
-      };
-    },
-  },
-
-  watch: {
-    datosMain: {
-      handler() {
-        this.$nextTick(() => {
-          setTimeout(() => this.inicializarGraficas(), 300);
-        });
-      },
-      immediate: true
     },
   },
 
   watch: {
     generarPDF: {
       async handler(val) {
-        if (val && this.datosCargados) {
+        if (val) {
           await this.generarPDFReport();
         }
       }
-    }
-  },
-
-  async mounted() {
-    console.log('ReporteDashboard mounted');
-    console.log('datosBalance:', this.datosBalance);
-    console.log('datosMorosidad:', this.datosMorosidad);
-    console.log('datosRetencion:', this.datosRetencion);
-    console.log('datosMain:', this.datosMain);
-    console.log('estudiantes:', this.estudiantes);
-    console.log('selectedPeriodoId:', this.selectedPeriodoId);
-    
-    await this.cargarDatos();
-    await this.$nextTick();
-    await new Promise((r) => setTimeout(r, 300));
-    this.datosCargados = true;
-    
-    console.log('Canvas refs:', {
-      chartInscripciones: this.$refs.chartInscripciones,
-      chartEdad: this.$refs.chartEdad
-    });
-    
-    // Inicializar las gráficas
-    this.inicializarGraficas();
-
-    if (this.generarPDF) {
-      this.$nextTick(() => this.generarPDFReport());
     }
   },
 
@@ -359,105 +245,6 @@ export default {
         minimumFractionDigits: decimals,
         maximumFractionDigits: decimals,
       });
-    },
-
-    async cargarDatos() {
-      // Los datos ya vienen por props del dashboard
-      // Solo necesitamos configurar el selectedPeriodoId
-      if (this.datosMain && this.datosMain.length) {
-        this.selectedPeriodoId = this.latestPeriodo?.id_periodo;
-      }
-      this.datosCargados = true;
-    },
-
-    inicializarGraficas() {
-      console.log('inicializarGraficas called');
-      console.log('refs:', {
-        chartBalanceTrimestral: this.$refs.chartBalanceTrimestral,
-        chartRetencionTrimestral: this.$refs.chartRetencionTrimestral,
-        chartInscripciones: this.$refs.chartInscripciones,
-        chartEdad: this.$refs.chartEdad
-      });
-      console.log('datosMain:', this.datosMain);
-      console.log('chartDataBarLine:', this.chartDataBarLine);
-      console.log('chartDataDoughnut:', this.chartDataDoughnut);
-      
-      // Balance Trimestral
-      if (this.$refs.chartBalanceTrimestral) {
-        this.charts.balance = new Chart(this.$refs.chartBalanceTrimestral, {
-          type: 'bar',
-          data: {
-            labels: ['Ene - Mar', 'Abr - Jun', 'Jul - Sep', 'Oct - Dic'],
-            datasets: [
-              { type: 'bar', label: 'Ingresos', data: [100, 50, 0, 0], backgroundColor: '#4CAF50' },
-              { type: 'bar', label: 'Egresos', data: [0, 0, 0, 0], backgroundColor: '#F44336' },
-              { type: 'line', label: 'Balance', data: [100, 50, 0, 0], borderColor: '#2196F3' }
-            ]
-          },
-options: { 
-            responsive: true, 
-            maintainAspectRatio: false,
-            animation: false,
-            plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 9 } } } },
-            layout: { padding: 5 }
-          }
-        });
-      }
-
-      // Retención Trimestral
-      if (this.$refs.chartRetencionTrimestral) {
-        this.charts.retencion = new Chart(this.$refs.chartRetencionTrimestral, {
-          type: 'bar',
-          data: {
-            labels: ['T1→T2', 'T2→T3', 'T3→T4'],
-            datasets: [
-              { type: 'bar', label: 'Retenidos', data: [1, 0, 0], backgroundColor: '#4CAF50' },
-              { type: 'line', label: 'Tasa %', data: [100, 0, 0], borderColor: '#FF9800', tension: 0.3, yAxisID: 'y1' }
-            ]
-          },
-options: { 
-            responsive: true, 
-            maintainAspectRatio: false,
-            animation: false,
-            plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 9 } } },
-            layout: { padding: 5 }
-          }
-          }
-        });
-      }
-      
-      // Inscripciones por período (Bar + Line)
-      if (this.$refs.chartInscripciones && this.chartDataBarLine) {
-        console.log('Creating inscripciones chart');
-        this.charts.inscripciones = new Chart(this.$refs.chartInscripciones, {
-          type: 'bar',
-          data: this.chartDataBarLine,
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            animation: false,
-            plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 9 } } } },
-            scales: { x: { ticks: { font: { size: 8 } } }, y: { ticks: { font: { size: 8 } } } },
-            layout: { padding: 5 }
-          },
-        });
-      }
-
-      // Distribución por edad (Doughnut)
-      if (this.$refs.chartEdad && this.chartDataDoughnut) {
-        console.log('Creating edad chart');
-        this.charts.edad = new Chart(this.$refs.chartEdad, {
-          type: 'doughnut',
-          data: this.chartDataDoughnut,
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            animation: false,
-            plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 9 } } } },
-            layout: { padding: 5 }
-          },
-        });
-      }
     },
 
     cerrar() {
@@ -472,9 +259,9 @@ options: {
 
         const opciones = {
           margin: [10, 10, 10, 10],
-          filename: `reporte-indicadores-${this.anioSeleccionado}.pdf`,
+          filename: `reporte-indicadores-${new Date().getFullYear()}.pdf`,
           image: { type: 'jpeg', quality: 0.98 },
-          html2canvas: { scale: 2, useCORS: true, logging: false },
+          html2canvas: { scale: 2, useCORS: true },
           jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
           pagebreak: { mode: ['avoid-all', 'css', 'legacy'] },
         };
@@ -542,6 +329,13 @@ options: {
   border: 1px solid #ddd;
 }
 
+.tabla-datos th {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  background: #f5f5f5;
+  text-align: left;
+}
+
 .tabla-datos tr:nth-child(odd) {
   background: #f9f9f9;
 }
@@ -557,27 +351,6 @@ options: {
 
 .tabla-datos .negativo {
   color: #c62828;
-}
-
-.graficas-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-}
-
-.grafica {
-  width: 100%;
-  height: 180px;
-  border: 1px solid #ddd;
-  padding: 8px;
-  display: block;
-  box-sizing: border-box;
-  margin-bottom: 8px;
-}
-
-.grafica canvas {
-  max-width: 100%;
-  max-height: 100%;
 }
 
 .pdf-generator {
