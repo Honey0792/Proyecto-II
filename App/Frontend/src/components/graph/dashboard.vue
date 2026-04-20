@@ -1,5 +1,24 @@
 <template>
   <v-container fluid>
+    <!-- Botón Reporte -->
+    <v-row justify="end" class="mb-2">
+      <v-btn color="red-darken-1" variant="tonal" @click="dialogReporte = true">
+        <v-icon start>mdi-file-pdf-box</v-icon>
+        Generar Reporte
+      </v-btn>
+    </v-row>
+
+    <!-- Dialog Reporte -->
+    <v-dialog v-model="dialogReporte" max-width="900" persistent>
+      <ReporteDashboard 
+        @cerrar="dialogReporte = false"
+        :datos-balance="balance"
+        :datos-morosidad="morosidad"
+        :datos-retencion="retencion"
+        :datos-main="datosMain"
+        :estudiantes="estudiantes"
+      />
+    </v-dialog>
     <!-- ===== SECCIÓN: BALANCE ===== -->
     <v-sheet class="mb-4 pa-3" color="orange-lighten-5" rounded="lg">
       <v-row align="center" class="mb-2">
@@ -10,6 +29,17 @@
           </div>
         </v-col>
         <v-col cols="12" md="8" class="d-flex align-center ga-2 justify-end">
+          <v-select
+            v-model="añoSeleccionado"
+            :items="años"
+            label="Año"
+            variant="outlined"
+            density="compact"
+            hide-details
+            bg-color="white"
+            style="max-width: 120px"
+            @update:model-value="onAñoChange"
+          />
           <v-text-field
             v-model="fechaInicio"
             type="date"
@@ -115,7 +145,7 @@
 
 </v-sheet>
 
-    <!-- ===== SECCIÓN: ACADÉMICO ===== -->
+    <!-- ===== SECCIÓN: MOROSIDAD ===== -->
     <v-sheet class="mb-4 pa-3" color="blue-grey-lighten-5" rounded="lg">
       <div class="text-h6 text-grey-darken-3 mb-3">
         <v-icon start color="info">mdi-chart-bar</v-icon>
@@ -163,10 +193,42 @@
 
     <!-- ===== SECCIÓN: RETENCIÓN ===== -->
     <v-sheet class="mb-4 pa-3" color="green-lighten-5" rounded="lg">
-      <div class="text-h6 text-grey-darken-3 mb-3">
-        <v-icon start color="success">mdi-account-check</v-icon>
-        Retención de Estudiantes
-      </div>
+      <v-row align="center" class="mb-3">
+        <v-col cols="12" md="4">
+          <div class="text-h6 text-grey-darken-3">
+            <v-icon start color="success">mdi-account-check</v-icon>
+            Retención de Estudiantes
+          </div>
+        </v-col>
+        <v-col cols="12" md="8" class="d-flex align-center ga-2 justify-end">
+          <v-select
+            v-model="periodoAnterior"
+            :items="periodoOptions"
+            item-title="nombre"
+            item-value="id"
+            label="Período Anterior"
+            variant="outlined"
+            density="compact"
+            hide-details
+            bg-color="white"
+            style="max-width: 200px"
+            @update:model-value="obtenerRetencion"
+          />
+          <v-select
+            v-model="periodoActual"
+            :items="periodoOptions"
+            item-title="nombre"
+            item-value="id"
+            label="Período Actual"
+            variant="outlined"
+            density="compact"
+            hide-details
+            bg-color="white"
+            style="max-width: 200px"
+            @update:model-value="obtenerRetencion"
+          />
+        </v-col>
+      </v-row>
 
       <v-row class="mb-3">
         <v-col cols="12" sm="6" md="3">
@@ -335,6 +397,7 @@ import { Bar, Doughnut } from "vue-chartjs";
 import newGoalService from "@/services/newGoalService";
 import BalanceTrimestralChart from "./BalanceTrimestralChart.vue";
 import RetencionTrimestralChart from "./RetencionTrimestralChart.vue";
+import ReporteDashboard from "./ReporteDashboard.vue";
 
 Chart.register(
   Title,
@@ -350,10 +413,11 @@ Chart.register(
 );
 
 export default {
-  components: { Bar, Doughnut, BalanceTrimestralChart, RetencionTrimestralChart },
+  components: { Bar, Doughnut, BalanceTrimestralChart, RetencionTrimestralChart, ReporteDashboard },
 
   data() {
     return {
+      dialogReporte: false,
       datosMain: [],
       estudiantes: [],
       selectedPeriodoId: null,
@@ -361,17 +425,26 @@ export default {
       balance: null,
       fechaInicio: "",
       fechaFin: "",
+      añoSeleccionado: new Date().getFullYear(),
       loadingBalance: false,
       // Morosidad
       morosidad: null,
       // Retención
       retencion: null,
+      periodoAnterior: null,
+      periodoActual: null,
+      periodosCompletos: [],
       // Gráficas trimestrales
       anioSeleccionado: new Date().getFullYear(),
     };
   },
 
   computed: {
+    años() {
+      const añoActual = new Date().getFullYear();
+      return [añoActual, añoActual - 1, añoActual - 2, añoActual - 3];
+    },
+    
     colorMargen() {
       const porcentaje = Number(this.balance?.margen_porcentaje || 0);
       if (porcentaje < 5) return "error";       // rojo: < 5%
@@ -414,7 +487,7 @@ export default {
     },
 
     periodoOptions() {
-      return this.datosMain.map((p) => ({
+      return this.periodosCompletos.map((p) => ({
         id: p.id_periodo,
         nombre: p.nombre_periodo,
       }));
@@ -546,18 +619,34 @@ export default {
   async mounted() {
     // Fechas por defecto: año actual
     const año = new Date().getFullYear();
+    this.añoSeleccionado = año;
     this.fechaInicio = `${año}-01-01`;
     this.fechaFin = `${año}-12-31`;
     
     await this.obtenerDatosMain();
     this.obtenerEstudiantes();
     this.obtenerBalance();
+    
+    // Establecer períodos por defecto para retención (últimos 2 períodos)
+    if (this.periodosCompletos.length >= 2) {
+      const sorted = [...this.periodosCompletos].sort((a, b) => b.id_periodo - a.id_periodo);
+      this.periodoAnterior = sorted[1].id_periodo;
+      this.periodoActual = sorted[0].id_periodo;
+      this.obtenerRetencion();
+    }
   },
 
   methods: {
-    async obtenerDatosMain() {
+async obtenerDatosMain() {
+      // Obtener períodos con sus fechas (para retención)
+      const resPeriodos = await newGoalService.getPeriodos();
+      this.periodosCompletos = resPeriodos.data || [];
+      
+      // Obtener datos para gráficas (del home)
       const res = await newGoalService.getHome();
       this.datosMain = res.data.datos;
+      
+      console.log(resPeriodos);
 
       if (this.datosMain.length) {
         this.selectedPeriodoId = this.latestPeriodo.id_periodo;
@@ -569,11 +658,48 @@ export default {
       this.estudiantes = res.data;
     },
 
+    onAñoChange(año) {
+      this.añoSeleccionado = año;
+      this.fechaInicio = `${año}-01-01`;
+      this.fechaFin = `${año}-12-31`;
+      this.obtenerBalance();
+    },
+
+async obtenerRetencion() {
+      if (!this.periodoAnterior || !this.periodoActual) return;
+
+      // Obtener datos de los períodos con sus fechas
+      const periodoAnt = this.periodosCompletos.find(p => p.id_periodo === this.periodoAnterior);
+      const periodoAct = this.periodosCompletos.find(p => p.id_periodo === this.periodoActual);
+
+      console.log('periodoAnterior:', periodoAnt);
+      console.log('periodoActual:', periodoAct);
+
+      if (!periodoAnt || !periodoAct) return;
+
+      const paramsRetencion = new URLSearchParams({
+        fecha_ini_anterior: periodoAnt.fecha_ini_periodo,
+        fecha_fin_anterior: periodoAnt.fecha_fin_periodo,
+        fecha_ini_actual: periodoAct.fecha_ini_periodo,
+        fecha_fin_actual: periodoAct.fecha_fin_periodo
+      });
+
+      console.log('paramsRetencion:', paramsRetencion.toString());
+
+      try {
+        const resRetencion = await newGoalService.getRetencionRango(paramsRetencion);
+        this.retencion = resRetencion.data;
+      } catch (error) {
+        console.error('Error al obtener retención:', error);
+      }
+    },
+
     async obtenerBalance() {
       if (!this.fechaInicio || !this.fechaFin) return;
       
       this.loadingBalance = true;
       try {
+        // Params para Balance y Morosidad (2 fechas)
         const params = new URLSearchParams({
           fecha_ini: this.fechaInicio,
           fecha_fin: this.fechaFin
@@ -586,10 +712,6 @@ export default {
         // Morosidad
         const resMorosidad = await newGoalService.getMorosidadRango(params);
         this.morosidad = resMorosidad.data;
-        
-        // Retención
-        const resRetencion = await newGoalService.getRetencionRango(params);
-        this.retencion = resRetencion.data;
       } catch (error) {
         console.error(error);
       } finally {

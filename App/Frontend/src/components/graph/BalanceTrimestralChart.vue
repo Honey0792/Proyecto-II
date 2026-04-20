@@ -59,7 +59,18 @@ export default {
     chartData() {
       if (!this.datos || this.datos.length === 0) return null;
       
-      const labels = this.datos.map(d => d.trimestre);
+      const labels = this.datos.map(d => {
+        const trim = d.trimestre || '';
+        const año = d.año || this.anio || '';
+        const nombres = {
+          'T1': 'Ene - Mar',
+          'T2': 'Abr - Jun',
+          'T3': 'Jul - Sep',
+          'T4': 'Oct - Dic'
+        };
+        const nombreTrim = nombres[trim] || trim;
+        return `${nombreTrim} ${año}`;
+      });
       const ingresos = this.datos.map(d => Number(d.ingresos_usd || 0));
       const egresos = this.datos.map(d => Number(d.egresos_usd || 0));
       const bilan = this.datos.map(d => Number(d.balance_usd || 0));

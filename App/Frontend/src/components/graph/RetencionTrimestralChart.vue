@@ -55,13 +55,26 @@ export default {
     };
   },
 
-  computed: {
+computed: {
     chartData() {
       if (!this.datos || this.datos.length === 0) return null;
       
-      const labels = this.datos.map(d => d.trimestre_actual || d.trimestre);
-      const anterior = this.datos.map(d => Number(d.estudiantes_anterior || 0));
-      const actual = this.datos.map(d => Number(d.estudiantes_actual || 0));
+      // Procesar cada registro como una transición de trimestre
+      const labels = this.datos.map((d, index) => {
+        const trimAnt = d.trimestre_anterior || '';
+        const trimAct = d.trimestre_actual || '';
+        const año = d.año || this.anio || '';
+        const nombres = {
+          1: 'Ene - Mar',
+          2: 'Abr - Jun',
+          3: 'Jul - Sep',
+          4: 'Oct - Dic'
+        };
+        return `${nombres[trimAnt]} → ${nombres[trimAct]}`;
+      });
+      
+      // Los datos de estudiantes retención
+      const retenidos = this.datos.map(d => Number(d.estudiantes_retenidos || 0));
       const tasa = this.datos.map(d => Number(d.tasa_retencion || 0));
 
       return {
@@ -69,24 +82,17 @@ export default {
         datasets: [
           {
             type: "bar",
-            label: "Est. Anterior",
-            data: anterior,
-            backgroundColor: "#9E9E9E",
-            order: 2,
-          },
-          {
-            type: "bar",
-            label: "Est. Actual",
-            data: actual,
-            backgroundColor: "#2196F3",
+            label: "Est. Retenidos",
+            data: retenidos,
+            backgroundColor: "#4CAF50",
             order: 1,
           },
           {
             type: "line",
             label: "Tasa %",
             data: tasa,
-            borderColor: this.getColorTasa(tasa),
-            backgroundColor: this.getColorTasa(tasa),
+            borderColor: "#FF9800",
+            backgroundColor: "#FF9800",
             tension: 0.3,
             order: 0,
             pointRadius: 5,
@@ -146,6 +152,7 @@ export default {
       try {
         const params = new URLSearchParams({ anio: this.anio });
         const res = await newGoalService.getRetencionTrimestral(params);
+        console.log(res)
         this.datos = res.data;
       } catch (error) {
         console.error("Error obteniendo retención trimestral:", error);
