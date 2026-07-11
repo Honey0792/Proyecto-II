@@ -17,8 +17,13 @@
       <div ref="reporteContainer" class="reporte-container">
         <!-- Header -->
         <div class="reporte-header">
-          <h1>Reporte de Indicadores</h1>
-          <p>{{ fechaReporte }}</p>
+          <div class="header-contenido">
+            <img :src="logoAcademia" alt="Logo Academia" class="logo-academia" />
+            <div class="header-texto">
+              <h1>Reporte de Indicadores</h1>
+              <p>{{ fechaReporte }}</p>
+            </div>
+          </div>
         </div>
 
         <!-- Balance Financiero -->
@@ -43,6 +48,23 @@
               <tr>
                 <td>Margen</td>
                 <td class="numero">{{ formatNumber(balance?.margen_porcentaje || 0, 1) }}%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Egresos por Tipo -->
+        <div class="seccion" v-if="balance?.egresos_por_tipo?.length">
+          <h2>Egresos por Tipo</h2>
+          <table class="tabla-datos">
+            <thead>
+              <tr><th>Tipo de Gasto</th><th>Monto</th><th>%</th></tr>
+            </thead>
+            <tbody>
+              <tr v-for="egreso in balance.egresos_por_tipo" :key="egreso.tipo_gasto">
+                <td>{{ egreso.tipo_gasto }}</td>
+                <td class="numero"><span>$</span>{{ formatNumber(egreso.monto_usd || 0, 2) }}</td>
+                <td class="numero">{{ formatNumber(egreso.porcentaje || 0, 1) }}%</td>
               </tr>
             </tbody>
           </table>
@@ -170,12 +192,20 @@
             </tbody>
           </table>
         </div>
+
+        <!-- Firma -->
+        <div class="firma-container">
+          <div class="firma-linea"></div>
+          <p class="firma-texto">Firma Autorizada</p>
+        </div>
       </div>
     </v-card-text>
   </v-card>
 </template>
 
 <script>
+import logoAcademia from '@/assets/Logo_Con_Fondo.jpg';
+
 export default {
   props: {
     generarPDF: { type: Boolean, default: false },
@@ -189,6 +219,7 @@ export default {
   data() {
     return {
       mostrar: true,
+      logoAcademia,
     };
   },
 
@@ -288,10 +319,27 @@ export default {
 }
 
 .reporte-header {
-  text-align: center;
   margin-bottom: 30px;
   border-bottom: 2px solid #333;
   padding-bottom: 15px;
+}
+
+.header-contenido {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.logo-academia {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.header-texto {
+  flex: 1;
+  text-align: center;
 }
 
 .reporte-header h1 {
@@ -356,5 +404,23 @@ export default {
 .pdf-generator {
   background: #f5f5f5;
   min-height: 100vh;
+}
+
+.firma-container {
+  margin-top: 60px;
+  text-align: center;
+  page-break-inside: avoid;
+}
+
+.firma-linea {
+  width: 250px;
+  border-top: 1px solid #333;
+  margin: 0 auto 8px;
+}
+
+.firma-texto {
+  margin: 0;
+  font-size: 12px;
+  color: #666;
 }
 </style>

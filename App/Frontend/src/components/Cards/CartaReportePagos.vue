@@ -15,7 +15,7 @@
     >
   </v-dialog>
   <v-card class="ma-7">
-    <h3 class="pa-3">Generar Listado</h3>
+    <h3 class="pa-3">Reporte de Pagos</h3>
     <v-divider></v-divider>
     <v-container>
       <v-form ref="form">

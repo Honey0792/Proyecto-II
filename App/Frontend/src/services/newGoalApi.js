@@ -3,7 +3,7 @@ import axios from "axios";
 export default()=>{
     const  token = `bearer ${sessionStorage.getItem('token')}`
     return axios.create({
-        baseURL: 'http://localhost:3000',
+        baseURL: `http://${window.location.hostname}:3000`,
         headers: {
             'authorization' : token, 
             'Accept': 'application/json',

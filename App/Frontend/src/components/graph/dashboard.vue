@@ -556,17 +556,34 @@ export default {
 
     chartDataBalance() {
       if (!this.balance) return null;
+      
+      const labels = ["Ingresos"];
+      const data = [Number(this.balance.ingresos_usd || 0)];
+      const colors = ["#4CAF50"]; // verde para ingresos
+      
+      // Colores distintos para cada tipo de gasto
+      const coloresGastos = [
+        "#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0", "#9966FF",
+        "#FF9F40", "#FF6384", "#C9CBCF", "#4BC0C0", "#9966FF", "#FFCE56"
+      ];
+      
+      // Agregar todos los tipos de egresos
+      if (this.balance.egresos_por_tipo?.length) {
+        this.balance.egresos_por_tipo.forEach((e, index) => {
+          labels.push(e.tipo_gasto);
+          data.push(Number(e.monto_usd || 0));
+          colors.push(coloresGastos[index % coloresGastos.length]);
+        });
+      } else {
+        // Si no hay desglose, mostrar egresos total
+        labels.push("Egresos");
+        data.push(Number(this.balance.egresos_usd || 0));
+        colors.push("#F44336");
+      }
+      
       return {
-        labels: ["Ingresos", "Egresos"],
-        datasets: [
-          {
-            data: [
-              Number(this.balance.ingresos_usd || 0),
-              Number(this.balance.egresos_usd || 0)
-            ],
-            backgroundColor: ["#4CAF50", "#F44336"],
-          },
-        ],
+        labels,
+        datasets: [{ data, backgroundColor: colors }],
       };
     },
 
@@ -576,8 +593,8 @@ export default {
         maintainAspectRatio: false,
         plugins: {
           legend: {
-            position: "bottom",
-            labels: { color: "#333" },
+            position: "right",
+            labels: { color: "#333", font: { size: 11 } },
           },
         },
       };
@@ -707,7 +724,9 @@ async obtenerRetencion() {
         
         // Balance
         const resBalance = await newGoalService.getBalanceRango(params);
+        console.log(resBalance)
         this.balance = resBalance.data;
+
         
         // Morosidad
         const resMorosidad = await newGoalService.getMorosidadRango(params);
