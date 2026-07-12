@@ -40,7 +40,7 @@
 <script>
 import newGoalService from "@/services/newGoalService";
 
-const API_BASE = "https://ve.dolarapi.com/v1";
+const API_BASE = "https://rates.dolarvzla.com/bcv";
 
 export default {
   data: () => ({
@@ -56,13 +56,12 @@ export default {
       this[loadingKey] = true;
 
       try {
-        const endpoint = esDolar ? `${API_BASE}/dolares` : `${API_BASE}/euros`;
-        const res = await fetch(endpoint);
+        const res = await fetch(`${API_BASE}/current.json`);
         const data = await res.json();
 
-        const oficial = data.find((d) => d.fuente === "oficial");
-        if (oficial && oficial.promedio) {
-          this.tasa_bolivares = Number(oficial.promedio.toFixed(2));
+        const tasa = esDolar ? data.current.usd : data.current.eur;
+        if (tasa) {
+          this.tasa_bolivares = Number(tasa.toFixed(2));
         }
       } catch (error) {
         console.error(`Error obteniendo tasa ${moneda}:`, error);
