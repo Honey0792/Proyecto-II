@@ -60,7 +60,7 @@
 
     <template v-slot:item.monto_cancelado_pago="{ item }">
   <div
-    class="pa-2 rounded"
+    class="pa-2 rounded text-white"
     :class="{
       'bg-success': item.monto_cancelado_visual === item.monto_total_visual,
       'bg-warning': item.monto_cancelado_visual !== item.monto_total_visual,
@@ -70,7 +70,7 @@
       {{ formatoMoneda(item.monto_cancelado_visual, item.moneda_base) }}
     </div>
 
-    <small v-if="modoMoneda === 'dual'" class="text-grey">
+    <small v-if="modoMoneda === 'dual'" class="text-white">
       {{ item.moneda_base === 'USD'
         ? formatoMoneda(item.monto_cancelado_bs, 'BS')
         : formatoMoneda(item.monto_cancelado_pago, 'USD')
@@ -301,7 +301,7 @@ export default {
     formatoMoneda(valor, monedaBase) {
       let simbolo = "";
 
-      if (this.modoMoneda === "default") {
+      if (this.modoMoneda === "default" || this.modoMoneda === "dual" || this.modoMoneda === "metodo") {
         simbolo = monedaBase === "USD" ? "$" : "Bs";
       } else if (this.modoMoneda === "usd") {
         simbolo = "$";
@@ -371,7 +371,14 @@ export default {
           moneda = "BS";
         }
 
-        // 🔥 MODO DUAL (NO cambia valores base)
+        // 🔥 MODO DUAL (cada pago muestra su moneda original)
+        if (this.modoMoneda === "dual") {
+          moneda = esUSD ? "USD" : "BS";
+          if (!esUSD) {
+            montoTotalVisual = montoTotalUSD * tasa;
+            montoCanceladoVisual = montoCanceladoUSD * tasa;
+          }
+        }
         return {
           ...p,
           monto_total_visual: montoTotalVisual,

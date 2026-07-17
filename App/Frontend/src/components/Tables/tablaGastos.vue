@@ -2,22 +2,43 @@
   <v-data-table
     :loading="loadingConfig"
     :search="search"
-    :items="gastos"
+    :items="gastosFormateados"
     :headers
   >
     <template v-slot:top>
-      <v-text-field
-        v-model="search"
-        placeholder="Buscar"
-        prepend-inner-icon="mdi-magnify"
-        clearable
-        density="compact"
-        single-line
-      ></v-text-field>
+      <div class="d-flex ga-3 align-center">
+        <v-text-field
+          variant="outlined"
+          v-model="search"
+          placeholder="Buscar"
+          prepend-inner-icon="mdi-magnify"
+          clearable
+          density="compact"
+          class="ma-2"
+          single-line
+        />
+
+        <v-select
+          class="ma-2"
+          v-model="modoMoneda"
+          :items="modosMoneda"
+          variant="outlined"
+          item-title="title"
+          item-value="value"
+          label="Mostrar montos en"
+          density="compact"
+          style="max-width: 220px"
+        />
+      </div>
     </template>
     <template v-slot:item.id_gasto="{ item }"></template>
     <template v-slot:item.fecha_gasto="{ item }">
       {{ item.fecha_gasto.split("T")[0] }}
+    </template>
+    <template v-slot:item.cantidad_gasto="{ item }">
+      <span>
+        {{ formatoMoneda(item.cantidad_visual, item.moneda_simbolo) }}
+      </span>
     </template>
     <template v-slot:item.actions="{ item }">
       <div class="d-flex ga-2 justify-end">
@@ -101,6 +122,8 @@ import CartaEditGasto from "../Cards/CartaEditGasto.vue";
 import CartaVerGasto from "../Cards/CartaVerGasto.vue";
 import CartaReporteGastos from "../Cards/CartaReporteGastos.vue";
 
+const METODOS_USD = [5, 6, 7, 8, 9];
+
 export default {
   components: { CartaEditGasto, CartaVerGasto, CartaReporteGastos },
   data: () => ({
@@ -112,6 +135,12 @@ export default {
     dialog_4: false,
     id_gasto: null,
     gastos: [],
+    modoMoneda: "metodo",
+    modosMoneda: [
+      { title: "Según método de pago", value: "metodo" },
+      { title: "Todo en USD", value: "usd" },
+      { title: "Todo en Bs", value: "bs" },
+    ],
     headers: [
       { title: "Orden", align: "start", key: "id_gasto" },
       { title: "Nombre", align: "start", key: "nombre_gasto" },
@@ -122,7 +151,29 @@ export default {
       { title: "Acciones", align: "end", key: "actions" },
     ],
   }),
+  computed: {
+    gastosFormateados() {
+      return this.gastos.map((g) => {
+        const esUSD = METODOS_USD.includes(g.id_metodo_pago);
+        let moneda = esUSD ? "USD" : "BS";
+
+        if (this.modoMoneda === "usd") moneda = "USD";
+        if (this.modoMoneda === "bs") moneda = "BS";
+
+        return {
+          ...g,
+          cantidad_visual: g.cantidad_gasto,
+          moneda_simbolo: moneda,
+          esUSD,
+        };
+      });
+    },
+  },
   methods: {
+    formatoMoneda(valor, moneda) {
+      const simbolo = moneda === "USD" ? "$" : "Bs";
+      return `${simbolo} ${Number(valor).toFixed(2)}`;
+    },
     async obtenerGastos() {
       try {
         const res = await newGoalService.getGastos();

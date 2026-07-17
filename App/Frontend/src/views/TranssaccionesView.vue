@@ -30,7 +30,7 @@ export default{
     }),
     computed: {
     mostrarPagos() {
-      return sessionStorage.getItem("role") === '1';
+      return sessionStorage.getItem("role") === '1' || sessionStorage.getItem("role") === '2';
     }
   },
   watch: {

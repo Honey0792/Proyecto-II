@@ -99,6 +99,8 @@
               label="Monto Total"
               v-model="pago.monto_total"
               :rules="montoTotalRules"
+              persistent-hint
+              hint="El monto debe ingresarse en USD o su equivalente en EUR"
             ></v-text-field>
           </v-col>
           <v-col>
