@@ -40,7 +40,7 @@
     </template>
     <template v-slot:footer.prepend>
       <div class="mx-3">
-        <v-btn @click="reporteInscripciones">Generar Listado</v-btn>
+        <v-btn @click="reporte">Generar reporte</v-btn>
       </div>
     </template>
   </v-data-table>
@@ -85,17 +85,28 @@
       </template>
     </v-card>
   </v-dialog>
+  <v-dialog v-model="this.dialog_4">
+    <v-icon
+      icon="mdi-close"
+      class="position-absolute right-0"
+      color="white"
+      @click="this.dialog_4 = false"
+    ></v-icon>
+    <CartaReporteInscripciones />
+  </v-dialog>
 </template>
 
 <script>
 import newGoalService from "@/services/newGoalService";
 import CartaEditInscripcion from "../Cards/CartaEditInscripcion.vue";
 import CartaVerInscripcion from "../Cards/CartaVerInscripcion.vue";
+import CartaReporteInscripciones from "../Cards/CartaReporteInscripciones.vue";
 
 export default {
   components: {
     CartaEditInscripcion,
     CartaVerInscripcion,
+    CartaReporteInscripciones,
   },
   data: () => ({
     loadingConfig: true,
@@ -103,6 +114,7 @@ export default {
     dialog_1: false,
     dialog_2: false,
     dialog_3: false,
+    dialog_4: false,
     id_inscripcion: null,
     inscripciones: [],
     headers: [
@@ -128,29 +140,8 @@ export default {
       }
     },
 
-    async reporteInscripciones() {
-      try {
-        const response = await newGoalService.getReporteInscripciones();
-        const url = window.URL.createObjectURL(new Blob([response.data]));
-        const link = document.createElement("a");
-        link.href = url;
-
-        // Obtener el nombre del archivo desde las cabeceras (si el servidor lo envía)
-        const contentDisposition = response.headers["content-disposition"];
-        const fileName = contentDisposition
-          ? contentDisposition.split("filename=")[1].replace(/"/g, "")
-          : `Reporte_Inscripciones_${new Date().toISOString()}.xlsx`; // Nombre por defecto si no hay header
-
-        link.setAttribute("download", fileName);
-        document.body.appendChild(link);
-        link.click();
-
-        // Limpiar recursos
-        document.body.removeChild(link);
-        window.URL.revokeObjectURL(url);
-      } catch (error) {
-        console.error("Error:", error.response?.data || error.message);
-      }
+    reporte() {
+      this.dialog_4 = true;
     },
 
     async eliminarInscripcion() {

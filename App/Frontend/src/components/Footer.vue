@@ -5,7 +5,7 @@
       {{ new Date().getFullYear() }} — <strong>New Goal ©</strong>
     </div>
             <div class="bg-cyan-darken-1 w-100 px-5 text-center">
-      <strong>Version 1.0</strong>
+      <strong>Version 2.0</strong>
 
       <!-- <v-spacer></v-spacer> -->
 

@@ -243,6 +243,12 @@ export default {
     });
   },
 
+  generarReporteInscripciones(params) {
+    return newGoalApi().get(`/inscripciones/reporte?${params.toString()}`, {
+      responseType: "blob",
+    });
+  },
+
   //NOTAS
   getNotas() {
     return newGoalApi().get(`/notas?pagina=1&limit=1000`);

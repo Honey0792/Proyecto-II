@@ -48,6 +48,19 @@
               :rules="cedulaRules"
             ></v-text-field>
           </v-col>
+        </v-row>
+        <v-row>
+          <v-col>
+            <v-select
+              variant="outlined"
+              label="Nivel Educativo"
+              :items="nivelesDisponibles"
+              item-title="nombre_nv_edu"
+              item-value="id_nv_edu"
+              v-model="persona.nivel_educativo"
+              :rules="globalRules"
+            ></v-select>
+          </v-col>
           <v-col>
             <v-text-field
               variant="outlined"
@@ -74,11 +87,13 @@ export default {
   components: { TablaPersonas },
   data: () => ({
     alert: { show: false, message: "" },
+    nivelEducativo: [],
     persona: {
       nombre: null,
       apellido: null,
       cedula: null,
       cargo: null,
+      nivel_educativo: null,
     },
     globalRules: [(value) => !!value || "Requerido"],
     nombresRules: [
@@ -95,7 +110,20 @@ export default {
   (v) => /^\d{7,8}$/.test(v) || 'Formato inválido (Ej: 12345678)'
 ]
   }),
+  computed: {
+    nivelesDisponibles() {
+      return this.nivelEducativo.filter(n => Number(n.id_nv_edu) >= 15);
+    },
+  },
   methods: {
+    async leerNivelEducativo() {
+      try {
+        const res = await newGoalService.getNivelEducacion();
+        this.nivelEducativo = res.data.datos;
+      } catch (error) {
+        console.log(error);
+      }
+    },
     async registrarPersona() {
       try {
                 const { valid } = await this.$refs.form.validate();
@@ -113,7 +141,7 @@ export default {
         this.alert = {
           show: true,
           color: "success",
-          message: "Persona registrada corectamente",
+          message: "Persona registrada correctamente",
         };
         this.$refs.hijo.obtenerPersonas();
       } catch (error) {
@@ -125,6 +153,9 @@ export default {
         };
       }
     },
+  },
+  mounted() {
+    this.leerNivelEducativo();
   },
 };
 </script>
